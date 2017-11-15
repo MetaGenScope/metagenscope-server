@@ -32,6 +32,20 @@ $ docker-machine ip dev
 
 And finally, connect to the machine at `https://192.168.99.100:5001/ping`.
 
+## Testing
+
+Test suite tools are defined in the `makefile`.
+
+### Linting
+
+Code quality is enforced using pylint, pycodestyle, and pydocstyle. The rules are defined in `.pylintrc`.
+
+These tools may be run together using:
+
+```sh
+$ make lint
+```
+
 ## Contributing
 
 Please read `CONTRIBUTING.md` for details on our code of conduct, and the process for submitting pull requests to us.
