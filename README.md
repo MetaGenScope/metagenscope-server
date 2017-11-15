@@ -10,25 +10,27 @@ These instructions will get you a copy of the project up and running on your loc
 
 MetaGenScope runs as a collection of Docker microservices. This makes it very easy to ensure a consistent environment across development and deployment machines. You will need to have [Docker installed](https://docs.docker.com/engine/installation/) on your system to continue.
 
-### Installing
+### Installing and Running
 
 The first thing you will need to do is build the Docker image locally. This will take a few minutes on first run but will be much faster after components are cached.
 
 ```sh
-docker-compose build
+$ docker-compose build
 ```
 
 Start the container as a daemon:
 
 ```sh
-docker-compose up -d
+$ docker-compose up -d
 ```
 
-And finally, grab the IP address of the machine:
+Grab the IP address of the machine (usually `192.168.99.100`):
 
 ```sh
-docker-machine ip dev
+$ docker-machine ip dev
 ```
+
+And finally, connect to the machine at `https://192.168.99.100:5001/ping`.
 
 ## Contributing
 
