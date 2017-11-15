@@ -4,3 +4,5 @@ pydocstyle==2.1.1
 
 Flask==0.12.2
 Flask-Script==2.0.5
+Flask-SQLAlchemy==2.2
+psycopg2==2.7.1
