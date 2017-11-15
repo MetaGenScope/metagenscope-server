@@ -1,0 +1,14 @@
+version: '2.1'
+
+services:
+
+  metagenscope-service:
+    container_name: metagenscope-service
+    build: .
+    volumes:
+      - '.:/usr/src/app'
+    ports:
+      - 5001:5000 # expose ports - HOST:CONTAINER
+    environment:
+      # Environment: development | testing | staging | production
+      - APP_SETTINGS=development

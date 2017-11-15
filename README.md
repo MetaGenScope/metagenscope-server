@@ -8,30 +8,26 @@ These instructions will get you a copy of the project up and running on your loc
 
 ### Prerequisites
 
-You will need to have [`pip`](https://pip.pypa.io/en/stable/installing/) and [PostgreSQL](https://wiki.postgresql.org/wiki/Detailed_installation_guides) to run MetaGenScope.
-
-It is also recommended that you use [Virtualenv](https://virtualenv.pypa.io/en/stable/), a tool to create isolated virtual environments, and [Autoenv](https://github.com/kennethreitz/autoenv) to automatically manage environment state.
+MetaGenScope runs as a collection of Docker microservices. This makes it very easy to ensure a consistent environment across development and deployment machines. You will need to have [Docker installed](https://docs.docker.com/engine/installation/) on your system to continue.
 
 ### Installing
 
-First thing you will need to do is configure your `.env` file.
+The first thing you will need to do is build the Docker image locally. This will take a few minutes on first run but will be much faster after components are cached.
 
-```bash
-cp .env.dist .env # Copy template
-vi .env # Make required changes
-source .env # Load the environment
+```sh
+docker-compose build
 ```
 
-Then install the Python requirements:
+Start the container as a daemon:
 
-```bash
-pip install -r requirements.txt
+```sh
+docker-compose up -d
 ```
 
-And finally, run the application
+And finally, grab the IP address of the machine:
 
-```bash
-python manage.py runserver
+```sh
+docker-machine ip dev
 ```
 
 ## Contributing
