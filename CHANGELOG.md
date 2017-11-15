@@ -8,6 +8,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## 0.0.1 - 2017-11-13
 ### Added
-- Basic flask project structure.
+- Basic Flask project structure.
 
 [Unreleased]: https://github.com/bchrobot/metagenscope-server/compare/v0.0.1...HEAD

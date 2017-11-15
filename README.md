@@ -31,7 +31,7 @@ pip install -r requirements.txt
 And finally, run the application
 
 ```bash
-flask run
+python manage.py runserver
 ```
 
 ## Contributing
