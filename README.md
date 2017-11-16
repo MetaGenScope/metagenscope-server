@@ -30,7 +30,7 @@ $ make test
 
 ## Contributing
 
-Please read `CONTRIBUTING.md` for details on our code of conduct, and the process for submitting pull requests to us.
+Please read [`CONTRIBUTING.md`](CONTRIBUTING.md) for details on our code of conduct, and the process for submitting pull requests to us.
 
 ## Versioning
 
@@ -38,7 +38,7 @@ We use [SemVer](http://semver.org/) for versioning. For the versions available, 
 
 ## Release History
 
-See `CHANGELOG.md`
+See [`CHANGELOG.md`](CHANGELOG.md).
 
 ## Authors
 
@@ -48,7 +48,7 @@ See also the list of [contributors][contributors] who participated in this proje
 
 ## License
 
-This project is licensed under the MIT License - see the `LICENSE.md` file for details.
+This project is licensed under the MIT License - see the [`LICENSE.md`](LICENSE.md) file for details.
 
 
 [project-tags]: https://github.com/bchrobot/metagenscope-server/tags
