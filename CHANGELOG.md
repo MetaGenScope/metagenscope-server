@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Basic Docker configuration.
 - PostgreSQL Docker and SQLAlchemy configuration.
 - Readme documentation about linting.
+- Basic test suite and commands.
 
 ## 0.0.1 - 2017-11-13
 ### Added

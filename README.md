@@ -34,7 +34,11 @@ And finally, connect to the machine at `https://192.168.99.100:5001/ping`.
 
 ## Testing
 
-Test suite tools are defined in the `makefile`.
+The entry point to test suite tools is the `makefile`. These commands are all run on the Docker machine.
+
+```sh
+$ docker-compose run metagenscope-service [command]
+```
 
 ### Linting
 
@@ -43,7 +47,15 @@ Code quality is enforced using pylint, pycodestyle, and pydocstyle. The rules ar
 These tools may be run together using:
 
 ```sh
-$ make lint
+$ docker-compose run metagenscope-service make lint
+```
+
+### Running Test Suite
+
+To run the test suite (requires a successful `lint` execution prior to running tests):
+
+```sh
+$ docker-compose run metagenscope-service make test
 ```
 
 ## Contributing
