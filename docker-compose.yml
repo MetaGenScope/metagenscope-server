@@ -24,6 +24,7 @@ services:
     environment:
       # Environment: development | testing | staging | production
       - APP_SETTINGS=development
+      - SECRET_KEY=my_precious
       - DATABASE_URL=postgres://postgres:postgres@metagenscope-db:5432/users_dev
       - DATABASE_TEST_URL=postgres://postgres:postgres@metagenscope-db:5432/users_test
     depends_on:

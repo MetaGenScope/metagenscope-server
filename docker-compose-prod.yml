@@ -1,0 +1,44 @@
+version: '2.1'
+
+services:
+
+  metagenscope-db:
+    container_name: metagenscope-db
+    build: ./app/db
+    ports:
+      - 5435:5432  # expose ports - HOST:CONTAINER
+    environment:
+      - POSTGRES_USER
+      - POSTGRES_PASSWORD
+    healthcheck:
+      test: exit 0
+
+  metagenscope-service:
+    container_name: metagenscope-service
+    build: .
+    command: gunicorn -b 0.0.0.0:5000 manage:app
+    ports:
+      - '5000'
+    environment:
+      # Environment: development | testing | staging | production
+      - APP_SETTINGS=production
+      - SECRET_KEY
+      - DATABASE_URL=postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@metagenscope-db:5432/users_prod
+      - DATABASE_TEST_URL=postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@metagenscope-db:5432/users_test
+    depends_on:
+      metagenscope-db:
+        condition: service_healthy
+    links:
+      - metagenscope-db
+
+  nginx:
+    container_name: nginx
+    build: ./nginx/
+    restart: always
+    ports:
+      - 80:80
+    depends_on:
+      metagenscope-service:
+        condition: service_started
+    links:
+      - metagenscope-service

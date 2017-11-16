@@ -58,6 +58,31 @@ To run the test suite (requires a successful `lint` execution prior to running t
 $ docker-compose run metagenscope-service make test
 ```
 
+## Deploying
+
+Switch to production Docker machine ([create it](https://docs.docker.com/machine/examples/ocean/) first, if you haven't):
+
+```sh
+$ docker-machine env production
+$ eval $(docker-machine env production)
+```
+
+Set production environment variables:
+
+```sh
+$ cp production-variables.env.dist .env
+$ vi .env
+```
+
+Spin up the containers, create the database, seed, and run the tests to make sure it's all working:
+
+```sh
+$ docker-compose -f docker-compose-prod.yml up -d
+$ docker-compose -f docker-compose-prod.yml run metagenscope-service python manage.py recreate_db
+$ docker-compose -f docker-compose-prod.yml run metagenscope-service python manage.py seed_db
+$ docker-compose -f docker-compose-prod.yml run metagenscope-service make test
+```
+
 ## Contributing
 
 Please read `CONTRIBUTING.md` for details on our code of conduct, and the process for submitting pull requests to us.
