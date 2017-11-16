@@ -8,7 +8,7 @@ from flask import Flask, jsonify
 from flask_sqlalchemy import SQLAlchemy
 
 
-from instance.config import app_config
+from app.config import app_config
 from app.api.views import users_blueprint
 
 

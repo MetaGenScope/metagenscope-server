@@ -6,7 +6,7 @@ from flask import current_app
 from flask_testing import TestCase
 
 from app import create_app
-from instance.config import app_config
+from app.config import app_config
 
 
 app = create_app()
