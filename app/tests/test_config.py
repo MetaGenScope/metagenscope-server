@@ -1,5 +1,6 @@
 """Test suites for application configurations."""
 
+import os
 import unittest
 
 from flask import current_app
@@ -24,6 +25,10 @@ class TestDevelopmentConfig(TestCase):
         self.assertTrue(app.config['SECRET_KEY'] == 'my_precious')
         self.assertTrue(app.config['DEBUG'] is True)
         self.assertFalse(current_app is None)
+        self.assertTrue(
+            app.config['SQLALCHEMY_DATABASE_URI'] ==
+            os.environ.get('DATABASE_URL')
+        )
 
 
 class TestTestingConfig(TestCase):
@@ -40,8 +45,8 @@ class TestTestingConfig(TestCase):
         self.assertTrue(app.config['TESTING'])
         self.assertFalse(app.config['PRESERVE_CONTEXT_ON_EXCEPTION'])
         self.assertTrue(
-            app.config['SQLALCHEMY_DATABASE_URI'].rsplit('/', 1)[-1] ==
-            'users_test'
+            app.config['SQLALCHEMY_DATABASE_URI'] ==
+            os.environ.get('DATABASE_TEST_URL')
         )
 
 
