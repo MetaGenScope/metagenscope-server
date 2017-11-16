@@ -5,8 +5,11 @@ import unittest
 from flask import current_app
 from flask_testing import TestCase
 
-from app import app
+from app import create_app
 from instance.config import app_config
+
+
+app = create_app()
 
 
 class TestDevelopmentConfig(TestCase):

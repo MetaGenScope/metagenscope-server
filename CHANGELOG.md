@@ -12,6 +12,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Basic test suite and commands.
 - 'clean' task to Makefile.
 
+### Changed
+- Moved API to blueprint.
+
 ## 0.0.1 - 2017-11-13
 ### Added
 - Basic Flask project structure.

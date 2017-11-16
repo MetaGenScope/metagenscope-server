@@ -2,9 +2,11 @@ import unittest
 
 from flask_script import Manager
 
-from app import app, db
+from app import create_app, db
+from app.api.models import User
 
 
+app = create_app()
 manager = Manager(app)
 
 
