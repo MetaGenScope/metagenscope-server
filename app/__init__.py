@@ -8,22 +8,22 @@ from flask import Flask, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_bcrypt import Bcrypt
+from flask_cors import CORS
 
 
 from app.config import app_config
-from app.api.views import users_blueprint
-
-
-# Instantiate extensions
-db = SQLAlchemy()
-migrate = Migrate()
-bcrypt = Bcrypt()
+from app.extensions import db, migrate, bcrypt
+from app.api.users import users_blueprint
+from app.api.auth import auth_blueprint
 
 
 def create_app():
     """Create and bootstrap app."""
     # Instantiate the app
     app = Flask(__name__)
+
+    # Enable CORS
+    CORS(app)
 
     # Set config
     config_name = os.getenv('APP_SETTINGS', 'development')
@@ -36,5 +36,6 @@ def create_app():
 
     # Register blueprints
     app.register_blueprint(users_blueprint)
+    app.register_blueprint(auth_blueprint)
 
     return app

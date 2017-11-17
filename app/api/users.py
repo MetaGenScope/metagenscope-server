@@ -1,4 +1,4 @@
-"""API endpoint definitions."""
+"""User API endpoint definitions."""
 
 
 from flask import Blueprint, jsonify
