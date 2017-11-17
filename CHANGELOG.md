@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - 'clean' task to Makefile.
 - Production release process and instructions.
 - Code coverage for testing.
+- Password to users.
 
 ### Changed
 - Moved API to blueprint.

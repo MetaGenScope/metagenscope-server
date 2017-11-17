@@ -1,3 +1,6 @@
+# Environments - Extended
+.env-local
+
 # Created by https://www.gitignore.io/api/macos,python,windows
 
 ### macOS ###
