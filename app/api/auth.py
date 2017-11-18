@@ -5,6 +5,7 @@ from sqlalchemy import exc, or_
 
 from app.extensions import db, bcrypt
 from app.api.models import User
+from app.api.utils import authenticate
 
 
 # pylint: disable=invalid-name
@@ -103,58 +104,29 @@ def login_user():
 
 
 @auth_blueprint.route('/auth/logout', methods=['GET'])
-def logout_user():
+@authenticate
+def logout_user(resp):
     """Log user out."""
-    # Get auth token
-    auth_header = request.headers.get('Authorization')
-    if auth_header:
-        auth_token = auth_header.split(" ")[1]
-        resp = User.decode_auth_token(auth_token)
-        if not isinstance(resp, str):
-            response_object = {
-                'status': 'success',
-                'message': 'Successfully logged out.'
-            }
-            return jsonify(response_object), 200
-        response_object = {
-            'status': 'error',
-            'message': resp
-        }
-        return jsonify(response_object), 401
     response_object = {
-        'status': 'error',
-        'message': 'Provide a valid auth token.'
+        'status': 'success',
+        'message': 'Successfully logged out.'
     }
-    return jsonify(response_object), 403
+    return jsonify(response_object), 200
+
 
 @auth_blueprint.route('/auth/status', methods=['GET'])
-def get_user_status():
+@authenticate
+def get_user_status(resp):
     """Get user status."""
-    # Get auth token
-    auth_header = request.headers.get('Authorization')
-    if auth_header:
-        auth_token = auth_header.split(" ")[1]
-        resp = User.decode_auth_token(auth_token)
-        if not isinstance(resp, str):
-            user = User.query.filter_by(id=resp).first()
-            response_object = {
-                'status': 'success',
-                'data': {
-                    'id': user.id,
-                    'username': user.username,
-                    'email': user.email,
-                    'active': user.active,
-                    'created_at': user.created_at
-                }
-            }
-            return jsonify(response_object), 200
-        response_object = {
-            'status': 'error',
-            'message': resp
-        }
-        return jsonify(response_object), 401
+    user = User.query.filter_by(id=resp).first()
     response_object = {
-        'status': 'error',
-        'message': 'Provide a valid auth token.'
+        'status': 'success',
+        'data': {
+            'id': user.id,
+            'username': user.username,
+            'email': user.email,
+            'active': user.active,
+            'created_at': user.created_at
+        }
     }
-    return jsonify(response_object), 401
+    return jsonify(response_object), 200
