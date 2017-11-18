@@ -1,3 +1,3 @@
-CREATE DATABASE users_prod;
-CREATE DATABASE users_dev;
-CREATE DATABASE users_test;
+CREATE DATABASE metagenscope_prod;
+CREATE DATABASE metagenscope_dev;
+CREATE DATABASE metagenscope_test;
