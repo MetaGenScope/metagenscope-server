@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Code coverage for testing.
 - Password to users.
 - Authentication endpoints and tests.
+- CircleCI configuration.
 
 ### Changed
 - Moved API to blueprint.
