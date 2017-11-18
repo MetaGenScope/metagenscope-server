@@ -3,8 +3,16 @@ version: 2
 jobs:
   build:
     docker:
-      - image: circleci/python:3.6.1
+      - image: circleci/python:3.6.3-jessie
+        environment:
+          SECRET_KEY: my_precious
+          APP_SETTINGS: testing
+          DATABASE_TEST_URL: postgresql://postgres:@localhost/metagenscope_test
       - image: circleci/postgres:9.4
+        environment:
+          POSTGRES_USER: postgres
+          POSTGRES_DB: metagenscope_test
+          POSTGRES_PASSWORD: ""
 
     working_directory: ~/repo
 
@@ -19,10 +27,6 @@ jobs:
           - v1-dependencies-
 
       - run:
-          name: Install PostgreSQL Client
-          command: apt-get install -y postgresql-client
-
-      - run:
           name: Install Python Dependencies
           command: |
             python3 -m venv venv
@@ -30,11 +34,13 @@ jobs:
             pip install -r requirements.txt
 
       - run:
-          name: set up environment
+          name: Wait for DB
+          command: dockerize -wait tcp://localhost:5432 -timeout 1m
+
+      - run:
+          name: Provision database
           command: |
-            export APP_SETTINGS="testing"
-            export DATABASE_TEST_URL=postgresql://postgres:@localhost/metagenscope_test
-            psql -c 'create database metagenscope_test;' -U postgres
+            . venv/bin/activate
             python manage.py recreate_db
 
       - save_cache:
