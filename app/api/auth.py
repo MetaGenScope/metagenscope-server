@@ -105,6 +105,7 @@ def login_user():
 
 @auth_blueprint.route('/auth/logout', methods=['GET'])
 @authenticate
+# pylint: disable=unused-argument
 def logout_user(resp):
     """Log user out."""
     response_object = {

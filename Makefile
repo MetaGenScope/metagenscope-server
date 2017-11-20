@@ -1,4 +1,4 @@
-.PHONY: clean-pyc clean-build clean lint test
+.PHONY: clean-pyc clean-build clean lint test cov
 .DEFAULT_GOAL: help
 
 help:
@@ -8,6 +8,7 @@ help:
 	@echo "clean-test - remove test and coverage artifacts"
 	@echo "lint - check style with pylint"
 	@echo "test - run tests quickly with the default Python"
+	@echo "cov - run tests and check coverage with the default Python"
 
 clean: clean-build clean-pyc clean-test
 
@@ -31,3 +32,6 @@ lint:
 
 test: lint
 	python manage.py test
+
+cov: lint
+	python manage.py cov
