@@ -2,21 +2,25 @@
 
 
 import datetime
+import uuid
 import jwt
 
 from flask import current_app
+from sqlalchemy.dialects.postgresql import UUID
 
 from app.extensions import db, bcrypt
 
 
 # User model
-# pylint: disable=too-few-public-methods
 class User(db.Model):
     """MetaGenScope User model."""
 
     __tablename__ = "users"
+
     # pylint: disable=invalid-name
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    id = db.Column(UUID(as_uuid=True),
+                   primary_key=True,
+                   server_default=db.text("uuid_generate_v4()"))
     username = db.Column(db.String(128), unique=True, nullable=False)
     email = db.Column(db.String(128), unique=True, nullable=False)
     password = db.Column(db.String(255), nullable=False)
@@ -45,7 +49,7 @@ class User(db.Model):
                 'exp': datetime.datetime.utcnow() + datetime.timedelta(
                     days=days, seconds=seconds),
                 'iat': datetime.datetime.utcnow(),
-                'sub': user_id
+                'sub': str(user_id)
             }
             return jwt.encode(
                 payload,
@@ -58,11 +62,11 @@ class User(db.Model):
 
     @staticmethod
     def decode_auth_token(auth_token):
-        """Decode the auth token - :param auth_token: - :return: integer|string."""
+        """Decode the auth token - :param auth_token: - :return: UUID|string."""
         try:
             secret = current_app.config.get('SECRET_KEY')
             payload = jwt.decode(auth_token, secret)
-            return payload['sub']
+            return uuid.UUID(payload['sub'])
         except jwt.ExpiredSignatureError:
             return 'Signature expired. Please log in again.'
         except jwt.InvalidTokenError:

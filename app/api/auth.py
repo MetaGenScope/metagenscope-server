@@ -123,7 +123,7 @@ def get_user_status(resp):
     response_object = {
         'status': 'success',
         'data': {
-            'id': user.id,
+            'id': str(user.id),
             'username': user.username,
             'email': user.email,
             'active': user.active,
