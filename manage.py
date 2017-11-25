@@ -7,7 +7,7 @@ from flask_script import Manager
 from flask_migrate import MigrateCommand
 
 from app import create_app, db
-from app.api.models import User
+from app.api.models import User, Organization
 
 
 COV = coverage.coverage(
@@ -64,6 +64,7 @@ def seed_db():
     """Seed the database."""
     db.session.add(User(username='bchrobot', email="benjamin.blair.chrobot@gmail.com", password='Foobar22'))
     db.session.add(User(username='benjaminchrobot', email="benjamin.chrobot@alum.mit.edu", password='Foobar22'))
+    db.session.add(Organization(name='Mason Lab', adminEmail='benjamin.blair.chrobot@gmail.com'))
     db.session.commit()
 
 

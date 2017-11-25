@@ -3,9 +3,9 @@
 from sqlalchemy.exc import IntegrityError
 
 from app import db
-from app.api.models import User, Organization
+from app.api.models import Organization
 from app.tests.base import BaseTestCase
-from app.tests.utils import add_user, add_organization
+from app.tests.utils import add_organization
 
 
 class TestOrganizationModel(BaseTestCase):
