@@ -77,3 +77,26 @@ def get_single_user(resp, organization_slug):
         return jsonify(response_object), 200
     except ValueError:
         return jsonify(response_object), 404
+
+@organizations_blueprint.route('/organizations', methods=['GET'])
+@authenticate
+# pylint: disable=unused-argument
+def get_all_organizations(resp):
+    """Get all organizations."""
+    organizations = Organization.query.all()
+    organizations_list = []
+    for organization in organizations:
+        organization_object = {
+            'id': str(organization.id),
+            'name': organization.name,
+            'admin_email': organization.adminEmail,
+            'created_at': organization.created_at
+        }
+        organizations_list.append(organization_object)
+    response_object = {
+        'status': 'success',
+        'data': {
+            'organizations': organizations_list
+        }
+    }
+    return jsonify(response_object), 200

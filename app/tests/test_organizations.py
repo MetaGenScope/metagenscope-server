@@ -192,3 +192,39 @@ class TestOrganizationService(BaseTestCase):
             self.assertEqual(response.status_code, 404)
             self.assertIn('Organization does not exist', data['message'])
             self.assertIn('fail', data['status'])
+
+    def test_all_organizations(self):
+        """Ensure get all organizations behaves correctly."""
+        add_organization('Test Organization', 'admin@test.org')
+        add_organization('Test Organization Two', 'admin@test.org')
+        add_user('test', 'test@test.com', 'test')
+        with self.client:
+            resp_login = self.client.post(
+                '/auth/login',
+                data=json.dumps(dict(
+                    email='test@test.com',
+                    password='test'
+                )),
+                content_type='application/json'
+            )
+            response = self.client.get(
+                f'/organizations',
+                headers=dict(
+                    Authorization='Bearer ' + json.loads(
+                        resp_login.data.decode()
+                    )['auth_token']
+                ),
+                content_type='application/json',
+            )
+            data = json.loads(response.data.decode())
+            self.assertEqual(response.status_code, 200)
+            self.assertEqual(len(data['data']['organizations']), 2)
+            self.assertTrue('created_at' in data['data']['organizations'][0])
+            self.assertTrue('created_at' in data['data']['organizations'][1])
+            self.assertIn('Test Organization', data['data']['organizations'][0]['name'])
+            self.assertIn(
+                'admin@test.org', data['data']['organizations'][0]['admin_email'])
+            self.assertIn('Test Organization Two', data['data']['organizations'][1]['name'])
+            self.assertIn(
+                'admin@test.org', data['data']['organizations'][1]['admin_email'])
+            self.assertIn('success', data['status'])
