@@ -1,12 +1,13 @@
 """Organization API endpoint definitions."""
 
+from uuid import UUID
 
 from flask import Blueprint, jsonify, request
 from sqlalchemy import exc
 
 from app.extensions import db
 from app.api.models import Organization
-from app.api.utils import authenticate
+from app.api.utils import authenticate, slug2uuid
 
 
 # pylint: disable=invalid-name
@@ -15,8 +16,9 @@ organizations_blueprint = Blueprint('organizations', __name__)
 
 @organizations_blueprint.route('/organizations', methods=['POST'])
 @authenticate
-def add_organization():
-    """Respond to ping."""
+# pylint: disable=unused-argument
+def add_organization(resp):
+    """Add organization."""
     post_data = request.get_json()
     if not post_data:
         response_object = {
@@ -49,3 +51,29 @@ def add_organization():
             'message': 'Invalid payload.'
         }
         return jsonify(response_object), 400
+
+@organizations_blueprint.route('/organizations/<organization_slug>', methods=['GET'])
+@authenticate
+# pylint: disable=unused-argument
+def get_single_user(resp, organization_slug):
+    """Get single organization details."""
+    response_object = {
+        'status': 'fail',
+        'message': 'Organization does not exist'
+    }
+    try:
+        organization_id = UUID(slug2uuid(organization_slug))
+        organization = Organization.query.filter_by(id=organization_id).first()
+        if not organization:
+            return jsonify(response_object), 404
+        response_object = {
+            'status': 'success',
+            'data': {
+                'name': organization.name,
+                'admin_email': organization.adminEmail,
+                'created_at': organization.created_at,
+            }
+        }
+        return jsonify(response_object), 200
+    except ValueError:
+        return jsonify(response_object), 404
