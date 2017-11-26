@@ -7,7 +7,7 @@ from sqlalchemy import exc
 
 from app.extensions import db
 from app.api.models import Organization
-from app.api.utils import authenticate, slug2uuid
+from app.api.utils import authenticate, uuid2slug, slug2uuid
 
 
 # pylint: disable=invalid-name
@@ -87,7 +87,7 @@ def get_all_organizations(resp):
     organizations_list = []
     for organization in organizations:
         organization_object = {
-            'id': str(organization.id),
+            'id': uuid2slug(str(organization.id)),
             'name': organization.name,
             'admin_email': organization.adminEmail,
             'created_at': organization.created_at
