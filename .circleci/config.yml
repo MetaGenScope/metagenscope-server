@@ -8,10 +8,12 @@ jobs:
           SECRET_KEY: my_precious
           APP_SETTINGS: testing
           DATABASE_TEST_URL: postgresql://postgres:@localhost/metagenscope_test
-      - image: circleci/postgres:9.4
+      - image: metagenscope/postgres:0afd77cd
+        auth:
+          username: $DOCKERHUB_USERID
+          password: $DOCKERHUB_PASSWORD
         environment:
           POSTGRES_USER: postgres
-          POSTGRES_DB: metagenscope_test
           POSTGRES_PASSWORD: ""
 
     working_directory: ~/repo
@@ -53,8 +55,8 @@ jobs:
           name: run tests
           command: |
             . venv/bin/activate
-            python manage.py test
+            python manage.py cov
 
       - store_artifacts:
-          path: test-reports
+          path: htmlcov
           destination: test-reports
