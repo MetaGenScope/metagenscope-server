@@ -80,6 +80,35 @@ You may also run tests checking their coverage:
 $ make cov
 ```
 
+## Conntinuous Integration
+
+The test suite is run automatically on CircleCI for each push to Github. You can skip this behavior for a commit by appending `[skip ci]` to the commit message.
+
+### Custom Docker Postgres Image
+
+CircleCI does not allow running commands on secondary containers (eg. the database). This means we cannot enable `uuid-ossp` on a stock postgres image and have to use our own. Fortunately, we already have a custom image -- we just have to build and publish it on Docker Hub. This only needs to be done when changes have been made to `./app/db/Dockerfile`.
+
+Build and tag the image:
+
+```sh
+$ export COMMIT_SHA=`git rev-parse HEAD`
+$ docker build -t imagebuildinprocess .
+$ docker tag imagebuildinprocess "metagenscope/postgres:${COMMIT_SHA::8}"
+```
+
+Push the image:
+
+```sh
+$ docker login
+$ docker push "metagenscope/postgres:${COMMIT_SHA::8}"
+```
+
+Clean up:
+
+```sh
+$ docker rmi imagebuildinprocess "metagenscope/postgres:${COMMIT_SHA::8}"
+```
+
 ## Contributing
 
 Please read [`CONTRIBUTING.md`](CONTRIBUTING.md) for details on our code of conduct, and the process for submitting pull requests to us.
