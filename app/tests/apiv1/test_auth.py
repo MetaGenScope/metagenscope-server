@@ -6,7 +6,7 @@ import json
 import time
 
 from app.extensions import db
-from app.api.models import User
+from app.api.v1.models import User
 from app.tests.base import BaseTestCase
 from app.tests.utils import add_user
 
@@ -18,7 +18,7 @@ class TestAuthBlueprint(BaseTestCase):
         """Test user registration."""
         with self.client:
             response = self.client.post(
-                '/auth/register',
+                '/api/v1/auth/register',
                 data=json.dumps(dict(
                     username='justatest',
                     email='test@test.com',
@@ -38,7 +38,7 @@ class TestAuthBlueprint(BaseTestCase):
         add_user('test', 'test@test.com', 'test')
         with self.client:
             response = self.client.post(
-                '/auth/register',
+                '/api/v1/auth/register',
                 data=json.dumps(dict(
                     username='michael',
                     email='test@test.com',
@@ -57,7 +57,7 @@ class TestAuthBlueprint(BaseTestCase):
         add_user('test', 'test@test.com', 'test')
         with self.client:
             response = self.client.post(
-                '/auth/register',
+                '/api/v1/auth/register',
                 data=json.dumps(dict(
                     username='test',
                     email='test@test.com2',
@@ -75,7 +75,7 @@ class TestAuthBlueprint(BaseTestCase):
         """Ensure registration fails for invalid JSON payload."""
         with self.client:
             response = self.client.post(
-                '/auth/register',
+                '/api/v1/auth/register',
                 data=json.dumps(dict()),
                 content_type='application/json'
             )
@@ -88,7 +88,7 @@ class TestAuthBlueprint(BaseTestCase):
         """Ensure registration fails for JSON payload missing username key."""
         with self.client:
             response = self.client.post(
-                '/auth/register',
+                '/api/v1/auth/register',
                 data=json.dumps(dict(email='test@test.com', password='test')),
                 content_type='application/json',
             )
@@ -101,7 +101,7 @@ class TestAuthBlueprint(BaseTestCase):
         """Ensure registration fails for JSON payload missing email key."""
         with self.client:
             response = self.client.post(
-                '/auth/register',
+                '/api/v1/auth/register',
                 data=json.dumps(dict(
                     username='justatest', password='test')),
                 content_type='application/json',
@@ -115,7 +115,7 @@ class TestAuthBlueprint(BaseTestCase):
         """Ensure registration fails for JSON payload missing password key."""
         with self.client:
             response = self.client.post(
-                '/auth/register',
+                '/api/v1/auth/register',
                 data=json.dumps(dict(
                     username='justatest', email='test@test.com')),
                 content_type='application/json',
@@ -130,7 +130,7 @@ class TestAuthBlueprint(BaseTestCase):
         with self.client:
             add_user('test', 'test@test.com', 'test')
             response = self.client.post(
-                '/auth/login',
+                '/api/v1/auth/login',
                 data=json.dumps(dict(
                     email='test@test.com',
                     password='test'
@@ -148,7 +148,7 @@ class TestAuthBlueprint(BaseTestCase):
         """Ensure login fails without a registered user."""
         with self.client:
             response = self.client.post(
-                '/auth/login',
+                '/api/v1/auth/login',
                 data=json.dumps(dict(
                     email='test@test.com',
                     password='test'
@@ -167,7 +167,7 @@ class TestAuthBlueprint(BaseTestCase):
         with self.client:
             # User login
             resp_login = self.client.post(
-                '/auth/login',
+                '/api/v1/auth/login',
                 data=json.dumps(dict(
                     email='test@test.com',
                     password='test'
@@ -176,7 +176,7 @@ class TestAuthBlueprint(BaseTestCase):
             )
             # Valid token logout
             response = self.client.get(
-                '/auth/logout',
+                '/api/v1/auth/logout',
                 headers=dict(
                     Authorization='Bearer ' + json.loads(
                         resp_login.data.decode()
@@ -193,7 +193,7 @@ class TestAuthBlueprint(BaseTestCase):
         add_user('test', 'test@test.com', 'test')
         with self.client:
             resp_login = self.client.post(
-                '/auth/login',
+                '/api/v1/auth/login',
                 data=json.dumps(dict(
                     email='test@test.com',
                     password='test'
@@ -203,7 +203,7 @@ class TestAuthBlueprint(BaseTestCase):
             # invalid token logout
             time.sleep(4)
             response = self.client.get(
-                '/auth/logout',
+                '/api/v1/auth/logout',
                 headers=dict(
                     Authorization='Bearer ' + json.loads(
                         resp_login.data.decode()
@@ -220,7 +220,7 @@ class TestAuthBlueprint(BaseTestCase):
         """Ensure logout fails for invalid token."""
         with self.client:
             response = self.client.get(
-                '/auth/logout',
+                '/api/v1/auth/logout',
                 headers=dict(Authorization='Bearer invalid'))
             data = json.loads(response.data.decode())
             self.assertTrue(data['status'] == 'error')
@@ -233,7 +233,7 @@ class TestAuthBlueprint(BaseTestCase):
         add_user('test', 'test@test.com', 'test')
         with self.client:
             resp_login = self.client.post(
-                '/auth/login',
+                '/api/v1/auth/login',
                 data=json.dumps(dict(
                     email='test@test.com',
                     password='test'
@@ -241,7 +241,7 @@ class TestAuthBlueprint(BaseTestCase):
                 content_type='application/json'
             )
             response = self.client.get(
-                '/auth/status',
+                '/api/v1/auth/status',
                 headers=dict(
                     Authorization='Bearer ' + json.loads(
                         resp_login.data.decode()
@@ -261,7 +261,7 @@ class TestAuthBlueprint(BaseTestCase):
         """Ensure user status route fails for invalid request."""
         with self.client:
             response = self.client.get(
-                '/auth/status',
+                '/api/v1/auth/status',
                 headers=dict(Authorization='Bearer invalid'))
             data = json.loads(response.data.decode())
             self.assertTrue(data['status'] == 'error')
@@ -278,7 +278,7 @@ class TestAuthBlueprint(BaseTestCase):
         db.session.commit()
         with self.client:
             resp_login = self.client.post(
-                '/auth/login',
+                '/api/v1/auth/login',
                 data=json.dumps(dict(
                     email='test@test.com',
                     password='test'
@@ -286,7 +286,7 @@ class TestAuthBlueprint(BaseTestCase):
                 content_type='application/json'
             )
             response = self.client.get(
-                '/auth/logout',
+                '/api/v1/auth/logout',
                 headers=dict(
                     Authorization='Bearer ' + json.loads(
                         resp_login.data.decode()
@@ -308,7 +308,7 @@ class TestAuthBlueprint(BaseTestCase):
         db.session.commit()
         with self.client:
             resp_login = self.client.post(
-                '/auth/login',
+                '/api/v1/auth/login',
                 data=json.dumps(dict(
                     email='test@test.com',
                     password='test'
@@ -316,7 +316,7 @@ class TestAuthBlueprint(BaseTestCase):
                 content_type='application/json'
             )
             response = self.client.get(
-                '/auth/status',
+                '/api/v1/auth/status',
                 headers=dict(
                     Authorization='Bearer ' + json.loads(
                         resp_login.data.decode()

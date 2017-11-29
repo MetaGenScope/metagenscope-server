@@ -4,7 +4,7 @@ import datetime
 
 
 from app import db
-from app.api.models import User, Organization
+from app.api.v1.models import User, Organization
 
 
 def add_user(username, email, password, created_at=datetime.datetime.utcnow()):

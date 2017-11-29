@@ -7,7 +7,7 @@ from uuid import UUID
 
 from flask import request, jsonify
 
-from app.api.models import User
+from app.api.v1.models import User
 
 
 # pylint: disable=invalid-name

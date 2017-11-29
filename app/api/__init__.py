@@ -1,1 +1,1 @@
-"""API blueprint."""
+"""API blueprints."""

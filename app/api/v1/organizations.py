@@ -6,7 +6,7 @@ from flask import Blueprint, jsonify, request
 from sqlalchemy import exc
 
 from app.extensions import db
-from app.api.models import Organization
+from app.api.v1.models import Organization
 from app.api.utils import authenticate, uuid2slug, slug2uuid
 
 

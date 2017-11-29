@@ -17,7 +17,7 @@ class TestOrganizationService(BaseTestCase):
         add_user('test', 'test@test.com', 'test')
         with self.client:
             resp_login = self.client.post(
-                '/auth/login',
+                '/api/v1/auth/login',
                 data=json.dumps(dict(
                     email='test@test.com',
                     password='test'
@@ -25,7 +25,7 @@ class TestOrganizationService(BaseTestCase):
                 content_type='application/json'
             )
             response = self.client.post(
-                '/organizations',
+                '/api/v1/organizations',
                 headers=dict(
                     Authorization='Bearer ' + json.loads(
                         resp_login.data.decode()
@@ -48,7 +48,7 @@ class TestOrganizationService(BaseTestCase):
         add_user('test', 'test@test.com', 'test')
         with self.client:
             resp_login = self.client.post(
-                '/auth/login',
+                '/api/v1/auth/login',
                 data=json.dumps(dict(
                     email='test@test.com',
                     password='test'
@@ -56,7 +56,7 @@ class TestOrganizationService(BaseTestCase):
                 content_type='application/json'
             )
             response = self.client.post(
-                '/organizations',
+                '/api/v1/organizations',
                 headers=dict(
                     Authorization='Bearer ' + json.loads(
                         resp_login.data.decode()
@@ -76,7 +76,7 @@ class TestOrganizationService(BaseTestCase):
         add_user('test', 'test@test.com', 'test')
         with self.client:
             resp_login = self.client.post(
-                '/auth/login',
+                '/api/v1/auth/login',
                 data=json.dumps(dict(
                     email='test@test.com',
                     password='test'
@@ -84,7 +84,7 @@ class TestOrganizationService(BaseTestCase):
                 content_type='application/json'
             )
             response = self.client.post(
-                '/organizations',
+                '/api/v1/organizations',
                 headers=dict(
                     Authorization='Bearer ' + json.loads(
                         resp_login.data.decode()
@@ -102,7 +102,7 @@ class TestOrganizationService(BaseTestCase):
         """Ensure create organization route fails for invalid token."""
         with self.client:
             response = self.client.post(
-                '/organizations',
+                '/api/v1/organizations',
                 headers=dict(Authorization='Bearer invalid'))
             data = json.loads(response.data.decode())
             self.assertTrue(data['status'] == 'error')
@@ -117,7 +117,7 @@ class TestOrganizationService(BaseTestCase):
         add_user('test', 'test@test.com', 'test')
         with self.client:
             resp_login = self.client.post(
-                '/auth/login',
+                '/api/v1/auth/login',
                 data=json.dumps(dict(
                     email='test@test.com',
                     password='test'
@@ -125,7 +125,7 @@ class TestOrganizationService(BaseTestCase):
                 content_type='application/json'
             )
             response = self.client.get(
-                f'/organizations/{slug}',
+                f'/api/v1/organizations/{slug}',
                 headers=dict(
                     Authorization='Bearer ' + json.loads(
                         resp_login.data.decode()
@@ -145,7 +145,7 @@ class TestOrganizationService(BaseTestCase):
         add_user('test', 'test@test.com', 'test')
         with self.client:
             resp_login = self.client.post(
-                '/auth/login',
+                '/api/v1/auth/login',
                 data=json.dumps(dict(
                     email='test@test.com',
                     password='test'
@@ -153,7 +153,7 @@ class TestOrganizationService(BaseTestCase):
                 content_type='application/json'
             )
             response = self.client.get(
-                f'/organizations/blah',
+                f'/api/v1/organizations/blah',
                 headers=dict(
                     Authorization='Bearer ' + json.loads(
                         resp_login.data.decode()
@@ -172,7 +172,7 @@ class TestOrganizationService(BaseTestCase):
         add_user('test', 'test@test.com', 'test')
         with self.client:
             resp_login = self.client.post(
-                '/auth/login',
+                '/api/v1/auth/login',
                 data=json.dumps(dict(
                     email='test@test.com',
                     password='test'
@@ -180,7 +180,7 @@ class TestOrganizationService(BaseTestCase):
                 content_type='application/json'
             )
             response = self.client.get(
-                f'/organizations/{randomSlug}',
+                f'/api/v1/organizations/{randomSlug}',
                 headers=dict(
                     Authorization='Bearer ' + json.loads(
                         resp_login.data.decode()
@@ -200,7 +200,7 @@ class TestOrganizationService(BaseTestCase):
         add_user('test', 'test@test.com', 'test')
         with self.client:
             resp_login = self.client.post(
-                '/auth/login',
+                '/api/v1/auth/login',
                 data=json.dumps(dict(
                     email='test@test.com',
                     password='test'
@@ -208,7 +208,7 @@ class TestOrganizationService(BaseTestCase):
                 content_type='application/json'
             )
             response = self.client.get(
-                f'/organizations',
+                f'/api/v1/organizations',
                 headers=dict(
                     Authorization='Bearer ' + json.loads(
                         resp_login.data.decode()

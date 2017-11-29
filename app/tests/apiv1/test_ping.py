@@ -10,7 +10,7 @@ class TestPingService(BaseTestCase):
 
     def test_ping(self):
         """Ensure the /ping route behaves correctly."""
-        response = self.client.get('/ping')
+        response = self.client.get('/api/v1/ping')
         data = json.loads(response.data.decode())
         self.assertEqual(response.status_code, 200)
         self.assertIn('pong!', data['message'])
