@@ -53,9 +53,7 @@ def add_organization(resp):
         return jsonify(response_object), 400
 
 @organizations_blueprint.route('/organizations/<organization_slug>', methods=['GET'])
-@authenticate
-# pylint: disable=unused-argument
-def get_single_user(resp, organization_slug):
+def get_single_user(organization_slug):
     """Get single organization details."""
     response_object = {
         'status': 'fail',
@@ -79,9 +77,7 @@ def get_single_user(resp, organization_slug):
         return jsonify(response_object), 404
 
 @organizations_blueprint.route('/organizations', methods=['GET'])
-@authenticate
-# pylint: disable=unused-argument
-def get_all_organizations(resp):
+def get_all_organizations():
     """Get all organizations."""
     organizations = Organization.query.all()
     organizations_list = []

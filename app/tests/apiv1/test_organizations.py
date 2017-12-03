@@ -114,23 +114,9 @@ class TestOrganizationService(BaseTestCase):
         """Ensure get single organization behaves correctly."""
         organization = add_organization('Test Organization', 'admin@test.org')
         slug = uuid2slug(str(organization.id))
-        add_user('test', 'test@test.com', 'test')
         with self.client:
-            resp_login = self.client.post(
-                '/api/v1/auth/login',
-                data=json.dumps(dict(
-                    email='test@test.com',
-                    password='test'
-                )),
-                content_type='application/json'
-            )
             response = self.client.get(
                 f'/api/v1/organizations/{slug}',
-                headers=dict(
-                    Authorization='Bearer ' + json.loads(
-                        resp_login.data.decode()
-                    )['auth_token']
-                ),
                 content_type='application/json',
             )
             data = json.loads(response.data.decode())
@@ -142,23 +128,9 @@ class TestOrganizationService(BaseTestCase):
 
     def test_single_organization_no_id(self):
         """Ensure error is thrown if an id is not provided."""
-        add_user('test', 'test@test.com', 'test')
         with self.client:
-            resp_login = self.client.post(
-                '/api/v1/auth/login',
-                data=json.dumps(dict(
-                    email='test@test.com',
-                    password='test'
-                )),
-                content_type='application/json'
-            )
             response = self.client.get(
                 f'/api/v1/organizations/blah',
-                headers=dict(
-                    Authorization='Bearer ' + json.loads(
-                        resp_login.data.decode()
-                    )['auth_token']
-                ),
                 content_type='application/json',
             )
             data = json.loads(response.data.decode())
@@ -169,23 +141,9 @@ class TestOrganizationService(BaseTestCase):
     def test_single_organization_incorrect_id(self):
         """Ensure error is thrown if the id does not exist."""
         randomSlug = uuid2slug(str(uuid4()))
-        add_user('test', 'test@test.com', 'test')
         with self.client:
-            resp_login = self.client.post(
-                '/api/v1/auth/login',
-                data=json.dumps(dict(
-                    email='test@test.com',
-                    password='test'
-                )),
-                content_type='application/json'
-            )
             response = self.client.get(
                 f'/api/v1/organizations/{randomSlug}',
-                headers=dict(
-                    Authorization='Bearer ' + json.loads(
-                        resp_login.data.decode()
-                    )['auth_token']
-                ),
                 content_type='application/json',
             )
             data = json.loads(response.data.decode())
@@ -197,23 +155,9 @@ class TestOrganizationService(BaseTestCase):
         """Ensure get all organizations behaves correctly."""
         add_organization('Test Organization', 'admin@test.org')
         add_organization('Test Organization Two', 'admin@test.org')
-        add_user('test', 'test@test.com', 'test')
         with self.client:
-            resp_login = self.client.post(
-                '/api/v1/auth/login',
-                data=json.dumps(dict(
-                    email='test@test.com',
-                    password='test'
-                )),
-                content_type='application/json'
-            )
             response = self.client.get(
                 f'/api/v1/organizations',
-                headers=dict(
-                    Authorization='Bearer ' + json.loads(
-                        resp_login.data.decode()
-                    )['auth_token']
-                ),
                 content_type='application/json',
             )
             data = json.loads(response.data.decode())
