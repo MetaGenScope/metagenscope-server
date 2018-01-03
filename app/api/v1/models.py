@@ -7,7 +7,6 @@ import jwt
 
 from flask import current_app
 from sqlalchemy.dialects.postgresql import UUID
-from flask_mongoengine.wtf import model_form
 
 from app.extensions import mongoDB, db, bcrypt
 
@@ -96,8 +95,9 @@ class Organization(db.Model):
         self.created_at = created_at
 
 
-# Result model
 class Result(mongoDB.Document):
+    """Base mongo result class."""
+
     uuid = mongoDB.UUIDField(required=True, primary_key=True, binary=False)
     sampleId = mongoDB.StringField()
     toolId = mongoDB.StringField()
@@ -106,38 +106,44 @@ class Result(mongoDB.Document):
     meta = {'allow_inheritance': True}
 
 
-# Metaphlan2 result model
 class Metaphlan2Result(Result):
+    """Metaphlan 2 tool's result type."""
+
     # The taxa dict is a map from taxon name to abundance value
     taxa = mongoDB.DictField()
 
 
-# Shortbred result model
 class ShortbredResult(Result):
+    """Shortbred tool's result type."""
+
     abundances = mongoDB.DictField()
 
 
-# Mic Census result model
 class MicCensusResult(Result):
+    """Mic Census tool's result type."""
+
     average_genome_size = mongoDB.IntField()
     total_bases = mongoDB.IntField()
     genome_equivalents = mongoDB.IntField()
 
 
-# Kraken result model
 class KrakenResult(Result):
+    """Kraken tool's result type."""
+
     # The taxa dict is a map from taxon name to abundance value
     taxa = mongoDB.DictField()
 
 
-# Nanopore Taxa result model
 class NanoporeTaxaResult(Result):
+    """Nanopore tool's taxa result type."""
+
     # The taxa dict is a map from taxon name to abundance value
     taxa = mongoDB.DictField()
 
 
-# Reads Classified result model
 class ReadsClassifiedResult(Result):
+    """Reads Classified tool's result type."""
+
     viral = mongoDB.IntField()
     archaea = mongoDB.IntField()
     bacteria = mongoDB.IntField()
@@ -145,15 +151,17 @@ class ReadsClassifiedResult(Result):
     unknown = mongoDB.IntField()
 
 
-# Hmp Sites result model
 class HmpSitesResult(Result):
+    """HMP Sites tool's result type."""
+
     gut = mongoDB.IntField()
     skin = mongoDB.IntField()
     throat = mongoDB.IntField()
 
 
-# Food Pet result model
 class FoodPetResult(Result):
+    """Food/Pet tool's result type."""
+
     vegetables = mongoDB.ListField(mongoDB.DictField(default={}), default=[])
     fruits = mongoDB.ListField(mongoDB.DictField(default={}), default=[])
     pets = mongoDB.ListField(mongoDB.DictField(default={}), default=[])

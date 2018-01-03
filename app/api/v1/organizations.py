@@ -52,6 +52,7 @@ def add_organization(resp):
         }
         return jsonify(response_object), 400
 
+
 @organizations_blueprint.route('/organizations/<organization_slug>', methods=['GET'])
 def get_single_user(organization_slug):
     """Get single organization details."""
@@ -75,6 +76,7 @@ def get_single_user(organization_slug):
         return jsonify(response_object), 200
     except ValueError:
         return jsonify(response_object), 404
+
 
 @organizations_blueprint.route('/organizations', methods=['GET'])
 def get_all_organizations():
