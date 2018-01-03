@@ -80,15 +80,20 @@ You may also run tests checking their coverage:
 $ make cov
 ```
 
-## Conntinuous Integration
+## Continuous Integration
 
 The test suite is run automatically on CircleCI for each push to Github. You can skip this behavior for a commit by appending `[skip ci]` to the commit message.
 
-### Custom Docker Postgres Image
+### Custom Docker Database Images
 
-CircleCI does not allow running commands on secondary containers (eg. the database). This means we cannot enable `uuid-ossp` on a stock postgres image and have to use our own. Fortunately, we already have a custom image -- we just have to build and publish it on Docker Hub. This only needs to be done when changes have been made to `./app/db/Dockerfile`.
+CircleCI does not allow running commands on secondary containers (eg. the database). To get around this, we use custom images for our database images. Changes to either image need to be built, tagged, and pushed to Docker Hub before CI can succeed.
 
-Build and tag the image:
+- **Postgres** - Stock Postgres image with the `uuid-ossp` extension enabled. Located at `./database_docker/postgres_db`.
+- **Mongo** - Stock Mongo image with a healthcheck script added. Located at `./database_docker/mongo_db`.
+
+**Steps**
+
+From the appropriate database docker subdirectory, build and tag the image:
 
 ```sh
 $ export COMMIT_SHA=`git rev-parse HEAD`
