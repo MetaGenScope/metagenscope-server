@@ -7,8 +7,9 @@ import jwt
 
 from flask import current_app
 from sqlalchemy.dialects.postgresql import UUID
+from flask_mongoengine.wtf import model_form
 
-from app.extensions import db, bcrypt
+from app.extensions import mongoDB, db, bcrypt
 
 
 # User model
@@ -93,3 +94,68 @@ class Organization(db.Model):
         self.name = name
         self.adminEmail = adminEmail
         self.created_at = created_at
+
+
+# Result model
+class Result(mongoDB.Document):
+    uuid = mongoDB.UUIDField(required=True, primary_key=True, binary=False)
+    sampleId = mongoDB.StringField()
+    toolId = mongoDB.StringField()
+    sampleName = mongoDB.StringField()
+
+    meta = {'allow_inheritance': True}
+
+
+# Metaphlan2 result model
+class Metaphlan2Result(Result):
+    # The taxa dict is a map from taxon name to abundance value
+    taxa = mongoDB.DictField()
+
+
+# Shortbred result model
+class ShortbredResult(Result):
+    abundances = mongoDB.DictField()
+
+
+# Mic Census result model
+class MicCensusResult(Result):
+    average_genome_size = mongoDB.IntField()
+    total_bases = mongoDB.IntField()
+    genome_equivalents = mongoDB.IntField()
+
+
+# Kraken result model
+class KrakenResult(Result):
+    # The taxa dict is a map from taxon name to abundance value
+    taxa = mongoDB.DictField()
+
+
+# Nanopore Taxa result model
+class NanoporeTaxaResult(Result):
+    # The taxa dict is a map from taxon name to abundance value
+    taxa = mongoDB.DictField()
+
+
+# Reads Classified result model
+class ReadsClassifiedResult(Result):
+    viral = mongoDB.IntField()
+    archaea = mongoDB.IntField()
+    bacteria = mongoDB.IntField()
+    host = mongoDB.IntField()
+    unknown = mongoDB.IntField()
+
+
+# Hmp Sites result model
+class HmpSitesResult(Result):
+    gut = mongoDB.IntField()
+    skin = mongoDB.IntField()
+    throat = mongoDB.IntField()
+
+
+# Food Pet result model
+class FoodPetResult(Result):
+    vegetables = mongoDB.ListField(mongoDB.DictField(default={}), default=[])
+    fruits = mongoDB.ListField(mongoDB.DictField(default={}), default=[])
+    pets = mongoDB.ListField(mongoDB.DictField(default={}), default=[])
+    meats = mongoDB.ListField(mongoDB.DictField(default={}), default=[])
+    total_reads = mongoDB.IntField()

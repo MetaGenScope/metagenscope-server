@@ -12,7 +12,7 @@ from flask_cors import CORS
 
 
 from app.config import app_config
-from app.extensions import db, migrate, bcrypt
+from app.extensions import mongoDB, db, migrate, bcrypt
 from app.api.v1.ping import ping_blueprint
 from app.api.v1.users import users_blueprint
 from app.api.v1.auth import auth_blueprint
@@ -32,6 +32,7 @@ def create_app():
     app.config.from_object(app_config[config_name])
 
     # Set up extensions
+    mongoDB.init_app(app)
     db.init_app(app)
     bcrypt.init_app(app)
     migrate.init_app(app, db)
