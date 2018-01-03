@@ -1,4 +1,4 @@
-.PHONY: clean-pyc clean-build clean lint test cov
+.PHONY: clean-pyc clean-build clean lint lint-tests test cov
 .DEFAULT_GOAL: help
 
 help:
@@ -7,6 +7,7 @@ help:
 	@echo "clean-pyc - remove Python file artifacts"
 	@echo "clean-test - remove test and coverage artifacts"
 	@echo "lint - check style with pylint"
+	@echo "lint-tests - check style of tests with pylint"
 	@echo "test - run tests quickly with the default Python"
 	@echo "cov - run tests and check coverage with the default Python"
 
@@ -29,6 +30,11 @@ lint:
 	pylint --rcfile=.pylintrc app -f parseable -r n && \
 	pycodestyle app --max-line-length=120 && \
 	pydocstyle app
+
+lint-tests:
+	pylint --rcfile=.pylintrc tests -f parseable -r n && \
+	pycodestyle tests --max-line-length=120 && \
+	pydocstyle tests
 
 test: lint
 	python manage.py test

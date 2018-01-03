@@ -6,8 +6,8 @@ from flask import Blueprint, jsonify, request
 from sqlalchemy import exc
 
 from app.extensions import db
-from app.api.v1.models import Organization
-from app.api.utils import authenticate, uuid2slug, slug2uuid
+from app.organizations.OrganizationModels import Organization
+from app.users.UserHelpers import authenticate, uuid2slug, slug2uuid
 
 
 # pylint: disable=invalid-name

@@ -3,9 +3,9 @@
 from sqlalchemy.exc import IntegrityError
 
 from app import db
-from app.api.v1.models import User
-from app.tests.base import BaseTestCase
-from app.tests.utils import add_user
+from app.users.UserModels import User
+from tests.base import BaseTestCase
+from tests.utils import add_user
 
 
 class TestUserModel(BaseTestCase):

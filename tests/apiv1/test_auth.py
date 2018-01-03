@@ -6,9 +6,9 @@ import json
 import time
 
 from app.extensions import db
-from app.api.v1.models import User
-from app.tests.base import BaseTestCase
-from app.tests.utils import add_user
+from app.users.UserModels import User
+from tests.base import BaseTestCase
+from tests.utils import add_user
 
 
 class TestAuthBlueprint(BaseTestCase):

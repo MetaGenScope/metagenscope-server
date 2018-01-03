@@ -4,9 +4,9 @@ import json
 
 from uuid import uuid4
 
-from app.tests.base import BaseTestCase
-from app.tests.utils import add_user, add_organization
-from app.api.utils import uuid2slug
+from tests.base import BaseTestCase
+from tests.utils import add_user, add_organization
+from app.users.UserHelpers import uuid2slug
 
 
 class TestOrganizationService(BaseTestCase):

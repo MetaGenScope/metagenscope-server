@@ -1,4 +1,4 @@
-"""Common utility methods for use in API."""
+"""Helper methods related to User model."""
 
 import base64
 
@@ -7,7 +7,7 @@ from uuid import UUID
 
 from flask import request, jsonify
 
-from app.api.v1.models import User
+from app.users.UserModels import User
 
 
 # pylint: disable=invalid-name

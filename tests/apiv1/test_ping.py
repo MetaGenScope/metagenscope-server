@@ -2,7 +2,7 @@
 
 import json
 
-from app.tests.base import BaseTestCase
+from tests.base import BaseTestCase
 
 
 class TestPingService(BaseTestCase):
