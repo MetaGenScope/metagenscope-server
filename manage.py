@@ -62,9 +62,12 @@ def recreate_db():
         pg_tables \
         WHERE \
         schemaname='public';"
-    dropStatements = "\n".join([x['pg_drop'] for x in db.engine.execute(sql)])
-    print(dropStatements)
-    db.engine.execute(dropStatements)
+
+    drop_statements = db.engine.execute(sql)
+    if drop_statements.rowcount > 0:
+        drop_statement = "\n".join([x['pg_drop'] for x in drop_statements])
+        drop_statements.close()
+        db.engine.execute(drop_statement)
 
     # Run migrations
     upgrade()
