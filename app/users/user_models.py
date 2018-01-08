@@ -1,14 +1,24 @@
 """User model definitions."""
 
-
 import datetime
 import uuid
 import jwt
 
 from flask import current_app
+from sqlalchemy.orm import relationship
 from sqlalchemy.dialects.postgresql import UUID
+from marshmallow import Schema, fields
 
 from app.extensions import db, bcrypt
+
+
+# pylint: disable=invalid-name
+users_organizations = db.Table(
+    'users_organizations',
+    db.Column('user_id', UUID(as_uuid=True), db.ForeignKey('users.id')),
+    db.Column('organization_id', UUID(as_uuid=True), db.ForeignKey('organizations.id')),
+    db.Column('role', db.String(128), default="member", nullable=False)
+)
 
 
 class User(db.Model):
@@ -26,6 +36,10 @@ class User(db.Model):
     active = db.Column(db.Boolean, default=True, nullable=False)
     admin = db.Column(db.Boolean, default=False, nullable=False)
     created_at = db.Column(db.DateTime, nullable=False)
+    organizations = relationship(
+        "Organization",
+        secondary=users_organizations,
+        back_populates="users")
 
     def __init__(
             self, username, email, password,
@@ -70,3 +84,14 @@ class User(db.Model):
             return 'Signature expired. Please log in again.'
         except jwt.InvalidTokenError:
             return 'Invalid token. Please log in again.'
+
+
+class UserSchema(Schema):
+    """Serializer for User."""
+
+    id = fields.Str()
+    username = fields.Str()
+    email = fields.Str()
+
+
+user_schema = UserSchema()

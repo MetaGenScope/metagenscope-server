@@ -4,8 +4,8 @@ from flask import Blueprint, jsonify, request
 from sqlalchemy import exc, or_
 
 from app.extensions import db, bcrypt
-from app.users.UserModels import User
-from app.users.UserHelpers import authenticate
+from app.users.user_models import User
+from app.users.user_helpers import authenticate
 
 
 # pylint: disable=invalid-name

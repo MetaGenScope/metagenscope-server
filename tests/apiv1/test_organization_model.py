@@ -3,7 +3,7 @@
 from sqlalchemy.exc import IntegrityError
 
 from app import db
-from app.organizations.OrganizationModels import Organization
+from app.organizations.organization_models import Organization
 from tests.base import BaseTestCase
 from tests.utils import add_organization
 

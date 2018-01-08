@@ -4,9 +4,10 @@ import json
 
 from uuid import uuid4
 
+from app import db
 from tests.base import BaseTestCase
 from tests.utils import add_user, add_organization
-from app.users.UserHelpers import uuid2slug
+from app.users.user_helpers import uuid2slug
 
 
 class TestOrganizationService(BaseTestCase):
@@ -137,6 +138,26 @@ class TestOrganizationService(BaseTestCase):
             self.assertEqual(response.status_code, 404)
             self.assertIn('Organization does not exist', data['message'])
             self.assertIn('fail', data['status'])
+
+    def test_single_organization_users(self):
+        """Ensure getting users for an organization behaves correctly."""
+        user = add_user('test', 'test@test.com', 'test')
+        organization = add_organization('Test Organization', 'admin@test.org')
+        organization.users = [user]
+        db.session.commit()
+
+        slug = uuid2slug(str(organization.id))
+        with self.client:
+            response = self.client.get(
+                f'/api/v1/organizations/{slug}/users',
+                content_type='application/json',
+            )
+            data = json.loads(response.data.decode())
+            self.assertEqual(response.status_code, 200)
+            self.assertTrue(len(data['data']['users']) == 1)
+            self.assertTrue('username' in data['data']['users'][0])
+            self.assertTrue('email' in data['data']['users'][0])
+            self.assertIn('success', data['status'])
 
     def test_single_organization_incorrect_id(self):
         """Ensure error is thrown if the id does not exist."""

@@ -4,11 +4,11 @@ import unittest
 import coverage
 
 from flask_script import Manager
-from flask_migrate import MigrateCommand
+from flask_migrate import MigrateCommand, upgrade
 
 from app import create_app, db
-from app.users.UserModels import User
-from app.organizations.OrganizationModels import Organization
+from app.users.user_models import User
+from app.organizations.organization_models import Organization
 
 
 COV = coverage.coverage(
@@ -54,22 +54,42 @@ def cov():
 
 @manager.command
 def recreate_db():
-    """Recreate a database."""
-    db.drop_all()
-    db.create_all()
-    db.session.commit()
+    """Recreate a database using migrations."""
+    # We cannot simply use db.drop_all() because it will not drop the alembic_versions table
+    sql = "SELECT \
+        'drop table if exists \"' || tablename || '\" cascade;' as pg_drop \
+        FROM \
+        pg_tables \
+        WHERE \
+        schemaname='public';"
+    dropStatements = "\n".join([x['pg_drop'] for x in db.engine.execute(sql)])
+    print(dropStatements)
+    db.engine.execute(dropStatements)
+
+    # Run migrations
+    upgrade()
 
 
 @manager.command
 def seed_db():
     """Seed the database."""
-    db.session.add(User(username='bchrobot',
-                        email="benjamin.blair.chrobot@gmail.com",
-                        password='Foobar22'))
-    db.session.add(User(username='benjaminchrobot',
-                        email="benjamin.chrobot@alum.mit.edu",
-                        password='Foobar22'))
-    db.session.add(Organization(name='Mason Lab', adminEmail='benjamin.blair.chrobot@gmail.com'))
+    bchrobot = User(username='bchrobot',
+                    email="benjamin.blair.chrobot@gmail.com",
+                    password='Foobar22')
+    dcdanko = User(username='dcdanko',
+                   email="dcd3001@med.cornell.edu",
+                   password='Foobar22')
+    cmason = User(username='cmason',
+                  email="chm2042@med.cornell.edu",
+                  password='Foobar22')
+    db.session.add(bchrobot)
+    db.session.add(dcdanko)
+    db.session.add(cmason)
+
+    mason_lab = Organization(name='Mason Lab', adminEmail='benjamin.blair.chrobot@gmail.com')
+    db.session.add(mason_lab)
+    mason_lab.users = [bchrobot, dcdanko, cmason]
+
     db.session.commit()
 
 

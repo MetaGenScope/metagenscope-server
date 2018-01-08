@@ -6,8 +6,9 @@ from flask import Blueprint, jsonify, request
 from sqlalchemy import exc
 
 from app.extensions import db
-from app.organizations.OrganizationModels import Organization
-from app.users.UserHelpers import authenticate, uuid2slug, slug2uuid
+from app.organizations.organization_models import Organization
+from app.users.user_models import user_schema
+from app.users.user_helpers import authenticate, uuid2slug, slug2uuid
 
 
 # pylint: disable=invalid-name
@@ -54,7 +55,7 @@ def add_organization(resp):
 
 
 @organizations_blueprint.route('/organizations/<organization_slug>', methods=['GET'])
-def get_single_user(organization_slug):
+def get_single_organization(organization_slug):
     """Get single organization details."""
     response_object = {
         'status': 'fail',
@@ -71,6 +72,30 @@ def get_single_user(organization_slug):
                 'name': organization.name,
                 'admin_email': organization.adminEmail,
                 'created_at': organization.created_at,
+            }
+        }
+        return jsonify(response_object), 200
+    except ValueError:
+        return jsonify(response_object), 404
+
+
+@organizations_blueprint.route('/organizations/<organization_slug>/users', methods=['GET'])
+def get_organization_users(organization_slug):
+    """Get single organization's users."""
+    response_object = {
+        'status': 'fail',
+        'message': 'Organization does not exist'
+    }
+    try:
+        organization_id = UUID(slug2uuid(organization_slug))
+        organization = Organization.query.filter_by(id=organization_id).first()
+        if not organization:
+            return jsonify(response_object), 404
+        users = user_schema.dump(organization.users, many=True).data
+        response_object = {
+            'status': 'success',
+            'data': {
+                'users': users,
             }
         }
         return jsonify(response_object), 200

@@ -4,8 +4,8 @@ import datetime
 
 
 from app import db
-from app.users.UserModels import User
-from app.organizations.OrganizationModels import Organization
+from app.users.user_models import User
+from app.organizations.organization_models import Organization
 
 
 def add_user(username, email, password, created_at=datetime.datetime.utcnow()):

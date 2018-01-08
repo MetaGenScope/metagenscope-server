@@ -6,7 +6,7 @@ import json
 import time
 
 from app.extensions import db
-from app.users.UserModels import User
+from app.users.user_models import User
 from tests.base import BaseTestCase
 from tests.utils import add_user
 
