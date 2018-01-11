@@ -15,6 +15,7 @@ jobs:
         environment:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: ""
+      - image: circleci/mongo
 
     working_directory: ~/repo
 
