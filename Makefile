@@ -1,4 +1,4 @@
-.PHONY: clean-pyc clean-build clean lint lint-tests test cov
+.PHONY: clean-pyc clean-build clean lint lint-tests lint-seed test cov
 .DEFAULT_GOAL: help
 
 help:
@@ -35,6 +35,11 @@ lint-tests:
 	pylint --rcfile=.pylintrc tests -f parseable -r n && \
 	pycodestyle tests --max-line-length=120 && \
 	pydocstyle tests
+
+lint-seed:
+	pylint --rcfile=.pylintrc seed -f parseable -r n && \
+	pycodestyle seed --max-line-length=120 && \
+	pydocstyle seed
 
 test: lint
 	python manage.py test

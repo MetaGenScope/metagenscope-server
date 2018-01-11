@@ -4,6 +4,7 @@ from flask_testing import TestCase
 
 from app import create_app, db
 from app.config import app_config
+from app.query_results.query_result_models import QueryResult
 
 
 app = create_app()
@@ -23,6 +24,9 @@ class BaseTestCase(TestCase):
         db.session.commit()
 
     def tearDown(self):
-        """Tear down test DB."""
+        """Tear down test DBs."""
+        # Postgres
         db.session.remove()
         db.drop_all()
+        # Mongo
+        QueryResult.drop_collection()

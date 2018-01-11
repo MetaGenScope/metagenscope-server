@@ -9,6 +9,9 @@ from flask_migrate import MigrateCommand, upgrade
 from app import create_app, db
 from app.users.user_models import User
 from app.organizations.organization_models import Organization
+from app.query_results.query_result_models import QueryResult
+
+from seed.sample_similarity import sample_similarity
 
 
 COV = coverage.coverage(
@@ -94,6 +97,8 @@ def seed_db():
     mason_lab.users = [bchrobot, dcdanko, cmason]
 
     db.session.commit()
+
+    QueryResult(sample_similarity=sample_similarity).save()
 
 
 if __name__ == '__main__':
