@@ -1,7 +1,9 @@
 """Common utility methods for use in testing."""
 
 import datetime
+import json
 
+from functools import wraps
 
 from app import db
 from app.users.user_models import User
@@ -26,3 +28,29 @@ def add_organization(name, admin_email, created_at=datetime.datetime.utcnow()):
     db.session.add(organization)
     db.session.commit()
     return organization
+
+
+# pylint: disable=invalid-name
+def with_user(f):
+    """Decorate API route calls requiring authentication."""
+    @wraps(f)
+    def decorated_function(self, *args, **kwargs):
+        """Wrap function f."""
+        login_user = add_user('test', 'test@test.com', 'test')
+        with self.client:
+            resp_login = self.client.post(
+                '/api/v1/auth/login',
+                data=json.dumps(dict(
+                    email='test@test.com',
+                    password='test'
+                )),
+                content_type='application/json'
+            )
+            auth_headers = dict(
+                Authorization='Bearer ' + json.loads(
+                    resp_login.data.decode()
+                )['auth_token']
+            )
+
+        return f(self, auth_headers, login_user, *args, **kwargs)
+    return decorated_function

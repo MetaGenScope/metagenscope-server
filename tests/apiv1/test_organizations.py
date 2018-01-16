@@ -1,4 +1,4 @@
-"""Test suite for Organization service"""
+"""Test suite for Organization module."""
 
 import json
 
@@ -7,31 +7,19 @@ from uuid import uuid4
 from app import db
 from app.users.user_helpers import uuid2slug
 from tests.base import BaseTestCase
-from tests.utils import add_user, add_organization
+from tests.utils import add_user, add_organization, with_user
 
 
 class TestOrganizationService(BaseTestCase):
     """Tests for the Organizations Service."""
 
-    def test_add_organization(self):
+    @with_user
+    def test_add_organization(self, auth_headers, *_):
         """Ensure a new organization can be added to the database."""
-        add_user('test', 'test@test.com', 'test')
         with self.client:
-            resp_login = self.client.post(
-                '/api/v1/auth/login',
-                data=json.dumps(dict(
-                    email='test@test.com',
-                    password='test'
-                )),
-                content_type='application/json'
-            )
             response = self.client.post(
                 '/api/v1/organizations',
-                headers=dict(
-                    Authorization='Bearer ' + json.loads(
-                        resp_login.data.decode()
-                    )['auth_token']
-                ),
+                headers=auth_headers,
                 data=json.dumps(dict(
                     name='MetaGenScope',
                     adminEmail='admin@metagenscope.com'
@@ -44,25 +32,13 @@ class TestOrganizationService(BaseTestCase):
             self.assertIn('success', data['status'])
 
     # pylint: disable=invalid-name
-    def test_add_organization_invalid_json(self):
+    @with_user
+    def test_add_organization_invalid_json(self, auth_headers, *_):
         """Ensure error is thrown if the JSON object is empty."""
-        add_user('test', 'test@test.com', 'test')
         with self.client:
-            resp_login = self.client.post(
-                '/api/v1/auth/login',
-                data=json.dumps(dict(
-                    email='test@test.com',
-                    password='test'
-                )),
-                content_type='application/json'
-            )
             response = self.client.post(
                 '/api/v1/organizations',
-                headers=dict(
-                    Authorization='Bearer ' + json.loads(
-                        resp_login.data.decode()
-                    )['auth_token']
-                ),
+                headers=auth_headers,
                 data=json.dumps(dict()),
                 content_type='application/json',
             )
@@ -72,25 +48,13 @@ class TestOrganizationService(BaseTestCase):
             self.assertIn('fail', data['status'])
 
     # pylint: disable=invalid-name
-    def test_add_organization_invalid_json_keys(self):
+    @with_user
+    def test_add_organization_invalid_json_keys(self, auth_headers, *_):
         """Ensure error is thrown if the JSON object does not have a name key."""
-        add_user('test', 'test@test.com', 'test')
         with self.client:
-            resp_login = self.client.post(
-                '/api/v1/auth/login',
-                data=json.dumps(dict(
-                    email='test@test.com',
-                    password='test'
-                )),
-                content_type='application/json'
-            )
             response = self.client.post(
                 '/api/v1/organizations',
-                headers=dict(
-                    Authorization='Bearer ' + json.loads(
-                        resp_login.data.decode()
-                    )['auth_token']
-                ),
+                headers=auth_headers,
                 data=json.dumps(dict(adminEmail='admin@metagenscope.com')),
                 content_type='application/json',
             )
