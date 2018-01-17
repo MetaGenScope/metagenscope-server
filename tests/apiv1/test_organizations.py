@@ -10,8 +10,8 @@ from tests.base import BaseTestCase
 from tests.utils import add_user, add_organization, with_user
 
 
-class TestOrganizationService(BaseTestCase):
-    """Tests for the Organizations Service."""
+class TestOrganizationModule(BaseTestCase):
+    """Tests for the Organizations module."""
 
     @with_user
     def test_add_organization(self, auth_headers, *_):

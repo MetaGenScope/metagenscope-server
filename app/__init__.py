@@ -17,6 +17,7 @@ from app.api.v1.ping import ping_blueprint
 from app.api.v1.users import users_blueprint
 from app.api.v1.auth import auth_blueprint
 from app.api.v1.organizations import organizations_blueprint
+from app.api.v1.query_results import query_results_blueprint
 
 
 def create_app():
@@ -42,5 +43,6 @@ def create_app():
     app.register_blueprint(users_blueprint, url_prefix='/api/v1')
     app.register_blueprint(auth_blueprint, url_prefix='/api/v1')
     app.register_blueprint(organizations_blueprint, url_prefix='/api/v1')
+    app.register_blueprint(query_results_blueprint, url_prefix='/api/v1')
 
     return app

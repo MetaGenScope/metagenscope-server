@@ -1,6 +1,5 @@
 """Organization model definitions."""
 
-
 import datetime
 
 from sqlalchemy.orm import relationship

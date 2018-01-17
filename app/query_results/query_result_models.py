@@ -1,5 +1,7 @@
 """Query Result model definitions."""
 
+import datetime
+
 from mongoengine import ValidationError
 
 from app.extensions import mongoDB
@@ -52,6 +54,7 @@ class QueryResult(mongoDB.Document):
                                  default='P')
     sample_group_id = mongoDB.UUIDField(binary=False)
     sample_similarity = mongoDB.EmbeddedDocumentField(SampleSimilarityResult)
+    created_at = mongoDB.DateTimeField(default=datetime.datetime.utcnow)
 
     meta = {
         'indexes': ['sample_group_id']
