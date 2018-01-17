@@ -26,7 +26,7 @@ def authenticate(f):
             response_object['message'] = 'Provide a valid auth token.'
             code = 403
             return jsonify(response_object), code
-        auth_token = auth_header.split(" ")[1]
+        auth_token = auth_header.split(' ')[1]
         resp = User.decode_auth_token(auth_token)
         if isinstance(resp, str):
             response_object['message'] = resp

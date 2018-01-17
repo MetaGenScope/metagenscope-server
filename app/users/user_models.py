@@ -17,19 +17,19 @@ users_organizations = db.Table(
     'users_organizations',
     db.Column('user_id', UUID(as_uuid=True), db.ForeignKey('users.id')),
     db.Column('organization_id', UUID(as_uuid=True), db.ForeignKey('organizations.id')),
-    db.Column('role', db.String(128), default="member", nullable=False)
+    db.Column('role', db.String(128), default='member', nullable=False)
 )
 
 
 class User(db.Model):
     """MetaGenScope User model."""
 
-    __tablename__ = "users"
+    __tablename__ = 'users'
 
     # pylint: disable=invalid-name
     id = db.Column(UUID(as_uuid=True),
                    primary_key=True,
-                   server_default=db.text("uuid_generate_v4()"))
+                   server_default=db.text('uuid_generate_v4()'))
     username = db.Column(db.String(128), unique=True, nullable=False)
     email = db.Column(db.String(128), unique=True, nullable=False)
     password = db.Column(db.String(255), nullable=False)
@@ -37,9 +37,9 @@ class User(db.Model):
     admin = db.Column(db.Boolean, default=False, nullable=False)
     created_at = db.Column(db.DateTime, nullable=False)
     organizations = relationship(
-        "Organization",
+        'Organization',
         secondary=users_organizations,
-        back_populates="users")
+        back_populates='users')
 
     def __init__(
             self, username, email, password,
