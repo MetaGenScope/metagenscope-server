@@ -5,7 +5,7 @@ import json
 from uuid import uuid4
 
 from app import db
-from app.users.user_helpers import uuid2slug
+from app.api.utils import uuid2slug
 from tests.base import BaseTestCase
 from tests.utils import add_user, add_organization, with_user
 

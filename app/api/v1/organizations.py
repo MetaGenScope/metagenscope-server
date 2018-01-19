@@ -5,10 +5,11 @@ from uuid import UUID
 from flask import Blueprint, jsonify, request
 from sqlalchemy import exc
 
+from app.api.utils import uuid2slug, slug2uuid
 from app.extensions import db
 from app.organizations.organization_models import Organization
 from app.users.user_models import user_schema
-from app.users.user_helpers import authenticate, uuid2slug, slug2uuid
+from app.users.user_helpers import authenticate
 
 
 # pylint: disable=invalid-name
