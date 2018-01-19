@@ -78,7 +78,7 @@ class TestOrganizationModule(BaseTestCase):
     def test_single_organization(self):
         """Ensure get single organization behaves correctly."""
         organization = add_organization('Test Organization', 'admin@test.org')
-        slug = uuid2slug(str(organization.id))
+        slug = uuid2slug(organization.id)
         with self.client:
             response = self.client.get(
                 f'/api/v1/organizations/{slug}',
@@ -110,7 +110,7 @@ class TestOrganizationModule(BaseTestCase):
         organization.users = [user]
         db.session.commit()
 
-        slug = uuid2slug(str(organization.id))
+        slug = uuid2slug(organization.id)
         with self.client:
             response = self.client.get(
                 f'/api/v1/organizations/{slug}/users',
@@ -125,7 +125,7 @@ class TestOrganizationModule(BaseTestCase):
 
     def test_single_organization_incorrect_id(self):
         """Ensure error is thrown if the id does not exist."""
-        randomSlug = uuid2slug(str(uuid4()))
+        randomSlug = uuid2slug(uuid4())
         with self.client:
             response = self.client.get(
                 f'/api/v1/organizations/{randomSlug}',

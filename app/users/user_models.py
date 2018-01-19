@@ -7,8 +7,9 @@ import jwt
 from flask import current_app
 from sqlalchemy.orm import relationship
 from sqlalchemy.dialects.postgresql import UUID
-from marshmallow import Schema, fields
+from marshmallow import Schema, fields, pre_load
 
+from app.api.utils import uuid2slug
 from app.extensions import db, bcrypt
 
 
@@ -89,9 +90,14 @@ class User(db.Model):
 class UserSchema(Schema):
     """Serializer for User."""
 
-    id = fields.Str()
+    slug = fields.Str()
     username = fields.Str()
     email = fields.Str()
+
+    @pre_load
+    def slugify_id(self, in_data):
+        in_data['slug'] = uuid2slug(in_data['id'])
+        return in_data
 
 
 user_schema = UserSchema()

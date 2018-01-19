@@ -3,9 +3,10 @@
 import datetime
 
 from sqlalchemy.dialects.postgresql import UUID
-from marshmallow import Schema, fields
+from marshmallow import Schema, fields, pre_load
 from mongoengine import DoesNotExist
 
+from app.api.utils import uuid2slug
 from app.extensions import db
 from app.query_results.query_result_models import QueryResult
 
@@ -42,10 +43,15 @@ class SampleGroup(db.Model):
 class SampleGroupSchema(Schema):
     """Serializer for Sample Group."""
 
-    id = fields.Str()
+    slug = fields.Str()
     name = fields.Str()
     access_scheme = fields.Str()
     created_at = fields.Date()
+
+    @pre_load
+    def slugify_id(self, in_data):
+        in_data['slug'] = uuid2slug(in_data['id'])
+        return in_data
 
 
 sample_group_schema = SampleGroupSchema()   # pylint: disable=invalid-name

@@ -1,7 +1,5 @@
 """Organization API endpoint definitions."""
 
-from uuid import UUID
-
 from flask import Blueprint, jsonify, request
 from sqlalchemy import exc
 
@@ -63,7 +61,7 @@ def get_single_organization(organization_slug):
         'message': 'Organization does not exist'
     }
     try:
-        organization_id = UUID(slug2uuid(organization_slug))
+        organization_id = slug2uuid(organization_slug)
         organization = Organization.query.filter_by(id=organization_id).first()
         if not organization:
             return jsonify(response_object), 404
@@ -88,7 +86,7 @@ def get_organization_users(organization_slug):
         'message': 'Organization does not exist'
     }
     try:
-        organization_id = UUID(slug2uuid(organization_slug))
+        organization_id = slug2uuid(organization_slug)
         organization = Organization.query.filter_by(id=organization_id).first()
         if not organization:
             return jsonify(response_object), 404
@@ -111,7 +109,7 @@ def get_all_organizations():
     organizations_list = []
     for organization in organizations:
         organization_object = {
-            'id': uuid2slug(str(organization.id)),
+            'id': uuid2slug(organization.id),
             'name': organization.name,
             'admin_email': organization.adminEmail,
             'created_at': organization.created_at
