@@ -4,9 +4,9 @@ import datetime
 
 from sqlalchemy.orm import relationship
 from sqlalchemy.dialects.postgresql import UUID
-from marshmallow import Schema, fields, pre_load
+from marshmallow import fields
 
-from app.api.utils import uuid2slug
+from app.base import BaseSchema
 from app.extensions import db
 from app.users.user_models import users_organizations
 
@@ -36,20 +36,19 @@ class Organization(db.Model):
         self.created_at = created_at
 
 
-class OrganizationSchema(Schema):
+class OrganizationSchema(BaseSchema):
     """Serializer for Organization model."""
+
+    __envelope__ = {
+        'single': 'organization',
+        'many': 'organizations',
+    }
+    __model__ = Organization
 
     slug = fields.Str()
     name = fields.Str()
     admin_email = fields.Str()
     created_at = fields.Date()
-
-    @pre_load
-    # pylint: disable=no-self-use
-    def slugify_organization_id(self, in_data):
-        """Translate UUID into URL-safe slug."""
-        in_data['slug'] = uuid2slug(in_data['id'])
-        return in_data
 
 
 organization_schema = OrganizationSchema()   # pylint: disable=invalid-name

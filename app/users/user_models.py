@@ -7,9 +7,9 @@ import jwt
 from flask import current_app
 from sqlalchemy.orm import relationship
 from sqlalchemy.dialects.postgresql import UUID
-from marshmallow import Schema, fields, pre_load
+from marshmallow import fields
 
-from app.api.utils import uuid2slug
+from app.base import BaseSchema
 from app.extensions import db, bcrypt
 
 
@@ -87,19 +87,18 @@ class User(db.Model):
             return 'Invalid token. Please log in again.'
 
 
-class UserSchema(Schema):
+class UserSchema(BaseSchema):
     """Serializer for User."""
+
+    __envelope__ = {
+        'single': 'user',
+        'many': 'users',
+    }
+    __model__ = User
 
     slug = fields.Str()
     username = fields.Str()
     email = fields.Str()
-
-    @pre_load
-    # pylint: disable=no-self-use
-    def slugify_user_id(self, in_data):
-        """Translate UUID into URL-safe slug."""
-        in_data['slug'] = uuid2slug(in_data['id'])
-        return in_data
 
 
 user_schema = UserSchema()

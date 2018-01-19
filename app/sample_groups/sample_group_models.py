@@ -3,10 +3,10 @@
 import datetime
 
 from sqlalchemy.dialects.postgresql import UUID
-from marshmallow import Schema, fields, pre_load
+from marshmallow import fields
 from mongoengine import DoesNotExist
 
-from app.api.utils import uuid2slug
+from app.base import BaseSchema
 from app.extensions import db
 from app.query_results.query_result_models import QueryResult
 
@@ -40,20 +40,19 @@ class SampleGroup(db.Model):
             return None
 
 
-class SampleGroupSchema(Schema):
+class SampleGroupSchema(BaseSchema):
     """Serializer for Sample Group."""
+
+    __envelope__ = {
+        'single': 'sample_group',
+        'many': 'sample_groups',
+    }
+    __model__ = SampleGroup
 
     slug = fields.Str()
     name = fields.Str()
     access_scheme = fields.Str()
     created_at = fields.Date()
-
-    @pre_load
-    # pylint: disable=no-self-use
-    def slugify_sample_group_id(self, in_data):
-        """Translate UUID into URL-safe slug."""
-        in_data['slug'] = uuid2slug(in_data['id'])
-        return in_data
 
 
 sample_group_schema = SampleGroupSchema()   # pylint: disable=invalid-name

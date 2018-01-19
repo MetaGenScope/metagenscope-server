@@ -89,9 +89,7 @@ def get_organization_users(organization_slug):
         users = user_schema.dump(organization.users, many=True).data
         response_object = {
             'status': 'success',
-            'data': {
-                'users': users,
-            }
+            'data': users,
         }
         return jsonify(response_object), 200
     except ValueError:
@@ -104,8 +102,6 @@ def get_all_organizations():
     organizations = Organization.query.all()
     response_object = {
         'status': 'success',
-        'data': {
-            'organizations': organization_schema.dump(organizations, many=True).data
-        }
+        'data': organization_schema.dump(organizations, many=True).data,
     }
     return jsonify(response_object), 200

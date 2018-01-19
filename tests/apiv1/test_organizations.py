@@ -86,9 +86,10 @@ class TestOrganizationModule(BaseTestCase):
             )
             data = json.loads(response.data.decode())
             self.assertEqual(response.status_code, 200)
-            self.assertTrue('created_at' in data['data'])
-            self.assertIn('Test Organization', data['data']['name'])
-            self.assertIn('admin@test.org', data['data']['admin_email'])
+            self.assertIn('slug', data['data']['organization'])
+            self.assertIn('Test Organization', data['data']['organization']['name'])
+            self.assertIn('admin@test.org', data['data']['organization']['admin_email'])
+            self.assertTrue('created_at' in data['data']['organization'])
             self.assertIn('success', data['status'])
 
     def test_single_organization_no_id(self):
@@ -148,12 +149,14 @@ class TestOrganizationModule(BaseTestCase):
             data = json.loads(response.data.decode())
             self.assertEqual(response.status_code, 200)
             self.assertEqual(len(data['data']['organizations']), 2)
-            self.assertTrue('created_at' in data['data']['organizations'][0])
-            self.assertTrue('created_at' in data['data']['organizations'][1])
+            self.assertTrue('slug' in data['data']['organizations'][0])
+            self.assertTrue('slug' in data['data']['organizations'][1])
             self.assertIn('Test Organization', data['data']['organizations'][0]['name'])
             self.assertIn(
                 'admin@test.org', data['data']['organizations'][0]['admin_email'])
             self.assertIn('Test Organization Two', data['data']['organizations'][1]['name'])
             self.assertIn(
                 'admin@test.org', data['data']['organizations'][1]['admin_email'])
+            self.assertTrue('created_at' in data['data']['organizations'][0])
+            self.assertTrue('created_at' in data['data']['organizations'][1])
             self.assertIn('success', data['status'])
