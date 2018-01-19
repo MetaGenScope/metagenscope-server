@@ -3,9 +3,9 @@
 from flask import Blueprint, jsonify, request
 from sqlalchemy import exc
 
-from app.api.utils import uuid2slug, slug2uuid
+from app.api.utils import slug2uuid
 from app.extensions import db
-from app.organizations.organization_models import Organization
+from app.organizations.organization_models import Organization, organization_schema
 from app.users.user_models import user_schema
 from app.users.user_helpers import authenticate
 
@@ -27,11 +27,11 @@ def add_organization(resp):
         }
         return jsonify(response_object), 400
     name = post_data.get('name')
-    admin_email = post_data.get('adminEmail')
+    admin_email = post_data.get('admin_email')
     try:
         organization = Organization.query.filter_by(name=name).first()
         if not organization:
-            db.session.add(Organization(name=name, adminEmail=admin_email))
+            db.session.add(Organization(name=name, admin_email=admin_email))
             db.session.commit()
             response_object = {
                 'status': 'success',
@@ -67,11 +67,7 @@ def get_single_organization(organization_slug):
             return jsonify(response_object), 404
         response_object = {
             'status': 'success',
-            'data': {
-                'name': organization.name,
-                'admin_email': organization.adminEmail,
-                'created_at': organization.created_at,
-            }
+            'data': organization_schema.dump(organization).data,
         }
         return jsonify(response_object), 200
     except ValueError:
@@ -106,19 +102,10 @@ def get_organization_users(organization_slug):
 def get_all_organizations():
     """Get all organizations."""
     organizations = Organization.query.all()
-    organizations_list = []
-    for organization in organizations:
-        organization_object = {
-            'id': uuid2slug(organization.id),
-            'name': organization.name,
-            'admin_email': organization.adminEmail,
-            'created_at': organization.created_at
-        }
-        organizations_list.append(organization_object)
     response_object = {
         'status': 'success',
         'data': {
-            'organizations': organizations_list
+            'organizations': organization_schema.dump(organizations, many=True).data
         }
     }
     return jsonify(response_object), 200

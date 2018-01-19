@@ -16,7 +16,7 @@ class TestOrganizationModel(BaseTestCase):
         organization = add_organization('Test Organization', 'admin@test.org')
         self.assertTrue(organization.id)
         self.assertEqual(organization.name, 'Test Organization')
-        self.assertEqual(organization.adminEmail, 'admin@test.org')
+        self.assertEqual(organization.admin_email, 'admin@test.org')
         self.assertTrue(organization.created_at)
 
     # pylint: disable=invalid-name
@@ -25,7 +25,7 @@ class TestOrganizationModel(BaseTestCase):
         add_organization('Test Organization', 'admin@test.org')
         duplicate_organization = Organization(
             name='Test Organization',
-            adminEmail='test@test2.org',
+            admin_email='test@test2.org',
         )
         db.session.add(duplicate_organization)
         self.assertRaises(IntegrityError, db.session.commit)

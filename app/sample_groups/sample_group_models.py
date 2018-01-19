@@ -49,7 +49,9 @@ class SampleGroupSchema(Schema):
     created_at = fields.Date()
 
     @pre_load
-    def slugify_id(self, in_data):
+    # pylint: disable=no-self-use
+    def slugify_sample_group_id(self, in_data):
+        """Translate UUID into URL-safe slug."""
         in_data['slug'] = uuid2slug(in_data['id'])
         return in_data
 

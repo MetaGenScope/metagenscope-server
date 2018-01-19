@@ -22,7 +22,7 @@ class TestOrganizationModule(BaseTestCase):
                 headers=auth_headers,
                 data=json.dumps(dict(
                     name='MetaGenScope',
-                    adminEmail='admin@metagenscope.com'
+                    admin_email='admin@metagenscope.com'
                 )),
                 content_type='application/json',
             )
@@ -55,7 +55,7 @@ class TestOrganizationModule(BaseTestCase):
             response = self.client.post(
                 '/api/v1/organizations',
                 headers=auth_headers,
-                data=json.dumps(dict(adminEmail='admin@metagenscope.com')),
+                data=json.dumps(dict(admin_email='admin@metagenscope.com')),
                 content_type='application/json',
             )
             data = json.loads(response.data.decode())

@@ -93,7 +93,7 @@ def seed_db():
     db.session.add(dcdanko)
     db.session.add(cmason)
 
-    mason_lab = Organization(name='Mason Lab', adminEmail='benjamin.blair.chrobot@gmail.com')
+    mason_lab = Organization(name='Mason Lab', admin_email='benjamin.blair.chrobot@gmail.com')
     db.session.add(mason_lab)
     mason_lab.users = [bchrobot, dcdanko, cmason]
 
