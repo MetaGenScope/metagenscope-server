@@ -8,6 +8,7 @@ from functools import wraps
 from app import db
 from app.users.user_models import User
 from app.organizations.organization_models import Organization
+from app.sample_groups.sample_group_models import SampleGroup
 
 
 def add_user(username, email, password, created_at=datetime.datetime.utcnow()):
@@ -29,6 +30,12 @@ def add_organization(name, admin_email, created_at=datetime.datetime.utcnow()):
     db.session.commit()
     return organization
 
+def add_sample_group(name, access_scheme='public', created_at=datetime.datetime.utcnow()):
+    """Wrap functionality for adding sample group."""
+    group = SampleGroup(name=name, access_scheme=access_scheme, created_at=created_at)
+    db.session.add(group)
+    db.session.commit()
+    return group
 
 # pylint: disable=invalid-name
 def with_user(f):

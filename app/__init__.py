@@ -18,6 +18,7 @@ from app.api.v1.users import users_blueprint
 from app.api.v1.auth import auth_blueprint
 from app.api.v1.organizations import organizations_blueprint
 from app.api.v1.query_results import query_results_blueprint
+from app.api.v1.sample_groups import sample_groups_blueprint
 
 
 def create_app():
@@ -44,5 +45,6 @@ def create_app():
     app.register_blueprint(auth_blueprint, url_prefix='/api/v1')
     app.register_blueprint(organizations_blueprint, url_prefix='/api/v1')
     app.register_blueprint(query_results_blueprint, url_prefix='/api/v1')
+    app.register_blueprint(sample_groups_blueprint, url_prefix='/api/v1')
 
     return app

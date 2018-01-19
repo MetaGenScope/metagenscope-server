@@ -10,6 +10,7 @@ from app import create_app, db
 from app.users.user_models import User
 from app.organizations.organization_models import Organization
 from app.query_results.query_result_models import QueryResult
+from app.sample_groups.sample_group_models import SampleGroup
 
 from seed.sample_similarity import sample_similarity
 
@@ -96,9 +97,12 @@ def seed_db():
     db.session.add(mason_lab)
     mason_lab.users = [bchrobot, dcdanko, cmason]
 
+    sample_group = SampleGroup(name='MetaSub Pilot 2017')
+    db.session.add(sample_group)
+
     db.session.commit()
 
-    QueryResult(sample_similarity=sample_similarity).save()
+    QueryResult(sample_similarity=sample_similarity, sample_group_id=sample_group.id).save()
 
 
 if __name__ == '__main__':

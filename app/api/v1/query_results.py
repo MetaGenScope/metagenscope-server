@@ -1,4 +1,4 @@
-"""Organization API endpoint definitions."""
+"""Query Result API endpoint definitions."""
 
 from flask import Blueprint, jsonify
 from mongoengine.errors import ValidationError
