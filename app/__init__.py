@@ -39,7 +39,15 @@ def create_app():
     bcrypt.init_app(app)
     migrate.init_app(app, db)
 
-    # Register blueprints
+    # Register application components
+    register_blueprints(app)
+    register_error_handlers(app)
+
+    return app
+
+
+def register_blueprints(app):
+    """Register API endpoint blueprints for app."""
     app.register_blueprint(ping_blueprint, url_prefix='/api/v1')
     app.register_blueprint(users_blueprint, url_prefix='/api/v1')
     app.register_blueprint(auth_blueprint, url_prefix='/api/v1')
@@ -47,4 +55,12 @@ def create_app():
     app.register_blueprint(query_results_blueprint, url_prefix='/api/v1')
     app.register_blueprint(sample_groups_blueprint, url_prefix='/api/v1')
 
-    return app
+
+def register_error_handlers(app):
+    """Register JSON error handlers for app."""
+    app.register_error_handler(404, page_not_found)
+
+
+def page_not_found(not_found_error):
+    """Handle 404 Not Found error."""
+    return jsonify(error=404, text=str(not_found_error)), 404
