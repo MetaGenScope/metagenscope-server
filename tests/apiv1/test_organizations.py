@@ -7,7 +7,7 @@ from uuid import uuid4
 from app import db
 from app.api.utils import uuid2slug
 from tests.base import BaseTestCase
-from tests.utils import add_user, add_organization, with_user
+from tests.utils import add_user, add_organization, add_sample_group, with_user
 
 
 class TestOrganizationModule(BaseTestCase):
@@ -90,6 +90,8 @@ class TestOrganizationModule(BaseTestCase):
             self.assertIn('Test Organization', data['data']['organization']['name'])
             self.assertIn('admin@test.org', data['data']['organization']['admin_email'])
             self.assertTrue('created_at' in data['data']['organization'])
+            self.assertTrue('users' in data['data']['organization'])
+            self.assertTrue('sample_groups' in data['data']['organization'])
             self.assertIn('success', data['status'])
 
     def test_single_organization_no_id(self):
@@ -122,6 +124,26 @@ class TestOrganizationModule(BaseTestCase):
             self.assertTrue(len(data['data']['users']) == 1)
             self.assertTrue('username' in data['data']['users'][0])
             self.assertTrue('email' in data['data']['users'][0])
+            self.assertIn('success', data['status'])
+
+    def test_single_organization_sample_groups(self):
+        """Ensure getting sample groups for an organization behaves correctly."""
+        sample_group = add_sample_group('Pilot Sample Group')
+        organization = add_organization('Test Organization', 'admin@test.org')
+        organization.sample_groups = [sample_group]
+        db.session.commit()
+
+        slug = uuid2slug(organization.id)
+        with self.client:
+            response = self.client.get(
+                f'/api/v1/organizations/{slug}/sample_groups',
+                content_type='application/json',
+            )
+            data = json.loads(response.data.decode())
+            self.assertEqual(response.status_code, 200)
+            self.assertTrue(len(data['data']['sample_groups']) == 1)
+            self.assertTrue('slug' in data['data']['sample_groups'][0])
+            self.assertTrue('name' in data['data']['sample_groups'][0])
             self.assertIn('success', data['status'])
 
     def test_single_organization_incorrect_id(self):

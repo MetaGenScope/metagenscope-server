@@ -89,17 +89,15 @@ def seed_db():
     cmason = User(username='cmason',
                   email="chm2042@med.cornell.edu",
                   password='Foobar22')
-    db.session.add(bchrobot)
-    db.session.add(dcdanko)
-    db.session.add(cmason)
-
-    mason_lab = Organization(name='Mason Lab', admin_email='benjamin.blair.chrobot@gmail.com')
-    db.session.add(mason_lab)
-    mason_lab.users = [bchrobot, dcdanko, cmason]
 
     sample_group = SampleGroup(name='MetaSub Pilot 2017')
-    db.session.add(sample_group)
 
+
+    mason_lab = Organization(name='Mason Lab', admin_email='benjamin.blair.chrobot@gmail.com')
+    mason_lab.users = [bchrobot, dcdanko, cmason]
+    mason_lab.sample_groups = [sample_group]
+
+    db.session.add(mason_lab)
     db.session.commit()
 
     QueryResult(sample_similarity=sample_similarity, sample_group_id=sample_group.id).save()

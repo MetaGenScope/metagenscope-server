@@ -2,13 +2,13 @@
 
 import datetime
 
-from sqlalchemy.orm import relationship
 from sqlalchemy.dialects.postgresql import UUID
 from marshmallow import fields
 
 from app.base import BaseSchema
 from app.extensions import db
-from app.users.user_models import users_organizations
+from app.users.user_models import users_organizations, UserSchema
+from app.sample_groups.sample_group_models import SampleGroupSchema
 
 
 # pylint: disable=too-few-public-methods
@@ -24,10 +24,14 @@ class Organization(db.Model):
     name = db.Column(db.String(128), unique=True, nullable=False)
     admin_email = db.Column(db.String(128), nullable=False)
     created_at = db.Column(db.DateTime, nullable=False)
-    users = relationship(
+    users = db.relationship(
         'User',
         secondary=users_organizations,
         back_populates='organizations')
+    sample_groups = db.relationship(
+        'SampleGroup',
+        backref='organization',
+        lazy='dynamic')
 
     def __init__(self, name, admin_email, created_at=datetime.datetime.utcnow()):
         """Initialize MetaGenScope Organization model."""
@@ -48,6 +52,8 @@ class OrganizationSchema(BaseSchema):
     slug = fields.Str()
     name = fields.Str()
     admin_email = fields.Str()
+    users = fields.Nested(UserSchema, many=True)
+    sample_groups = fields.Nested(SampleGroupSchema, many=True)
     created_at = fields.Date()
 
 

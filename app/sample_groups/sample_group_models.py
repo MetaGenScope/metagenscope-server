@@ -20,6 +20,9 @@ class SampleGroup(db.Model):
     id = db.Column(UUID(as_uuid=True),
                    primary_key=True,
                    server_default=db.text('uuid_generate_v4()'))
+
+    organization_id = db.Column(UUID(as_uuid=True), db.ForeignKey('organizations.id'))
+
     name = db.Column(db.String(128), unique=True, nullable=False)
     access_scheme = db.Column(db.String(128), default='public', nullable=False)
     created_at = db.Column(db.DateTime, nullable=False)
