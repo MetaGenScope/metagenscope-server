@@ -30,7 +30,7 @@ def get_single_result(group_slug):
 
         query_result = sample_group.query_result()
         if query_result:
-            response_object['data']['query_result_id'] = query_result.id
+            response_object['data']['sample_group']['query_result_id'] = str(query_result.id)
         return jsonify(response_object), 200
     except ValueError:
         return jsonify(response_object), 404
