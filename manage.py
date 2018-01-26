@@ -12,7 +12,7 @@ from app.organizations.organization_models import Organization
 from app.query_results.query_result_models import QueryResult
 from app.sample_groups.sample_group_models import SampleGroup
 
-from seed.sample_similarity import sample_similarity
+from seed import sample_similarity
 
 
 COV = coverage.coverage(
@@ -90,7 +90,7 @@ def seed_db():
                   email="chm2042@med.cornell.edu",
                   password='Foobar22')
 
-    sample_group = SampleGroup(name='MetaSub Pilot 2017')
+    sample_group = SampleGroup(name='ABRF 2017')
 
 
     mason_lab = Organization(name='Mason Lab', admin_email='benjamin.blair.chrobot@gmail.com')
