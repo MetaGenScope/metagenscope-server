@@ -12,7 +12,7 @@ from app.organizations.organization_models import Organization
 from app.query_results.query_result_models import QueryResult
 from app.sample_groups.sample_group_models import SampleGroup
 
-from seed import sample_similarity
+from seed import sample_similarity, taxon_abundance
 
 
 COV = coverage.coverage(
@@ -100,7 +100,9 @@ def seed_db():
     db.session.add(mason_lab)
     db.session.commit()
 
-    QueryResult(sample_similarity=sample_similarity, sample_group_id=sample_group.id).save()
+    QueryResult(sample_group_id=sample_group.id,
+                sample_similarity=sample_similarity,
+                taxon_abundance=taxon_abundance).save()
 
 
 if __name__ == '__main__':

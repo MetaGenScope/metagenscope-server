@@ -1,4 +1,4 @@
-"""Test suite for Query Result model."""
+"""Test suite for Sample Similarity model."""
 
 from mongoengine import ValidationError
 
@@ -7,10 +7,10 @@ from tests.base import BaseTestCase
 
 
 class TestSampleSimilarityResult(BaseTestCase):
-    """Test suite for Query Result model."""
+    """Test suite for Sample Similarity model."""
 
     def test_add_sample_similarity(self):
-        """Ensure organization model is created correctly."""
+        """Ensure Sample Similarity model is created correctly."""
 
         categories = {
             'city': ['Montevideo', 'Sacramento']

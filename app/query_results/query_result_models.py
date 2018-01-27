@@ -39,6 +39,44 @@ class SampleSimilarityResult(mongoDB.EmbeddedDocument):
                     raise ValidationError(msg)
 
 
+# pylint: disable=too-few-public-methods
+class TaxonAbundanceNode(mongoDB.EmbeddedDocument):
+    """Taxon Abundance node type."""
+
+    id = mongoDB.StringField(required=True)
+    name = mongoDB.StringField(required=True)
+    value = mongoDB.FloatField(required=True)
+
+
+# pylint: disable=too-few-public-methods
+class TaxonAbundanceEdge(mongoDB.EmbeddedDocument):
+    """Taxon Abundance edge type."""
+
+    source = mongoDB.StringField(required=True)
+    target = mongoDB.StringField(required=True)
+    value = mongoDB.FloatField(required=True)
+
+
+# pylint: disable=too-few-public-methods
+class TaxonAbundanceResult(mongoDB.EmbeddedDocument):
+    """Taxon Abundance document type."""
+
+    # Do not store depth of node because this can be derived from the edges
+    nodes = mongoDB.EmbeddedDocumentListField(TaxonAbundanceNode)
+    edges = mongoDB.EmbeddedDocumentListField(TaxonAbundanceEdge)
+
+    def clean(self):
+        """Ensure that `edges` reference valid nodes."""
+        node_ids = set([node.id for node in self.nodes])
+        for edge in self.edges:
+            if edge.source not in node_ids:
+                msg = f'Could not find Edge\'s source [{edge.source}] in nodes!'
+                raise ValidationError(msg)
+            if edge.target not in node_ids:
+                msg = f'Could not find Edge\'s target [{edge.target}] in nodes!'
+                raise ValidationError(msg)
+
+
 QUERY_RESULT_STATUS = (('E', 'ERROR'),
                        ('P', 'PENDING'),
                        ('W', 'WORKING'),
@@ -54,6 +92,7 @@ class QueryResult(mongoDB.Document):
                                  default='P')
     sample_group_id = mongoDB.UUIDField(binary=False)
     sample_similarity = mongoDB.EmbeddedDocumentField(SampleSimilarityResult)
+    taxon_abundance = mongoDB.EmbeddedDocumentField(TaxonAbundanceResult)
     created_at = mongoDB.DateTimeField(default=datetime.datetime.utcnow)
 
     meta = {
