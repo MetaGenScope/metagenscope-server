@@ -63,9 +63,80 @@ jobs:
           path: htmlcov
           destination: test-reports
 
+  build_emptyfish:
+    docker:
+      - image: circleci/node:9.2.0
+
+    environment:
+      TAG: emptyfish
+      DOCKER_ORG: metagenscope
+      REACT_APP_METAGENSCOPE_SERVICE_URL: https://www.emptyfish.net
+
+    steps:
+      - checkout
+
+      - setup_remote_docker
+
+      - run:
+          name: Set COMMIT env var
+          command: echo 'export COMMIT=${CIRCLE_SHA1::8}' >> $BASH_ENV
+
+      - run:
+          name: Sign in to Docker Hub
+          command: docker login -u $DOCKER_ID -p $DOCKER_PASSWORD
+
+      - run:
+          name: Build and push mongo-db
+          environment:
+            DB_SERVICE: mongo
+          command: |
+            docker build ./database_docker/mongo_db -t $DB_SERVICE:$COMMIT
+            docker tag $DB_SERVICE:$COMMIT $DOCKER_ORG/$DB_SERVICE:$TAG
+            docker push $DOCKER_ORG/$DB_SERVICE
+
+      - run:
+          name: Build and push metagenscope-db
+          environment:
+            DB_SERVICE: metagenscope-db
+          command: |
+            docker build ./database_docker/postgres_db -t $DB_SERVICE:$COMMIT
+            docker tag $DB_SERVICE:$COMMIT $DOCKER_ORG/$DB_SERVICE:$TAG
+            docker push $DOCKER_ORG/$DB_SERVICE
+
+      - run:
+          name: Build and push metagenscope-service
+          environment:
+            MAIN_SERVICE: metagenscope-service
+          command: |
+            docker build . -t $MAIN_SERVICE:$COMMIT
+            docker tag $MAIN_SERVICE:$COMMIT $DOCKER_ORG/$MAIN_SERVICE:$TAG
+            docker push $DOCKER_ORG/$MAIN_SERVICE
+
+  deploy_emptyfish:
+    docker:
+      - image: circleci/node:9.2.0
+
+    working_directory: ~/repo
+
+    steps:
+      - run:
+          name: Deploy to emptyfish.net
+          command: |
+            set -x
+            echo "$DROPLET_IP $DROPLET_HOST_KEY" > ~/tmp_auth_hosts
+            ssh -A -o "UserKnownHostsFile ~/tmp_auth_hosts" $DROPLET_USER@$DROPLET_IP "cd ~/metagenscope && git pull && sh deploy.sh"
+
 workflows:
   version: 2
-  test:
+  test-and-deploy:
     jobs:
       - run-tests:
             context: org-global
+      - build_emptyfish:
+          context: org-global
+          requires:
+            - run-tests
+      - deploy_emptyfish:
+          context: org-global
+          requires:
+            - build_emptyfish
