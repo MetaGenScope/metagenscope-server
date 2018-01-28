@@ -1,7 +1,7 @@
 version: 2
 
 jobs:
-  build:
+  run-tests:
     docker:
       - image: circleci/python:3.6.3-jessie
         environment:
@@ -11,8 +11,8 @@ jobs:
           MONGODB_TEST_HOST: mongodb://localhost/metagenscope_test
       - image: metagenscope/postgres:0afd77cd
         auth:
-          username: $DOCKERHUB_USERID
-          password: $DOCKERHUB_PASSWORD
+          username: $DOCKER_ID
+          password: $DOCKER_PASSWORD
         environment:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: ""
@@ -62,3 +62,10 @@ jobs:
       - store_artifacts:
           path: htmlcov
           destination: test-reports
+
+workflows:
+  version: 2
+  test:
+    jobs:
+      - run-tests:
+            context: org-global
