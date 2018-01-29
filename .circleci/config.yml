@@ -131,7 +131,7 @@ workflows:
   test-and-deploy:
     jobs:
       - run-tests:
-            context: org-global
+          context: org-global
       - build_emptyfish:
           context: org-global
           requires:
