@@ -124,7 +124,7 @@ jobs:
           command: |
             set -x
             echo "$DROPLET_IP $DROPLET_HOST_KEY" > ~/tmp_auth_hosts
-            ssh -A -o "UserKnownHostsFile ~/tmp_auth_hosts" $DROPLET_USER@$DROPLET_IP "cd ~/metagenscope && git pull && sh deploy.sh"
+            ssh -A -o "UserKnownHostsFile ~/tmp_auth_hosts" $DROPLET_USER@$DROPLET_IP "cd /home/metagenscope/metagenscope-app && git pull && sh deploy.sh"
 
 workflows:
   version: 2
