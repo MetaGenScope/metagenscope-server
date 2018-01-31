@@ -19,9 +19,9 @@ class ToolDocument(mongoDB.EmbeddedDocument):
 class SampleSimilarityResult(mongoDB.EmbeddedDocument):
     """Sample Similarity document type."""
 
-    categories = mongoDB.MapField(field=mongoDB.ListField(mongoDB.StringField()))
-    tools = mongoDB.MapField(field=mongoDB.EmbeddedDocumentField(ToolDocument))
-    data_records = mongoDB.ListField(mongoDB.DictField())
+    categories = mongoDB.MapField(field=mongoDB.ListField(mongoDB.StringField()), required=True)
+    tools = mongoDB.MapField(field=mongoDB.EmbeddedDocumentField(ToolDocument), required=True)
+    data_records = mongoDB.ListField(mongoDB.DictField(), required=True)
 
     def clean(self):
         """Ensure that `data_records` contain valid records."""
@@ -62,8 +62,8 @@ class TaxonAbundanceResult(mongoDB.EmbeddedDocument):
     """Taxon Abundance document type."""
 
     # Do not store depth of node because this can be derived from the edges
-    nodes = mongoDB.EmbeddedDocumentListField(TaxonAbundanceNode)
-    edges = mongoDB.EmbeddedDocumentListField(TaxonAbundanceEdge)
+    nodes = mongoDB.EmbeddedDocumentListField(TaxonAbundanceNode, required=True)
+    edges = mongoDB.EmbeddedDocumentListField(TaxonAbundanceEdge, required=True)
 
     def clean(self):
         """Ensure that `edges` reference valid nodes."""
@@ -83,6 +83,32 @@ QUERY_RESULT_STATUS = (('E', 'ERROR'),
                        ('S', 'SUCCESS'))
 
 
+class ReadsClassifiedDatum(mongoDB.EmbeddedDocument):
+    """Taxon Abundance datum type."""
+
+    category = mongoDB.StringField(required=True)
+    values = mongoDB.ListField(mongoDB.FloatField(), required=True)
+
+
+class ReadsClassifiedResult(mongoDB.EmbeddedDocument):
+    """Reads Classified document type."""
+
+    categories = mongoDB.ListField(mongoDB.StringField(), required=True)
+    sample_names = mongoDB.ListField(mongoDB.StringField(), required=True)
+    data = mongoDB.EmbeddedDocumentListField(ReadsClassifiedDatum, required=True)
+
+    def clean(self):
+        """Ensure integrity of result content."""
+        for datum in self.data:
+            if datum.category not in self.categories:
+                msg = f'Datum category \'{datum.category}\' does no exist in categories!'
+                raise ValidationError(msg)
+            if len(datum.values) != len(self.sample_names):
+                msg = (f'Number of datum values for \'{datum.category}\''
+                       'does not match sample_names length!')
+                raise ValidationError(msg)
+
+
 class QueryResult(mongoDB.Document):
     """Base mongo result class."""
 
@@ -93,6 +119,7 @@ class QueryResult(mongoDB.Document):
     sample_group_id = mongoDB.UUIDField(binary=False)
     sample_similarity = mongoDB.EmbeddedDocumentField(SampleSimilarityResult)
     taxon_abundance = mongoDB.EmbeddedDocumentField(TaxonAbundanceResult)
+    reads_classified = mongoDB.EmbeddedDocumentField(ReadsClassifiedResult)
     created_at = mongoDB.DateTimeField(default=datetime.datetime.utcnow)
 
     meta = {

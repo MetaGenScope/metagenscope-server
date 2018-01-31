@@ -12,7 +12,7 @@ from app.organizations.organization_models import Organization
 from app.query_results.query_result_models import QueryResult
 from app.sample_groups.sample_group_models import SampleGroup
 
-from seed import sample_similarity, taxon_abundance
+from seed import sample_similarity, taxon_abundance, reads_classified
 
 
 COV = coverage.coverage(
@@ -102,7 +102,8 @@ def seed_db():
 
     QueryResult(sample_group_id=sample_group.id,
                 sample_similarity=sample_similarity,
-                taxon_abundance=taxon_abundance).save()
+                taxon_abundance=taxon_abundance,
+                reads_classified=reads_classified).save()
 
 
 if __name__ == '__main__':
