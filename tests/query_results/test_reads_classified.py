@@ -1,4 +1,4 @@
-"""Test suite for Query Result model."""
+"""Test suite for Reads Classified model."""
 
 from mongoengine import ValidationError
 

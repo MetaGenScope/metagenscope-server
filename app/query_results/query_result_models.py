@@ -109,6 +109,44 @@ class ReadsClassifiedResult(mongoDB.EmbeddedDocument):
                 raise ValidationError(msg)
 
 
+class HMPDatum(mongoDB.EmbeddedDocument):
+    """HMP datum type."""
+
+    name = mongoDB.StringField(required=True)
+    data = mongoDB.ListField(mongoDB.ListField(mongoDB.FloatField()), required=True)
+
+
+class HMPResult(mongoDB.EmbeddedDocument):
+    """HMP document type."""
+
+    categories = mongoDB.MapField(field=mongoDB.ListField(mongoDB.StringField()), required=True)
+    sites = mongoDB.ListField(mongoDB.StringField(), required=True)
+    data = mongoDB.MapField(field=mongoDB.EmbeddedDocumentListField(HMPDatum), required=True)
+
+    def clean(self):
+        """Ensure integrity of result content."""
+        for category, values in self.categories.items():
+            if category not in self.data:
+                msg = f'Value \'{category}\' is not present in \'data\'!'
+                raise ValidationError(msg)
+            values_present = [datum.name for datum in self.data[category]]
+            for value in values:
+                if value not in values_present:
+                    msg = f'Value \'{category}\' is not present in \'data\'!'
+                    raise ValidationError(msg)
+
+        for category_name, category_data in self.data.items():
+            if len(category_data) != len(self.categories[category_name]):
+                msg = (f'Category data for {category_name} does not match size of '
+                       f'category values ({len(self.categories[category_name])})!')
+                raise ValidationError(msg)
+            for datum in category_data:
+                if len(datum.data) != len(self.sites):
+                    msg = (f'Datum <{datum.name}> of size {len(datum.data)} '
+                           f'does not match size of sites ({len(self.sites)})!')
+                    raise ValidationError(msg)
+
+
 class QueryResult(mongoDB.Document):
     """Base mongo result class."""
 
@@ -120,6 +158,7 @@ class QueryResult(mongoDB.Document):
     sample_similarity = mongoDB.EmbeddedDocumentField(SampleSimilarityResult)
     taxon_abundance = mongoDB.EmbeddedDocumentField(TaxonAbundanceResult)
     reads_classified = mongoDB.EmbeddedDocumentField(ReadsClassifiedResult)
+    hmp = mongoDB.EmbeddedDocumentField(HMPResult)
     created_at = mongoDB.DateTimeField(default=datetime.datetime.utcnow)
 
     meta = {

@@ -1,4 +1,4 @@
-"""Test suite for Query Result model."""
+"""Test suite for Taxon Abundance model."""
 
 from mongoengine import ValidationError
 

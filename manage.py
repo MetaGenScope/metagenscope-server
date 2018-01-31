@@ -12,7 +12,7 @@ from app.organizations.organization_models import Organization
 from app.query_results.query_result_models import QueryResult
 from app.sample_groups.sample_group_models import SampleGroup
 
-from seed import sample_similarity, taxon_abundance, reads_classified
+from seed import sample_similarity, taxon_abundance, reads_classified, hmp
 
 
 COV = coverage.coverage(
@@ -76,6 +76,9 @@ def recreate_db():
     # Run migrations
     upgrade()
 
+    # Empty Mongo database
+    QueryResult.drop_collection()
+
 
 @manager.command
 def seed_db():
@@ -103,7 +106,8 @@ def seed_db():
     QueryResult(sample_group_id=sample_group.id,
                 sample_similarity=sample_similarity,
                 taxon_abundance=taxon_abundance,
-                reads_classified=reads_classified).save()
+                reads_classified=reads_classified,
+                hmp=hmp).save()
 
 
 if __name__ == '__main__':

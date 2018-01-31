@@ -6,7 +6,8 @@ import os
 from app.query_results.query_result_models import (
     SampleSimilarityResult,
     TaxonAbundanceResult,
-    ReadsClassifiedResult
+    ReadsClassifiedResult,
+    HMPResult
 )
 
 
@@ -60,4 +61,18 @@ def load_reads_classified():
         result = ReadsClassifiedResult(categories=categories,
                                        sample_names=sample_names,
                                        data=data)
+        return result
+
+
+def load_hmp():
+    """Load HMP source JSON."""
+    filename = os.path.join(LOCATION, 'hmp_box.json')
+    with open(filename, 'r') as f:
+        datastore = json.load(f)['payload']
+        categories = datastore['cats2vals']
+        sites = datastore['sites']
+        data = {category: datastore[category] for category in categories}
+        result = HMPResult(categories=categories,
+                           sites=sites,
+                           data=data)
         return result
