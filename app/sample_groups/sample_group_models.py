@@ -8,7 +8,7 @@ from mongoengine import DoesNotExist
 
 from app.base import BaseSchema
 from app.extensions import db
-from app.query_results.query_result_models import QueryResult
+from app.query_results.query_result_models import QueryResultMeta
 
 
 # pylint: disable=too-few-public-methods
@@ -35,10 +35,11 @@ class SampleGroup(db.Model):
         self.access_scheme = access_scheme
         self.created_at = created_at
 
+    @property
     def query_result(self):
         """Get sample group's query result model."""
         try:
-            return QueryResult.objects.get(sample_group_id=self.id)
+            return QueryResultMeta.objects.get(sample_group_id=self.id)
         except DoesNotExist:
             return None
 

@@ -6,7 +6,12 @@ import random
 
 import factory
 
-from app.query_results.query_result_models import ToolDocument, SampleSimilarityResult, QueryResult
+from app.query_results.query_result_models import (
+    ToolDocument,
+    SampleSimilarityResult,
+    SampleSimilarityResultWrapper,
+    QueryResultMeta,
+)
 
 
 class ToolFactory(factory.mongoengine.MongoEngineFactory):
@@ -52,19 +57,31 @@ class SampleSimilarityFactory(factory.mongoengine.MongoEngineFactory):
 
         return [record(i) for i in range(20)]
 
-
-class QueryResultFactory(factory.mongoengine.MongoEngineFactory):
-    """Factory for Query Result."""
-
+class SampleSimilarityWrapperFactory(factory.mongoengine.MongoEngineFactory):
+    """Factory for Query Result's Sample Similarity status wrapper."""
     class Meta:
-        model = QueryResult
+        model = SampleSimilarityResultWrapper
 
     status = 'P'
-    sample_group_id = None
-    sample_similarity = None
+    data = None
 
     class Params:
         processed = factory.Trait(
             status='S',
-            sample_similarity=factory.SubFactory(SampleSimilarityFactory)
+            data=factory.SubFactory(SampleSimilarityFactory)
+        )
+
+
+class QueryResultMetaFactory(factory.mongoengine.MongoEngineFactory):
+    """Factory for Query Result meta."""
+
+    class Meta:
+        model = QueryResultMeta
+
+    sample_group_id = None
+    sample_similarity = factory.SubFactory(SampleSimilarityWrapperFactory)
+
+    class Params:
+        processed = factory.Trait(
+            sample_similarity=factory.SubFactory(SampleSimilarityWrapperFactory, processed=True)
         )

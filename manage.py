@@ -9,7 +9,7 @@ from flask_migrate import MigrateCommand, upgrade
 from app import create_app, db
 from app.users.user_models import User
 from app.organizations.organization_models import Organization
-from app.query_results.query_result_models import QueryResult
+from app.query_results.query_result_models import QueryResultMeta
 from app.sample_groups.sample_group_models import SampleGroup
 
 from seed import sample_similarity, taxon_abundance, reads_classified, hmp
@@ -77,7 +77,7 @@ def recreate_db():
     upgrade()
 
     # Empty Mongo database
-    QueryResult.drop_collection()
+    QueryResultMeta.drop_collection()
 
 
 @manager.command
@@ -103,11 +103,11 @@ def seed_db():
     db.session.add(mason_lab)
     db.session.commit()
 
-    QueryResult(sample_group_id=sample_group.id,
-                sample_similarity=sample_similarity,
-                taxon_abundance=taxon_abundance,
-                reads_classified=reads_classified,
-                hmp=hmp).save()
+    QueryResultMeta(sample_group_id=sample_group.id,
+                    sample_similarity=sample_similarity,
+                    taxon_abundance=taxon_abundance,
+                    reads_classified=reads_classified,
+                    hmp=hmp).save()
 
 
 if __name__ == '__main__':

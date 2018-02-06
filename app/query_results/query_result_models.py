@@ -7,7 +7,24 @@ from mongoengine import ValidationError
 from app.extensions import mongoDB
 
 
+QUERY_RESULT_STATUS = (('E', 'ERROR'),
+                       ('P', 'PENDING'),
+                       ('W', 'WORKING'),
+                       ('S', 'SUCCESS'))
+
+
 # pylint: disable=too-few-public-methods
+class QueryResultWrapper(mongoDB.EmbeddedDocument):
+    """Base mongo result class."""
+
+    status = mongoDB.StringField(required=True,
+                                 max_length=1,
+                                 choices=QUERY_RESULT_STATUS,
+                                 default='P')
+
+    meta = {'allow_inheritance': True}
+
+
 class ToolDocument(mongoDB.EmbeddedDocument):
     """Tool document type."""
 
@@ -15,7 +32,6 @@ class ToolDocument(mongoDB.EmbeddedDocument):
     y_label = mongoDB.StringField(required=True)
 
 
-# pylint: disable=too-few-public-methods
 class SampleSimilarityResult(mongoDB.EmbeddedDocument):
     """Sample Similarity document type."""
 
@@ -39,7 +55,12 @@ class SampleSimilarityResult(mongoDB.EmbeddedDocument):
                     raise ValidationError(msg)
 
 
-# pylint: disable=too-few-public-methods
+class SampleSimilarityResultWrapper(QueryResultWrapper):
+    """Status wrapper for Sample Similarity document type."""
+
+    data = mongoDB.EmbeddedDocumentField(SampleSimilarityResult)
+
+
 class TaxonAbundanceNode(mongoDB.EmbeddedDocument):
     """Taxon Abundance node type."""
 
@@ -48,7 +69,6 @@ class TaxonAbundanceNode(mongoDB.EmbeddedDocument):
     value = mongoDB.FloatField(required=True)
 
 
-# pylint: disable=too-few-public-methods
 class TaxonAbundanceEdge(mongoDB.EmbeddedDocument):
     """Taxon Abundance edge type."""
 
@@ -57,7 +77,6 @@ class TaxonAbundanceEdge(mongoDB.EmbeddedDocument):
     value = mongoDB.FloatField(required=True)
 
 
-# pylint: disable=too-few-public-methods
 class TaxonAbundanceResult(mongoDB.EmbeddedDocument):
     """Taxon Abundance document type."""
 
@@ -77,10 +96,10 @@ class TaxonAbundanceResult(mongoDB.EmbeddedDocument):
                 raise ValidationError(msg)
 
 
-QUERY_RESULT_STATUS = (('E', 'ERROR'),
-                       ('P', 'PENDING'),
-                       ('W', 'WORKING'),
-                       ('S', 'SUCCESS'))
+class TaxonAbundanceResultWrapper(QueryResultWrapper):
+    """Status wrapper for Taxon Abundance document type."""
+
+    data = mongoDB.EmbeddedDocumentField(TaxonAbundanceResult)
 
 
 class ReadsClassifiedDatum(mongoDB.EmbeddedDocument):
@@ -107,6 +126,12 @@ class ReadsClassifiedResult(mongoDB.EmbeddedDocument):
                 msg = (f'Number of datum values for \'{datum.category}\''
                        'does not match sample_names length!')
                 raise ValidationError(msg)
+
+
+class ReadsClassifiedResultWrapper(QueryResultWrapper):
+    """Status wrapper for Reads Classified document type."""
+
+    data = mongoDB.EmbeddedDocumentField(ReadsClassifiedResult)
 
 
 class HMPDatum(mongoDB.EmbeddedDocument):
@@ -147,20 +172,30 @@ class HMPResult(mongoDB.EmbeddedDocument):
                     raise ValidationError(msg)
 
 
-class QueryResult(mongoDB.Document):
+class HMPResultWrapper(QueryResultWrapper):
+    """Status wrapper for HMP document type."""
+
+    data = mongoDB.EmbeddedDocumentField(HMPResult)
+
+
+class QueryResultMeta(mongoDB.Document):
     """Base mongo result class."""
 
-    status = mongoDB.StringField(required=True,
-                                 max_length=1,
-                                 choices=QUERY_RESULT_STATUS,
-                                 default='P')
     sample_group_id = mongoDB.UUIDField(binary=False)
-    sample_similarity = mongoDB.EmbeddedDocumentField(SampleSimilarityResult)
-    taxon_abundance = mongoDB.EmbeddedDocumentField(TaxonAbundanceResult)
-    reads_classified = mongoDB.EmbeddedDocumentField(ReadsClassifiedResult)
-    hmp = mongoDB.EmbeddedDocumentField(HMPResult)
     created_at = mongoDB.DateTimeField(default=datetime.datetime.utcnow)
+
+    sample_similarity = mongoDB.EmbeddedDocumentField(SampleSimilarityResultWrapper)
+    taxon_abundance = mongoDB.EmbeddedDocumentField(TaxonAbundanceResultWrapper)
+    reads_classified = mongoDB.EmbeddedDocumentField(ReadsClassifiedResultWrapper)
+    hmp = mongoDB.EmbeddedDocumentField(HMPResultWrapper)
 
     meta = {
         'indexes': ['sample_group_id']
     }
+
+    @property
+    def result_types(self):
+        """Return a list of all query result types available for this record."""
+        blacklist = ['id', 'sample_group_id', 'created_at']
+        all_fields = [k for k, v in self.__class__._fields.items() if k not in blacklist]
+        return [field for field in all_fields if hasattr(self, field)]

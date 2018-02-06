@@ -2,7 +2,11 @@
 
 from mongoengine import ValidationError
 
-from app.query_results.query_result_models import QueryResult, SampleSimilarityResult
+from app.query_results.query_result_models import (
+    QueryResultMeta,
+    SampleSimilarityResult,
+    SampleSimilarityResultWrapper,
+)
 from tests.base import BaseTestCase
 
 
@@ -33,7 +37,8 @@ class TestSampleSimilarityResult(BaseTestCase):
         sample_similarity_result = SampleSimilarityResult(categories=categories,
                                                           tools=tools,
                                                           data_records=data_records)
-        result = QueryResult(sample_similarity=sample_similarity_result).save()
+        wrapper = SampleSimilarityResultWrapper(data=sample_similarity_result)
+        result = QueryResultMeta(sample_similarity=wrapper).save()
         self.assertTrue(result.id)
         self.assertTrue(result.sample_similarity)
 
@@ -51,7 +56,8 @@ class TestSampleSimilarityResult(BaseTestCase):
         sample_similarity_result = SampleSimilarityResult(categories=categories,
                                                           tools={},
                                                           data_records=data_records)
-        result = QueryResult(sample_similarity=sample_similarity_result)
+        wrapper = SampleSimilarityResultWrapper(data=sample_similarity_result)
+        result = QueryResultMeta(sample_similarity=wrapper)
         self.assertRaises(ValidationError, result.save)
 
     def test_add_malformed_tool(self):
@@ -71,7 +77,8 @@ class TestSampleSimilarityResult(BaseTestCase):
         sample_similarity_result = SampleSimilarityResult(categories={},
                                                           tools=tools,
                                                           data_records=data_records)
-        result = QueryResult(sample_similarity=sample_similarity_result)
+        wrapper = SampleSimilarityResultWrapper(data=sample_similarity_result)
+        result = QueryResultMeta(sample_similarity=wrapper)
         self.assertRaises(ValidationError, result.save)
 
     def test_add_missing_tool_x_value(self):
@@ -92,7 +99,8 @@ class TestSampleSimilarityResult(BaseTestCase):
         sample_similarity_result = SampleSimilarityResult(categories={},
                                                           tools=tools,
                                                           data_records=data_records)
-        result = QueryResult(sample_similarity=sample_similarity_result)
+        wrapper = SampleSimilarityResultWrapper(data=sample_similarity_result)
+        result = QueryResultMeta(sample_similarity=wrapper)
         self.assertRaises(ValidationError, result.save)
 
     def test_add_missing_tool_y_value(self):
@@ -113,5 +121,6 @@ class TestSampleSimilarityResult(BaseTestCase):
         sample_similarity_result = SampleSimilarityResult(categories={},
                                                           tools=tools,
                                                           data_records=data_records)
-        result = QueryResult(sample_similarity=sample_similarity_result)
+        wrapper = SampleSimilarityResultWrapper(data=sample_similarity_result)
+        result = QueryResultMeta(sample_similarity=wrapper)
         self.assertRaises(ValidationError, result.save)

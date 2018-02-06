@@ -28,7 +28,7 @@ def get_single_result(group_slug):
             'data': data,
         }
 
-        query_result = sample_group.query_result()
+        query_result = sample_group.query_result
         if query_result:
             response_object['data']['sample_group']['query_result_id'] = str(query_result.id)
         return jsonify(response_object), 200

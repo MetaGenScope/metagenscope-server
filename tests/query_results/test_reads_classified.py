@@ -2,7 +2,11 @@
 
 from mongoengine import ValidationError
 
-from app.query_results.query_result_models import QueryResult, ReadsClassifiedResult
+from app.query_results.query_result_models import (
+    QueryResultMeta,
+    ReadsClassifiedResult,
+    ReadsClassifiedResultWrapper,
+)
 from tests.base import BaseTestCase
 
 
@@ -27,7 +31,8 @@ class TestReadsClassifiedResult(BaseTestCase):
         reads_classified = ReadsClassifiedResult(categories=categories,
                                                  sample_names=sample_names,
                                                  data=data)
-        result = QueryResult(reads_classified=reads_classified).save()
+        wrapper = ReadsClassifiedResultWrapper(data=reads_classified)
+        result = QueryResultMeta(reads_classified=wrapper).save()
         self.assertTrue(result.id)
         self.assertTrue(result.reads_classified)
 
@@ -49,7 +54,8 @@ class TestReadsClassifiedResult(BaseTestCase):
         reads_classified = ReadsClassifiedResult(categories=categories,
                                                  sample_names=sample_names,
                                                  data=data)
-        result = QueryResult(reads_classified=reads_classified)
+        wrapper = ReadsClassifiedResultWrapper(data=reads_classified)
+        result = QueryResultMeta(reads_classified=wrapper)
         self.assertRaises(ValidationError, result.save)
 
     def test_add_value_count_mismatch(self):
@@ -66,5 +72,6 @@ class TestReadsClassifiedResult(BaseTestCase):
         reads_classified = ReadsClassifiedResult(categories=categories,
                                                  sample_names=sample_names,
                                                  data=data)
-        result = QueryResult(reads_classified=reads_classified)
+        wrapper = ReadsClassifiedResultWrapper(data=reads_classified)
+        result = QueryResultMeta(reads_classified=wrapper)
         self.assertRaises(ValidationError, result.save)

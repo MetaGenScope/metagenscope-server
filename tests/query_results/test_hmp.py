@@ -4,13 +4,18 @@ import copy
 
 from mongoengine import ValidationError
 
-from app.query_results.query_result_models import QueryResult, HMPResult
+from app.query_results.query_result_models import (
+    QueryResultMeta,
+    HMPResult,
+    HMPResultWrapper,
+)
 from tests.base import BaseTestCase
 
 
 # Test data
+# pylint: disable=invalid-name
 categories = {
-    'front-phone': [ 'glass', 'plastic'],
+    'front-phone': ['glass', 'plastic'],
 }
 sites = ['airways', 'skin']
 data = {
@@ -55,6 +60,7 @@ data = {
         },
     ],
 }
+# pylint: enable=invalid-name
 
 
 class TestHMPResult(BaseTestCase):
@@ -63,14 +69,16 @@ class TestHMPResult(BaseTestCase):
     def test_add_hmp(self):
         """Ensure HMP model is created correctly."""
         hmp = HMPResult(categories=categories, sites=sites, data=data)
-        result = QueryResult(hmp=hmp).save()
+        wrapper = HMPResultWrapper(data=hmp)
+        result = QueryResultMeta(hmp=wrapper).save()
         self.assertTrue(result.id)
         self.assertTrue(result.hmp)
 
     def test_add_missing_category(self):
         """Ensure saving model fails if category is missing from `data`."""
         hmp = HMPResult(categories=categories, sites=sites, data={})
-        result = QueryResult(hmp=hmp)
+        wrapper = HMPResultWrapper(data=hmp)
+        result = QueryResultMeta(hmp=wrapper)
         self.assertRaises(ValidationError, result.save)
 
     def test_add_missing_category_value(self):
@@ -78,7 +86,8 @@ class TestHMPResult(BaseTestCase):
         incomplete_data = copy.deepcopy(data)
         incomplete_data['front-phone'] = incomplete_data['front-phone'][:1]
         hmp = HMPResult(categories=categories, sites=sites, data=incomplete_data)
-        result = QueryResult(hmp=hmp)
+        wrapper = HMPResultWrapper(data=hmp)
+        result = QueryResultMeta(hmp=wrapper)
         self.assertRaises(ValidationError, result.save)
 
     def test_add_missing_site(self):
@@ -86,5 +95,6 @@ class TestHMPResult(BaseTestCase):
         incomplete_data = copy.deepcopy(data)
         incomplete_data['front-phone'][0]['data'] = incomplete_data['front-phone'][0]['data'][:1]
         hmp = HMPResult(categories=categories, sites=sites, data=incomplete_data)
-        result = QueryResult(hmp=hmp)
+        wrapper = HMPResultWrapper(data=hmp)
+        result = QueryResultMeta(hmp=wrapper)
         self.assertRaises(ValidationError, result.save)

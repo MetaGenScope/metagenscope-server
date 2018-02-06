@@ -3,7 +3,7 @@
 import json
 
 from tests.base import BaseTestCase
-from tests.factories.query_result import QueryResultFactory
+from tests.factories.query_result import QueryResultMetaFactory
 
 class TestSampleSimilarityModule(BaseTestCase):
     """Tests for the Sample Similarity module."""
@@ -11,7 +11,7 @@ class TestSampleSimilarityModule(BaseTestCase):
     def test_get_sample_similarity(self):
         """Ensure getting a single sample similarity behaves correctly."""
 
-        query_result = QueryResultFactory(processed=True)
+        query_result = QueryResultMetaFactory(processed=True)
         with self.client:
             response = self.client.get(
                 f'/api/v1/query_results/{query_result.id}/sample_similarity',
@@ -19,18 +19,21 @@ class TestSampleSimilarityModule(BaseTestCase):
             )
             data = json.loads(response.data.decode())
             self.assertEqual(response.status_code, 200)
-            self.assertIn('categories', data['data'])
-            self.assertIn('tools', data['data'])
-            self.assertIn('data_records', data['data'])
-            self.assertTrue(len(data['data']['data_records']) > 0)
-            self.assertIn('SampleID', data['data']['data_records'][0])
             self.assertIn('success', data['status'])
+            self.assertEqual(data['data']['status'], 'S')
+            self.assertIn('data', data['data'])
+            sample_similarity = data['data']['data']
+            self.assertIn('categories', sample_similarity)
+            self.assertIn('tools', sample_similarity)
+            self.assertIn('data_records', sample_similarity)
+            self.assertTrue(len(sample_similarity['data_records']) > 0)
+            self.assertIn('SampleID', sample_similarity['data_records'][0])
 
     # pylint: disable=invalid-name
     def test_get_pending_sample_similarity(self):
         """Ensure getting a pending single sample similarity behaves correctly."""
 
-        query_result = QueryResultFactory()
+        query_result = QueryResultMetaFactory()
         with self.client:
             response = self.client.get(
                 f'/api/v1/query_results/{query_result.id}/sample_similarity',
