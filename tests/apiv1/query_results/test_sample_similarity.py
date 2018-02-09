@@ -54,7 +54,7 @@ class TestSampleSimilarityModule(BaseTestCase):
                 content_type='application/json',
             )
             data = json.loads(response.data.decode())
-            self.assertEqual(response.status_code, 404)
+            self.assertEqual(response.status_code, 400)
             message = ('\'foobarblah\' is not a valid ObjectId, '
                        'it must be a 12-byte input or a 24-character hex string')
             self.assertIn(message, data['message'])
