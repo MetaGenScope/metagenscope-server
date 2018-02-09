@@ -39,6 +39,9 @@ def get_single_result(result_id):
         return jsonify(response_object), 200
     except ValueError:
         return jsonify(response_object), 404
+    except ValidationError as validation_error:
+        response_object['message'] = f'{validation_error}'
+        return jsonify(response_object), 400
 
 
 @query_results_blueprint.route('/query_results/<result_id>/sample_similarity', methods=['GET'])
@@ -67,7 +70,7 @@ def get_sample_similarity(result_id):
         return jsonify(response_object), 404
     except ValidationError as validation_error:
         response_object['message'] = f'{validation_error}'
-        return jsonify(response_object), 404
+        return jsonify(response_object), 400
 
 
 @query_results_blueprint.route('/query_results/<result_id>/taxon_abundance', methods=['GET'])
@@ -96,7 +99,7 @@ def get_taxon_abundance(result_id):
         return jsonify(response_object), 404
     except ValidationError as validation_error:
         response_object['message'] = f'{validation_error}'
-        return jsonify(response_object), 404
+        return jsonify(response_object), 400
 
 
 @query_results_blueprint.route('/query_results/<result_id>/reads_classified', methods=['GET'])
@@ -125,7 +128,7 @@ def get_reads_classified(result_id):
         return jsonify(response_object), 404
     except ValidationError as validation_error:
         response_object['message'] = f'{validation_error}'
-        return jsonify(response_object), 404
+        return jsonify(response_object), 400
 
 
 @query_results_blueprint.route('/query_results/<result_id>/hmp', methods=['GET'])
@@ -154,4 +157,4 @@ def get_hmp(result_id):
         return jsonify(response_object), 404
     except ValidationError as validation_error:
         response_object['message'] = f'{validation_error}'
-        return jsonify(response_object), 404
+        return jsonify(response_object), 400
