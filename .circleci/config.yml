@@ -63,14 +63,13 @@ jobs:
           path: htmlcov
           destination: test-reports
 
-  build_emptyfish:
+  build_staging_images:
     docker:
       - image: circleci/node:9.2.0
 
     environment:
-      TAG: emptyfish
+      TAG: staging
       DOCKER_ORG: metagenscope
-      REACT_APP_METAGENSCOPE_SERVICE_URL: https://www.emptyfish.net
 
     steps:
       - checkout
@@ -112,7 +111,7 @@ jobs:
             docker tag $MAIN_SERVICE:$COMMIT $DOCKER_ORG/$MAIN_SERVICE:$TAG
             docker push $DOCKER_ORG/$MAIN_SERVICE
 
-  deploy_emptyfish:
+  deploy_staging:
     docker:
       - image: circleci/node:9.2.0
 
@@ -128,15 +127,21 @@ jobs:
 
 workflows:
   version: 2
-  test-and-deploy:
+  test-and-deploy-staging:
     jobs:
       - run-tests:
           context: org-global
-      - build_emptyfish:
+      - build_staging_images:
           context: org-global
+          filters:
+            branches:
+              only: develop
           requires:
             - run-tests
-      - deploy_emptyfish:
+      - deploy_staging:
           context: org-global
+          filters:
+            branches:
+              only: develop
           requires:
-            - build_emptyfish
+            - build_staging_images
