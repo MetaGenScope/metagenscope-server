@@ -80,6 +80,10 @@ You may also run tests checking their coverage:
 $ make cov
 ```
 
+## Development
+
+MetaGenScope uses the GitFlow branching strategy along with Pull Requests for code reviews. Check out [this post](https://devblog.dwarvesf.com/post/git-best-practices/) by the Dwarves Foundation for more information.
+
 ## Continuous Integration
 
 The test suite is run automatically on CircleCI for each push to Github. You can skip this behavior for a commit by appending `[skip ci]` to the commit message.
