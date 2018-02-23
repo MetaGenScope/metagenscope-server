@@ -182,3 +182,63 @@ class TestOrganizationModule(BaseTestCase):
             self.assertTrue('created_at' in data['data']['organizations'][0])
             self.assertTrue('created_at' in data['data']['organizations'][1])
             self.assertIn('success', data['status'])
+
+    @with_user
+    def test_add_user_to_organiztion(self, auth_headers, login_user):
+        """Ensure user can be added to organization by admin user."""
+        organization = add_organization('Test Organization', 'admin@test.org')
+        organization.admin_users = [login_user]
+        db.session.commit()
+        user = add_user('new_user', 'new_user@test.com', 'somepassword')
+        with self.client:
+            org_slug = uuid2slug(organization.id)
+            response = self.client.post(
+                f'/api/v1/organizations/{org_slug}/users',
+                headers=auth_headers,
+                data=json.dumps(dict(
+                    user_id=str(user.id),
+                )),
+                content_type='application/json',
+            )
+            data = json.loads(response.data.decode())
+            self.assertEqual(response.status_code, 200)
+            self.assertIn(user, organization.admin_users)
+            self.assertIn('success', data['status'])
+
+    def test_unauthenticated_add_user_to_organiztion(self):
+        """Ensure unauthenticated user cannot attempt action."""
+        organization = add_organization('Test Organization', 'admin@test.org')
+        user_id = uuid4()
+        with self.client:
+            org_slug = uuid2slug(organization.id)
+            response = self.client.post(
+                f'/api/v1/organizations/{org_slug}/users',
+                data=json.dumps(dict(
+                    user_id=str(user_id),
+                )),
+                content_type='application/json',
+            )
+            data = json.loads(response.data.decode())
+            self.assertEqual(response.status_code, 401)
+            self.assertIn('You must log in to perform that action.', data['message'])
+            self.assertIn('fail', data['status'])
+
+    @with_user
+    def test_unauthorized_add_user_to_organiztion(self, auth_headers, *_):
+        """Ensure user cannot be added to organization by non-organization admin user."""
+        organization = add_organization('Test Organization', 'admin@test.org')
+        user_id = uuid4()
+        with self.client:
+            org_slug = uuid2slug(organization.id)
+            response = self.client.post(
+                f'/api/v1/organizations/{org_slug}/users',
+                headers=auth_headers,
+                data=json.dumps(dict(
+                    user_id=str(user_id),
+                )),
+                content_type='application/json',
+            )
+            data = json.loads(response.data.decode())
+            self.assertEqual(response.status_code, 403)
+            self.assertIn('You do not have permission to perform that action.', data['message'])
+            self.assertIn('fail', data['status'])
