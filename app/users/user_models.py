@@ -29,7 +29,7 @@ class User(db.Model):
     admin = db.Column(db.Boolean, default=False, nullable=False)
     created_at = db.Column(db.DateTime, nullable=False)
 
-    # Use association proxy to skip associateion object for most cases
+    # Use association proxy to skip association object for most cases
     organizations = association_proxy('user_organizations', 'organization')
 
     def __init__(

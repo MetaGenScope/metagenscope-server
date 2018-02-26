@@ -8,26 +8,33 @@ from marshmallow import fields
 
 from app.base import BaseSchema
 from app.extensions import db
-from app.users.user_models import UserSchema
+from app.users.user_models import User, UserSchema
 from app.sample_groups.sample_group_models import SampleGroupSchema
 
 
 # pylint: disable=too-few-public-methods
 class OrganizationMembership(db.Model):
-    """Associateion object for linking users to organizations with role."""
+    """Association object for linking users to organizations with role."""
 
     __tablename__ = 'users_organizations'
     user_id = db.Column(UUID(as_uuid=True), db.ForeignKey('users.id'), primary_key=True)
     organization_id = db.Column(UUID(as_uuid=True),
                                 db.ForeignKey('organizations.id'),
                                 primary_key=True)
+
     role = db.Column(db.String(128), default='member', nullable=False)
 
     # Bidirectional attribute/collection of "organization"/"organization_users"
-    organization = db.relationship('Organization', backref=db.backref('organization_users'))
+    organization = db.relationship('Organization', backref='organization_users')
 
     # Bidirectional attribute/collection of "user"/"user_organizations"
-    user = db.relationship('User', backref=db.backref('user_organizations'))
+    user = db.relationship('User', backref='user_organizations')
+
+    def __init__(self, user=None, organization=None, role='member'):
+        """Initialize Organization/User association object."""
+        self.organization = organization
+        self.user = user
+        self.role = role
 
 
 # pylint: disable=too-few-public-methods
@@ -44,9 +51,8 @@ class Organization(db.Model):
     admin_email = db.Column(db.String(128), nullable=False)
     created_at = db.Column(db.DateTime, nullable=False)
 
-    # Use association proxy to skip associateion object for most cases
-    users = association_proxy('organization_users', 'user',
-                              creator=lambda user: OrganizationMembership(user=user, role='member'))
+    # Use association proxy to skip association object for most cases
+    users = association_proxy('organization_users', 'user')
 
     admin_memberships = db.relationship(
         'OrganizationMembership',
