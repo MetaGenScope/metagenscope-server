@@ -5,21 +5,12 @@ import uuid
 import jwt
 
 from flask import current_app
-from sqlalchemy.orm import relationship
 from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy.ext.associationproxy import association_proxy
 from marshmallow import fields
 
 from app.base import BaseSchema
 from app.extensions import db, bcrypt
-
-
-# pylint: disable=invalid-name
-users_organizations = db.Table(
-    'users_organizations',
-    db.Column('user_id', UUID(as_uuid=True), db.ForeignKey('users.id')),
-    db.Column('organization_id', UUID(as_uuid=True), db.ForeignKey('organizations.id')),
-    db.Column('role', db.String(128), default='member', nullable=False)
-)
 
 
 class User(db.Model):
@@ -37,10 +28,9 @@ class User(db.Model):
     active = db.Column(db.Boolean, default=True, nullable=False)
     admin = db.Column(db.Boolean, default=False, nullable=False)
     created_at = db.Column(db.DateTime, nullable=False)
-    organizations = relationship(
-        'Organization',
-        secondary=users_organizations,
-        back_populates='users')
+
+    # Use association proxy to skip associateion object for most cases
+    organizations = association_proxy('user_organizations', 'organization')
 
     def __init__(
             self, username, email, password,
@@ -101,4 +91,4 @@ class UserSchema(BaseSchema):
     email = fields.Str()
 
 
-user_schema = UserSchema()
+user_schema = UserSchema()      # pylint: disable=invalid-name

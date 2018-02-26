@@ -1,5 +1,7 @@
 """Test suite for Organization management."""
 
+from sqlalchemy.orm.exc import FlushError
+
 from app import db
 from tests.base import BaseTestCase
 from tests.utils import add_user, add_organization
@@ -23,14 +25,12 @@ class TestOrganizationManagement(BaseTestCase):
         organization.users.append(user)
         db.session.commit()
         organization.users.append(user)
-        db.session.commit()
-        self.assertTrue(len(organization.users) == 1)
-        self.assertIn(user, organization.users)
+        self.assertRaises(FlushError, db.session.commit)
 
     def test_set_admin_user_to_organization(self):      # pylint: disable=invalid-name
         """Ensure user can be added to organization."""
         organization = add_organization('Test Organization', 'admin@test.org')
         user = add_user('justatest', 'test@test.com', 'test')
-        organization.admin_users.append(user)
+        organization.add_admin(user)
         db.session.commit()
         self.assertIn(user, organization.admin_users)

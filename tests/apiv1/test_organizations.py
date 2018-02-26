@@ -187,7 +187,7 @@ class TestOrganizationModule(BaseTestCase):
     def test_add_user_to_organiztion(self, auth_headers, login_user):
         """Ensure user can be added to organization by admin user."""
         organization = add_organization('Test Organization', 'admin@test.org')
-        organization.admin_users = [login_user]
+        organization.add_admin(login_user)
         db.session.commit()
         user = add_user('new_user', 'new_user@test.com', 'somepassword')
         with self.client:
