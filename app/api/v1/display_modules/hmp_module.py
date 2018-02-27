@@ -25,14 +25,6 @@ class HMPModule(DisplayModule):
         """Return status wrapper for HMP type."""
         return EmbeddedDoc(HMPResult)
 
-    @classmethod
-    def get_mongodb_embedded_docs(cls):
-        """Return sub-document types for HMP type."""
-        return [
-            HMPDatum,
-            HMPResult,
-        ]
-
 
 class HMPDatum(mdb.EmbeddedDocument):       # pylint: disable=too-few-public-methods
     """HMP datum type."""
@@ -46,7 +38,7 @@ class HMPResult(mdb.EmbeddedDocument):      # pylint: disable=too-few-public-met
 
     categories = mdb.MapField(field=StringList, required=True)
     sites = mdb.ListField(mdb.StringField(), required=True)
-    data = mdb.MapField(field=mdb.EmDocList(HMPDatum), required=True)
+    data = mdb.MapField(field=EmDocList(HMPDatum), required=True)
 
     def clean(self):
         """Ensure integrity of result content."""

@@ -4,12 +4,16 @@ import copy
 
 from mongoengine import ValidationError
 
-from app.query_results.query_result_models import (
-    QueryResultMeta,
+from app.query_results.query_result_models import QueryResultMeta
+from app.api.v1.display_modules.hmp_module import (
     HMPResult,
-    HMPResultWrapper,
+    HMPModule,
 )
 from tests.base import BaseTestCase
+
+
+# Define aliases
+HMPResultWrapper = HMPModule.get_query_result_wrapper()
 
 
 # Test data

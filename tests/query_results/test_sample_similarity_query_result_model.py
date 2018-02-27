@@ -2,12 +2,16 @@
 
 from mongoengine import ValidationError
 
-from app.query_results.query_result_models import (
-    QueryResultMeta,
+from app.query_results.query_result_models import QueryResultMeta
+from app.api.v1.display_modules.sample_similarity_module import (
     SampleSimilarityResult,
-    SampleSimilarityResultWrapper,
+    SampleSimilarityDisplayModule,
 )
 from tests.base import BaseTestCase
+
+
+# Define aliases
+SampleSimilarityResultWrapper = SampleSimilarityDisplayModule.get_query_result_wrapper()
 
 
 class TestSampleSimilarityResult(BaseTestCase):

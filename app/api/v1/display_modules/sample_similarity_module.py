@@ -24,14 +24,6 @@ class SampleSimilarityDisplayModule(DisplayModule):
         """Return status wrapper for Sample Similarity type."""
         return EmbeddedDoc(SampleSimilarityResult)
 
-    @classmethod
-    def get_mongodb_embedded_docs(cls):
-        """Return sub-document types for Sample Similarity type."""
-        return [
-            ToolDocument,
-            SampleSimilarityResult,
-        ]
-
 
 class ToolDocument(mdb.EmbeddedDocument):   # pylint: disable=too-few-public-methods
     """Tool document type."""

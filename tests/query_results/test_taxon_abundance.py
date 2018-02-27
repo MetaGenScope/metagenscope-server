@@ -2,12 +2,16 @@
 
 from mongoengine import ValidationError
 
-from app.query_results.query_result_models import (
-    QueryResultMeta,
+from app.query_results.query_result_models import QueryResultMeta
+from app.api.v1.display_modules.taxon_abundance_module import (
     TaxonAbundanceResult,
-    TaxonAbundanceResultWrapper,
+    TaxonAbundanceDisplayModule,
 )
 from tests.base import BaseTestCase
+
+
+# Define aliases
+TaxonAbundanceResultWrapper = TaxonAbundanceDisplayModule.get_query_result_wrapper()
 
 
 class TestTaxonAbundanceResult(BaseTestCase):

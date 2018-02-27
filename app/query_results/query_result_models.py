@@ -21,7 +21,7 @@ class QueryResultWrapper(mongoDB.EmbeddedDocument):   # pylint: disable=too-few-
     meta = {'allow_inheritance': True}
 
 
-class QueryResultMeta(mongoDB.Document):
+class QueryResultMeta(mongoDB.DynamicDocument):
     """Base mongo result class."""
 
     sample_group_id = mongoDB.UUIDField(binary=False)
@@ -42,7 +42,7 @@ class QueryResultMeta(mongoDB.Document):
     @classmethod
     def build_result_type(cls, name):
         """Build result type for query result model."""
-        out = type(name, (cls,))
+        out = type(name, (cls,), {})
         return out
 
     @classmethod

@@ -23,14 +23,6 @@ class ReadsClassifiedModule(DisplayModule):
         """Return status wrapper for Reads Classified type."""
         return EmbeddedDoc(ReadsClassifiedResult)
 
-    @classmethod
-    def get_mongodb_embedded_docs(cls):
-        """Return sub-document types for Reads Classified type."""
-        return [
-            ReadsClassifiedDatum,
-            ReadsClassifiedResult,
-        ]
-
 
 class ReadsClassifiedDatum(mdb.EmbeddedDocument):       # pylint: disable=too-few-public-methods
     """Taxon Abundance datum type."""

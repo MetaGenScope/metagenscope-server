@@ -23,15 +23,6 @@ class TaxonAbundanceDisplayModule(DisplayModule):
         """Return status wrapper for Taxon Abundance type."""
         return EmbeddedDoc(TaxonAbundanceResult)
 
-    @classmethod
-    def get_mongodb_embedded_docs(cls):
-        """Return sub-document types for Taxon Abundance type."""
-        return [
-            TaxonAbundanceEdge,
-            TaxonAbundanceNode,
-            TaxonAbundanceResult,
-        ]
-
 
 class TaxonAbundanceNode(mdb.EmbeddedDocument):     # pylint: disable=too-few-public-methods
     """Taxon Abundance node type."""
