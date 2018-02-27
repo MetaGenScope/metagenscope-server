@@ -1,38 +1,45 @@
-from .display_module import DisplayModule
-from app.extensions import mongoDB as mdb
+"""Reads Classified display module."""
+
 from mongoengine import ValidationError
 
-EmDoc = mdb.EmbeddedDocumentField
+from app.api.v1.display_modules.display_module import DisplayModule
+from app.extensions import mongoDB as mdb
+
+
+# Define aliases
+EmbeddedDoc = mdb.EmbeddedDocumentField   # pylint: disable=invalid-name
 
 
 class ReadsClassifiedModule(DisplayModule):
+    """Reads Classified display module."""
 
     @classmethod
-    def name(ctype):
+    def name(cls):
+        """Return module's unique identifier string."""
         return 'reads_classified'
 
     @classmethod
-    def get_data(ctype, my_result):
-        return my_result
+    def get_query_result_wrapper_field(cls):
+        """Return status wrapper for Reads Classified type."""
+        return EmbeddedDoc(ReadsClassifiedResult)
 
     @classmethod
-    def get_query_result_wrapper_field(ctype):
-        return EmDoc(ReadsClassifiedResult)
+    def get_mongodb_embedded_docs(cls):
+        """Return sub-document types for Reads Classified type."""
+        return [
+            ReadsClassifiedDatum,
+            ReadsClassifiedResult,
+        ]
 
-    @classmethod
-    def get_mongodb_embedded_docs(ctype):
-        return [ReadsClassifiedDatum,
-                ReadsClassifiedResult]
 
-
-class ReadsClassifiedDatum(mdb.EmbeddedDocument):
+class ReadsClassifiedDatum(mdb.EmbeddedDocument):       # pylint: disable=too-few-public-methods
     """Taxon Abundance datum type."""
 
     category = mdb.StringField(required=True)
     values = mdb.ListField(mdb.FloatField(), required=True)
 
 
-class ReadsClassifiedResult(mdb.EmbeddedDocument):
+class ReadsClassifiedResult(mdb.EmbeddedDocument):      # pylint: disable=too-few-public-methods
     """Reads Classified document type."""
 
     categories = mdb.ListField(mdb.StringField(), required=True)

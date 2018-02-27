@@ -10,7 +10,7 @@ QUERY_RESULT_STATUS = (('E', 'ERROR'),
                        ('S', 'SUCCESS'))
 
 
-class QueryResultWrapper(mongoDB.EmbeddedDocument):
+class QueryResultWrapper(mongoDB.EmbeddedDocument):   # pylint: disable=too-few-public-methods
     """Base mongo result class."""
 
     status = mongoDB.StringField(required=True,
@@ -32,19 +32,20 @@ class QueryResultMeta(mongoDB.Document):
 
     @property
     def result_types(self):
-        """Return a list of all query result types available for this record.
-        """
+        """Return a list of all query result types available for this record."""
         blacklist = ['id', 'sample_group_id', 'created_at']
         all_fields = [k
                       for k, v in self.__class__._fields.items()  # pylint: disable=no-member
                       if k not in blacklist]
         return [field for field in all_fields if hasattr(self, field)]
 
-    @classmethod()
-    def build_result_type(ctype, name):
-        out = type(name, (ctype,))
+    @classmethod
+    def build_result_type(cls, name):
+        """Build result type for query result model."""
+        out = type(name, (cls,))
         return out
 
-    @classmethod()
-    def add_property(ctype, name, obj):
-        setattr(ctype, name, property(obj))
+    @classmethod
+    def add_property(cls, name, obj):
+        """Expose wrapper for setting attribute."""
+        setattr(cls, name, property(obj))

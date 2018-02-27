@@ -1,3 +1,3 @@
 """API v1 blueprint."""
 
-import .register_modules
+import app.api.v1.register_modules

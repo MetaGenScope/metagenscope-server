@@ -1,42 +1,50 @@
-from .display_module import DisplayModule
-from app.extensions import mongoDB as mdb
+"""Sample Similarity display module."""
+
 from mongoengine import ValidationError
 
-EmDoc = mdb.EmbeddedDocumentField
-StringList = mdb.ListField(mdb.StringField())
+from app.api.v1.display_modules.display_module import DisplayModule
+from app.extensions import mongoDB as mdb
+
+
+# Define aliases
+EmbeddedDoc = mdb.EmbeddedDocumentField         # pylint: disable=invalid-name
+StringList = mdb.ListField(mdb.StringField())   # pylint: disable=invalid-name
 
 
 class SampleSimilarityDisplayModule(DisplayModule):
+    """Sample Similarity display module."""
 
     @classmethod
-    def name(ctype):
+    def name(cls):
+        """Return module's unique identifier string."""
         return 'sample_similarity'
 
     @classmethod
-    def get_data(ctype, my_result):
-        return my_result
+    def get_query_result_wrapper_field(cls):
+        """Return status wrapper for Sample Similarity type."""
+        return EmbeddedDoc(SampleSimilarityResult)
 
     @classmethod
-    def get_query_result_wrapper_field(ctype):
-        return EmDoc(SampleSimilarityResult)
+    def get_mongodb_embedded_docs(cls):
+        """Return sub-document types for Sample Similarity type."""
+        return [
+            ToolDocument,
+            SampleSimilarityResult,
+        ]
 
-    @classmethod
-    def get_mongodb_embedded_docs(ctype):
-        return [ToolDocument, SampleSimilarityResult]
 
-
-class ToolDocument(mdb.EmbeddedDocument):
+class ToolDocument(mdb.EmbeddedDocument):   # pylint: disable=too-few-public-methods
     """Tool document type."""
 
     x_label = mdb.StringField(required=True)
     y_label = mdb.StringField(required=True)
 
 
-class SampleSimilarityResult(mdb.EmbeddedDocument):
+class SampleSimilarityResult(mdb.EmbeddedDocument):     # pylint: disable=too-few-public-methods
     """Sample Similarity document type."""
 
     categories = mdb.MapField(field=StringList, required=True)
-    tools = mdb.MapField(field=EmDoc(ToolDocument), required=True)
+    tools = mdb.MapField(field=EmbeddedDoc(ToolDocument), required=True)
     data_records = mdb.ListField(mdb.DictField(), required=True)
 
     def clean(self):

@@ -1,32 +1,39 @@
-from .display_module import DisplayModule
-from app.extensions import mongoDB as mdb
+"""Taxon Abundance display module."""
+
 from mongoengine import ValidationError
 
-EmDoc = mdb.EmbeddedDocumentField
+from app.api.v1.display_modules.display_module import DisplayModule
+from app.extensions import mongoDB as mdb
+
+
+# Define aliases
+EmbeddedDoc = mdb.EmbeddedDocumentField         # pylint: disable=invalid-name
 
 
 class TaxonAbundanceDisplayModule(DisplayModule):
+    """Taxon Abundance display module."""
 
     @classmethod
-    def name(ctype):
+    def name(cls):
+        """Return module's unique identifier string."""
         return 'taxon_abundance'
 
     @classmethod
-    def get_data(ctype, my_result):
-        return my_result
+    def get_query_result_wrapper_field(cls):
+        """Return status wrapper for Taxon Abundance type."""
+        return EmbeddedDoc(TaxonAbundanceResult)
 
     @classmethod
-    def get_query_result_wrapper_field(ctype):
-        return EmDoc(TaxonAbundanceResult)
+    def get_mongodb_embedded_docs(cls):
+        """Return sub-document types for Taxon Abundance type."""
+        return [
+            TaxonAbundanceEdge,
+            TaxonAbundanceNode,
+            TaxonAbundanceResult,
+        ]
 
-    @classmethod
-    def get_mongodb_embedded_docs(ctype):
-        return [TaxonAbundanceEdge,
-                TaxonAbundanceNode,
-                TaxonAbundanceResult]
 
-
-class TaxonAbundanceNode(mdb.EmbeddedDocument):
+class TaxonAbundanceNode(mdb.EmbeddedDocument):     # pylint: disable=too-few-public-methods
     """Taxon Abundance node type."""
 
     id = mdb.StringField(required=True)
@@ -34,7 +41,7 @@ class TaxonAbundanceNode(mdb.EmbeddedDocument):
     value = mdb.FloatField(required=True)
 
 
-class TaxonAbundanceEdge(mdb.EmbeddedDocument):
+class TaxonAbundanceEdge(mdb.EmbeddedDocument):     # pylint: disable=too-few-public-methods
     """Taxon Abundance edge type."""
 
     source = mdb.StringField(required=True)
@@ -42,7 +49,7 @@ class TaxonAbundanceEdge(mdb.EmbeddedDocument):
     value = mdb.FloatField(required=True)
 
 
-class TaxonAbundanceResult(mdb.EmbeddedDocument):
+class TaxonAbundanceResult(mdb.EmbeddedDocument):   # pylint: disable=too-few-public-methods
     """Taxon Abundance document type."""
 
     # Do not store depth of node because this can be derived from the edges

@@ -1,40 +1,47 @@
-from .display_module import DisplayModule
-from app.extensions import mongoDB as mdb
+"""HMP display module."""
+
 from mongoengine import ValidationError
 
-EmDoc = mdb.EmbeddedDocumentField
-EmDocList = mdb.EmbeddedDocumentListField
-StringList = mdb.ListField(mdb.StringField())
+from app.api.v1.display_modules.display_module import DisplayModule
+from app.extensions import mongoDB as mdb
+
+
+# Define aliases
+EmbeddedDoc = mdb.EmbeddedDocumentField         # pylint: disable=invalid-name
+EmDocList = mdb.EmbeddedDocumentListField       # pylint: disable=invalid-name
+StringList = mdb.ListField(mdb.StringField())   # pylint: disable=invalid-name
 
 
 class HMPModule(DisplayModule):
+    """HMP display module."""
 
     @classmethod
-    def name(ctype):
+    def name(cls):
+        """Return module's unique identifier string."""
         return 'hmp'
 
     @classmethod
-    def get_data(ctype, my_result):
-        return my_result
+    def get_query_result_wrapper_field(cls):
+        """Return status wrapper for HMP type."""
+        return EmbeddedDoc(HMPResult)
 
     @classmethod
-    def get_query_result_wrapper_field(ctype):
-        return EmDoc(HMPResult)
+    def get_mongodb_embedded_docs(cls):
+        """Return sub-document types for HMP type."""
+        return [
+            HMPDatum,
+            HMPResult,
+        ]
 
-    @classmethod
-    def get_mongodb_embedded_docs(ctype):
-        return [HMPDatum,
-                HMPResult]
 
-
-class HMPDatum(mdb.EmbeddedDocument):
+class HMPDatum(mdb.EmbeddedDocument):       # pylint: disable=too-few-public-methods
     """HMP datum type."""
 
     name = mdb.StringField(required=True)
     data = mdb.ListField(mdb.ListField(mdb.FloatField()), required=True)
 
 
-class HMPResult(mdb.EmbeddedDocument):
+class HMPResult(mdb.EmbeddedDocument):      # pylint: disable=too-few-public-methods
     """HMP document type."""
 
     categories = mdb.MapField(field=StringList, required=True)
