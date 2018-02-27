@@ -22,10 +22,11 @@ class TestOrganizationManagement(BaseTestCase):
         """Ensure user can only be added to organization once."""
         organization = add_organization('Test Organization', 'admin@test.org')
         user = add_user('justatest', 'test@test.com', 'test')
-        organization.users.append(user)
-        db.session.commit()
-        organization.users.append(user)
-        self.assertRaises(FlushError, db.session.commit)
+        with db.session.no_autoflush:
+            organization.users.append(user)
+            db.session.commit()
+            organization.users.append(user)
+            self.assertRaises(FlushError, db.session.commit)
 
     def test_set_admin_user_to_organization(self):      # pylint: disable=invalid-name
         """Ensure user can be added to organization."""
