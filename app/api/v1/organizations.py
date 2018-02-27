@@ -100,7 +100,7 @@ def get_organization_users(organization_slug):
 
 @organizations_blueprint.route('/organizations/<organization_slug>/users', methods=['POST'])
 @authenticate
-def add_organization_user(resp, organization_slug):
+def add_organization_user(resp, organization_slug):     # pylint: disable=too-many-return-statements
     """Add user to organization."""
     response_object = {
         'status': 'fail',
@@ -135,7 +135,7 @@ def add_organization_user(resp, organization_slug):
                 'message': f'${user.username} added to ${organization.name}'
             }
             return jsonify(response_object), 200
-        except Exception as e:
+        except Exception as e:      # pylint: disable=broad-except
             response_object['message'] = f'Exception: ${str(e)}'
             return jsonify(response_object), 500
     except ValueError:
