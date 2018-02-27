@@ -7,7 +7,7 @@ from app.api.constants import PAGE_SIZE
 from app.api.utils import slug2uuid
 from app.extensions import db
 from app.organizations.organization_models import Organization, organization_schema
-from app.users.user_models import user_schema
+from app.users.user_models import User, user_schema
 from app.users.user_helpers import authenticate
 from app.sample_groups.sample_group_models import sample_group_schema
 
@@ -94,6 +94,50 @@ def get_organization_users(organization_slug):
             'data': users,
         }
         return jsonify(response_object), 200
+    except ValueError:
+        return jsonify(response_object), 404
+
+
+@organizations_blueprint.route('/organizations/<organization_slug>/users', methods=['POST'])
+@authenticate
+def add_organization_user(resp, organization_slug):
+    """Add user to organization."""
+    response_object = {
+        'status': 'fail',
+        'message': 'Invalid payload.'
+    }
+    post_data = request.get_json()
+    if not post_data:
+        return jsonify(response_object), 400
+    user_id = post_data.get('user_id')
+    try:
+        organization_id = slug2uuid(organization_slug)
+        organization = Organization.query.filter_by(id=organization_id).first()
+        if not organization:
+            response_object['message'] = 'Organization does not exist'
+            return jsonify(response_object), 404
+
+        auth_user = User.query.filter_by(id=resp).first()
+        if not auth_user or auth_user not in organization.admin_users:
+            response_object = {
+                'status': 'fail',
+                'message': 'You do not have permission to perform that action.'
+            }
+            return jsonify(response_object), 403
+        user = User.query.filter_by(id=user_id).first()
+        if not user:
+            response_object['message'] = 'User does not exist'
+            return jsonify(response_object), 404
+        try:
+            organization.users.append(user)
+            response_object = {
+                'status': 'success',
+                'message': f'${user.username} added to ${organization.name}'
+            }
+            return jsonify(response_object), 200
+        except Exception as e:
+            response_object['message'] = f'Exception: ${str(e)}'
+            return jsonify(response_object), 500
     except ValueError:
         return jsonify(response_object), 404
 

@@ -202,7 +202,7 @@ class TestOrganizationModule(BaseTestCase):
             )
             data = json.loads(response.data.decode())
             self.assertEqual(response.status_code, 200)
-            self.assertIn(user, organization.admin_users)
+            self.assertIn(user, organization.users)
             self.assertIn('success', data['status'])
 
     def test_unauthenticated_add_user_to_organiztion(self):
@@ -220,8 +220,8 @@ class TestOrganizationModule(BaseTestCase):
             )
             data = json.loads(response.data.decode())
             self.assertEqual(response.status_code, 401)
-            self.assertIn('You must log in to perform that action.', data['message'])
-            self.assertIn('fail', data['status'])
+            self.assertIn('Provide a valid auth token.', data['message'])
+            self.assertIn('error', data['status'])
 
     @with_user
     def test_unauthorized_add_user_to_organiztion(self, auth_headers, *_):
