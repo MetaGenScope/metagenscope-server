@@ -98,6 +98,8 @@ def seed_db():
 
     mason_lab = Organization(name='Mason Lab', admin_email='benjamin.blair.chrobot@gmail.com')
     mason_lab.users = [bchrobot, dcdanko, cmason]
+    mason_lab.add_admin(bchrobot)
+    mason_lab.add_admin(dcdanko)
     mason_lab.sample_groups = [sample_group]
 
     db.session.add(mason_lab)

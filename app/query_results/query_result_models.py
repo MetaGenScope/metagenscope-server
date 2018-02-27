@@ -197,5 +197,5 @@ class QueryResultMeta(mongoDB.Document):
     def result_types(self):
         """Return a list of all query result types available for this record."""
         blacklist = ['id', 'sample_group_id', 'created_at']
-        all_fields = [k for k, v in self.__class__._fields.items() if k not in blacklist]
+        all_fields = [k for k, v in self.__class__._fields.items() if k not in blacklist]   # pylint: disable=no-member
         return [field for field in all_fields if hasattr(self, field)]
