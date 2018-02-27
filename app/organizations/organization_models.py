@@ -8,7 +8,7 @@ from marshmallow import fields
 
 from app.base import BaseSchema
 from app.extensions import db
-from app.users.user_models import User, UserSchema
+from app.users.user_models import UserSchema
 from app.sample_groups.sample_group_models import SampleGroupSchema
 
 
