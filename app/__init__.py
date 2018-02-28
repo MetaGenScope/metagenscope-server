@@ -20,7 +20,6 @@ from app.api.v1.sample_groups import sample_groups_blueprint
 from app.api.constants import URL_PREFIX
 from app.config import app_config
 from app.extensions import mongoDB, db, migrate, bcrypt
-from app.query_results.query_result_models import QueryResultMeta as QRM
 
 
 def create_app():
@@ -51,10 +50,8 @@ def create_app():
 
 def register_modules(app):
     """Register each display module."""
-    # MetagenomicGroupQRM = QRM.build_result_type('MetagenomicGroupQRM')  # pylint: disable=invalid-name
     query_results_blueprint = Blueprint('query_results', __name__)
     for module in all_display_modules:
-        QRM.add_property(module.name(), module.get_query_result_wrapper_field())
         module.register_api_call(query_results_blueprint)
     app.register_blueprint(query_results_blueprint, url_prefix=URL_PREFIX)
 
