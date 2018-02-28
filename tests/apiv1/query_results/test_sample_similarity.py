@@ -71,6 +71,5 @@ class TestSampleSimilarityModule(BaseTestCase):
             )
             data = json.loads(response.data.decode())
             self.assertEqual(response.status_code, 404)
-            # print(data['message'])
             self.assertIn('Query Result does not exist.', data['message'])
             self.assertIn('fail', data['status'])

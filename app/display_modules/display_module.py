@@ -3,7 +3,7 @@
 from mongoengine.errors import ValidationError
 
 from app.query_results.query_result_models import QueryResultMeta, QueryResultWrapper
-from app.api.v1.endpoint_response import EndpointResponse
+from app.api.endpoint_response import EndpointResponse
 
 
 class DisplayModule:

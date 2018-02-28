@@ -2,7 +2,7 @@
 
 from mongoengine import ValidationError
 
-from app.api.v1.display_modules.display_module import DisplayModule
+from app.display_modules.display_module import DisplayModule
 from app.extensions import mongoDB as mdb
 
 

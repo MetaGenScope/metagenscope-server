@@ -1,8 +1,6 @@
 """MetaGenScope server application."""
 
-
 import os
-
 
 from flask import Flask, jsonify, Blueprint
 from flask_sqlalchemy import SQLAlchemy
@@ -10,8 +8,6 @@ from flask_migrate import Migrate
 from flask_bcrypt import Bcrypt
 from flask_cors import CORS
 
-
-from app.api.v1.display_modules import all_display_modules
 from app.api.v1.ping import ping_blueprint
 from app.api.v1.users import users_blueprint
 from app.api.v1.auth import auth_blueprint
@@ -19,6 +15,7 @@ from app.api.v1.organizations import organizations_blueprint
 from app.api.v1.sample_groups import sample_groups_blueprint
 from app.api.constants import URL_PREFIX
 from app.config import app_config
+from app.display_modules import all_display_modules
 from app.extensions import mongoDB, db, migrate, bcrypt
 
 
