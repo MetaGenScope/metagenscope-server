@@ -2,12 +2,16 @@
 
 from mongoengine import ValidationError
 
-from app.query_results.query_result_models import (
-    QueryResultMeta,
+
+from app.display_modules.reads_classified import (
     ReadsClassifiedResult,
-    ReadsClassifiedResultWrapper,
+    ReadsClassifiedModule,
 )
+from app.query_results.query_result_models import QueryResultMeta
 from tests.base import BaseTestCase
+
+
+ReadsClassifiedResultWrapper = ReadsClassifiedModule.get_query_result_wrapper()
 
 
 class TestReadsClassifiedResult(BaseTestCase):

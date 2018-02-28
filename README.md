@@ -84,6 +84,21 @@ $ make cov
 
 MetaGenScope uses the GitFlow branching strategy along with Pull Requests for code reviews. Check out [this post](https://devblog.dwarvesf.com/post/git-best-practices/) by the Dwarves Foundation for more information.
 
+### Display Modules
+
+`DisplayModule`s provide the backing data for each front-end visualization type. They are in charge of:
+
+- Providing the data model for the visualization backing data
+- Enumerating the `ToolResult` types that are valid data sources (_WIP_)
+- The Middleware task that transforms a set of `Sample`s into the module's data model (_WIP_)
+
+These modules live in `app/display_modules/` and are self-contained: all models, API endpoint definitions, long-running tasks, and tests live within each module.
+
+Adding a new `DisplayModule` is easy:
+
+1. Write your new module `app/display_modules/my_new_module` following existing conventions.
+2. Add the module to `all_display_modules` in `app/display_modules/__init__.py` to make sure it is picked up by the application.
+
 ## Continuous Integration
 
 The test suite is run automatically on CircleCI for each push to Github. You can skip this behavior for a commit by appending `[skip ci]` to the commit message.

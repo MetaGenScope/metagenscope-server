@@ -6,12 +6,15 @@ import random
 
 import factory
 
-from app.query_results.query_result_models import (
+from app.display_modules.sample_similarity import (
     ToolDocument,
     SampleSimilarityResult,
-    SampleSimilarityResultWrapper,
-    QueryResultMeta,
+    SampleSimilarityDisplayModule,
 )
+from app.query_results.query_result_models import QueryResultMeta
+
+# Define aliases
+SampleSimilarityResultWrapper = SampleSimilarityDisplayModule.get_query_result_wrapper()
 
 
 class ToolFactory(factory.mongoengine.MongoEngineFactory):

@@ -1,12 +1,11 @@
 """MetaGenScope seed data."""
 
 
-from app.query_results.query_result_models import (
-    SampleSimilarityResultWrapper,
-    TaxonAbundanceResultWrapper,
-    ReadsClassifiedResultWrapper,
-    HMPResultWrapper,
-)
+from app.display_modules.hmp import HMPModule
+from app.display_modules.reads_classified import ReadsClassifiedModule
+from app.display_modules.sample_similarity import SampleSimilarityDisplayModule
+from app.display_modules.taxon_abundance import TaxonAbundanceDisplayModule
+
 from seed.abrf_2017 import (
     load_sample_similarity,
     load_taxon_abundance,
@@ -14,6 +13,11 @@ from seed.abrf_2017 import (
     load_hmp,
 )
 
+
+SampleSimilarityResultWrapper = SampleSimilarityDisplayModule.get_query_result_wrapper()
+TaxonAbundanceResultWrapper = TaxonAbundanceDisplayModule.get_query_result_wrapper()
+ReadsClassifiedResultWrapper = ReadsClassifiedModule.get_query_result_wrapper()
+HMPResultWrapper = HMPModule.get_query_result_wrapper()
 
 sample_similarity = SampleSimilarityResultWrapper(status='S', data=load_sample_similarity())
 taxon_abundance = TaxonAbundanceResultWrapper(status='S', data=load_taxon_abundance())
