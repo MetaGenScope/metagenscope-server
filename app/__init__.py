@@ -12,6 +12,7 @@ from app.api.v1.ping import ping_blueprint
 from app.api.v1.users import users_blueprint
 from app.api.v1.auth import auth_blueprint
 from app.api.v1.organizations import organizations_blueprint
+from app.api.v1.samples import samples_blueprint
 from app.api.v1.sample_groups import sample_groups_blueprint
 from app.api.constants import URL_PREFIX
 from app.config import app_config
@@ -69,6 +70,7 @@ def register_blueprints(app):
     app.register_blueprint(users_blueprint, url_prefix=URL_PREFIX)
     app.register_blueprint(auth_blueprint, url_prefix=URL_PREFIX)
     app.register_blueprint(organizations_blueprint, url_prefix=URL_PREFIX)
+    app.register_blueprint(samples_blueprint, url_prefix=URL_PREFIX)
     app.register_blueprint(sample_groups_blueprint, url_prefix=URL_PREFIX)
 
 

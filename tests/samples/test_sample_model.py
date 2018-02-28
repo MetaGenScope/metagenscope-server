@@ -19,6 +19,6 @@ class TestSampleModel(BaseTestCase):
 
     def test_add_duplicate_name(self):
         """Ensure duplicate sample names are not allowed."""
-        sample = Sample(name='SMPL_01').save()
+        Sample(name='SMPL_01').save()
         duplicate = Sample(name='SMPL_01')
         self.assertRaises(NotUniqueError, duplicate.save)
