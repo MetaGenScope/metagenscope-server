@@ -16,6 +16,7 @@ from app.api.v1.sample_groups import sample_groups_blueprint
 from app.api.constants import URL_PREFIX
 from app.config import app_config
 from app.display_modules import all_display_modules
+from app.tool_results import all_tool_result_modules
 from app.extensions import mongoDB, db, migrate, bcrypt
 
 
@@ -38,19 +39,28 @@ def create_app():
     migrate.init_app(app, db)
 
     # Register application components
-    register_modules(app)
+    register_tool_result_modules(app)
+    register_display_modules(app)
     register_blueprints(app)
     register_error_handlers(app)
 
     return app
 
 
-def register_modules(app):
-    """Register each display module."""
-    query_results_blueprint = Blueprint('query_results', __name__)
+def register_tool_result_modules(app):
+    """Register each Tool Result module."""
+    tool_result_modules_blueprint = Blueprint('tool_result_modules', __name__)
+    for module in all_tool_result_modules:
+        module.register_api_call(tool_result_modules_blueprint)
+    app.register_blueprint(tool_result_modules_blueprint, url_prefix=URL_PREFIX)
+
+
+def register_display_modules(app):
+    """Register each Display Module."""
+    display_modules_blueprint = Blueprint('display_modules', __name__)
     for module in all_display_modules:
-        module.register_api_call(query_results_blueprint)
-    app.register_blueprint(query_results_blueprint, url_prefix=URL_PREFIX)
+        module.register_api_call(display_modules_blueprint)
+    app.register_blueprint(display_modules_blueprint, url_prefix=URL_PREFIX)
 
 
 def register_blueprints(app):

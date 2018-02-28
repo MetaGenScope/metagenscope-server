@@ -13,10 +13,10 @@ class EndpointResponse:
         self.message = ''
         self.data = None
 
-    def success(self):
+    def success(self, code=200):
         """Set response as successful."""
         self.status = 'success'
-        self.code = 200
+        self.code = code
 
     def json_and_code(self):
         """Return EndpointResponse as Flask-format response."""
