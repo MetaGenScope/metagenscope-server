@@ -5,7 +5,7 @@ import copy
 from mongoengine import ValidationError
 
 from app.query_results.query_result_models import QueryResultMeta
-from app.api.v1.display_modules.hmp_module import (
+from app.display_modules.hmp import (
     HMPResult,
     HMPModule,
 )

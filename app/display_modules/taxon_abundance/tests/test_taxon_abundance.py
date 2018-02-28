@@ -3,7 +3,7 @@
 from mongoengine import ValidationError
 
 from app.query_results.query_result_models import QueryResultMeta
-from app.api.v1.display_modules.taxon_abundance_module import (
+from app.display_modules.taxon_abundance import (
     TaxonAbundanceResult,
     TaxonAbundanceDisplayModule,
 )

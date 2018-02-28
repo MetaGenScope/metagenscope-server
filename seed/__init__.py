@@ -1,10 +1,10 @@
 """MetaGenScope seed data."""
 
 
-from app.api.v1.display_modules.hmp_module import HMPModule
-from app.api.v1.display_modules.reads_classified_module import ReadsClassifiedModule
-from app.api.v1.display_modules.sample_similarity_module import SampleSimilarityDisplayModule
-from app.api.v1.display_modules.taxon_abundance_module import TaxonAbundanceDisplayModule
+from app.display_modules.hmp import HMPModule
+from app.display_modules.reads_classified import ReadsClassifiedModule
+from app.display_modules.sample_similarity import SampleSimilarityDisplayModule
+from app.display_modules.taxon_abundance import TaxonAbundanceDisplayModule
 
 from seed.abrf_2017 import (
     load_sample_similarity,

@@ -3,10 +3,10 @@
 import json
 import os
 
-from app.api.v1.display_modules.hmp_module import HMPResult
-from app.api.v1.display_modules.reads_classified_module import ReadsClassifiedResult
-from app.api.v1.display_modules.sample_similarity_module import SampleSimilarityResult
-from app.api.v1.display_modules.taxon_abundance_module import TaxonAbundanceResult
+from app.display_modules.hmp import HMPResult
+from app.display_modules.reads_classified import ReadsClassifiedResult
+from app.display_modules.sample_similarity import SampleSimilarityResult
+from app.display_modules.taxon_abundance import TaxonAbundanceResult
 
 
 LOCATION = os.path.realpath(os.path.join(os.getcwd(),

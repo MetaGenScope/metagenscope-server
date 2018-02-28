@@ -5,6 +5,7 @@ import json
 from tests.base import BaseTestCase
 from tests.factories.query_result import QueryResultMetaFactory
 
+
 class TestSampleSimilarityModule(BaseTestCase):
     """Tests for the Sample Similarity module."""
 

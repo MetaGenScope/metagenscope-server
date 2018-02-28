@@ -6,7 +6,7 @@ import random
 
 import factory
 
-from app.api.v1.display_modules.sample_similarity_module import (
+from app.display_modules.sample_similarity import (
     ToolDocument,
     SampleSimilarityResult,
     SampleSimilarityDisplayModule,

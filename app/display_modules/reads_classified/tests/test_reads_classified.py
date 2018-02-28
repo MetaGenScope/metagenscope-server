@@ -3,7 +3,7 @@
 from mongoengine import ValidationError
 
 
-from app.api.v1.display_modules.reads_classified_module import (
+from app.display_modules.reads_classified import (
     ReadsClassifiedResult,
     ReadsClassifiedModule,
 )
