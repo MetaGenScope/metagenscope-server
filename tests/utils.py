@@ -37,8 +37,7 @@ def add_sample_group(name, access_scheme='public', created_at=datetime.datetime.
     db.session.commit()
     return group
 
-# pylint: disable=invalid-name
-def with_user(f):
+def with_user(f):   # pylint: disable=invalid-name
     """Decorate API route calls requiring authentication."""
     @wraps(f)
     def decorated_function(self, *args, **kwargs):
