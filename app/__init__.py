@@ -7,6 +7,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_bcrypt import Bcrypt
 from flask_cors import CORS
+import wtforms_json
 
 from app.api.v1.ping import ping_blueprint
 from app.api.v1.users import users_blueprint
@@ -17,7 +18,8 @@ from app.api.v1.sample_groups import sample_groups_blueprint
 from app.api.constants import URL_PREFIX
 from app.config import app_config
 from app.display_modules import all_display_modules
-from app.tool_results import all_tool_result_modules
+from app.tool_results import ToolResultModule, all_tool_result_modules
+from app.tool_results.register import register_modules
 from app.extensions import mongoDB, db, migrate, bcrypt
 
 
@@ -38,6 +40,7 @@ def create_app():
     db.init_app(app)
     bcrypt.init_app(app)
     migrate.init_app(app, db)
+    wtforms_json.init()
 
     # Register application components
     register_tool_result_modules(app)
@@ -51,8 +54,7 @@ def create_app():
 def register_tool_result_modules(app):
     """Register each Tool Result module."""
     tool_result_modules_blueprint = Blueprint('tool_result_modules', __name__)
-    for module in all_tool_result_modules:
-        module.register_api_call(tool_result_modules_blueprint)
+    register_modules(all_tool_result_modules, tool_result_modules_blueprint)
     app.register_blueprint(tool_result_modules_blueprint, url_prefix=URL_PREFIX)
 
 

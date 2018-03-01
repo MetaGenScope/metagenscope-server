@@ -4,7 +4,7 @@ from app.extensions import mongoDB
 from app.tool_results.tool_module import ToolResult, ToolResultModule
 
 
-class ReadsClassifiedResult(ToolResult):
+class ReadsClassifiedResult(ToolResult):    # pylint: disable=too-few-public-methods
     """Reads Classified tool's result type."""
 
     viral = mongoDB.IntField()
@@ -21,3 +21,8 @@ class ReadsClassifiedResultModule(ToolResultModule):
     def name(cls):
         """Return Reads Classified module's unique identifier string."""
         return 'reads_classified'
+
+    @classmethod
+    def result_model(cls):
+        """Return Reads Classified module's model class."""
+        return ReadsClassifiedResult

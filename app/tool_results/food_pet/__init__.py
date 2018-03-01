@@ -1,16 +1,22 @@
-"""Food and Pet tool module."""
+"""
+DEPRECATED: Food and Pet tool module.
+
+This module is different in the new pipeline and should be ignored for now.
+"""
 
 from app.extensions import mongoDB
 from app.tool_results.tool_module import ToolResult, ToolResultModule
 
 
-class FoodPetResult(ToolResult):
+class FoodPetResult(ToolResult):        # pylint: disable=too-few-public-methods
     """Food/Pet tool's result type."""
 
-    vegetables = mongoDB.ListField(mongoDB.DictField(default={}), default=[])
-    fruits = mongoDB.ListField(mongoDB.DictField(default={}), default=[])
-    pets = mongoDB.ListField(mongoDB.DictField(default={}), default=[])
-    meats = mongoDB.ListField(mongoDB.DictField(default={}), default=[])
+    # DictFields are of the form: {<sample_id>: <sample_value>}
+    vegetables = mongoDB.DictField(default={})
+    fruits = mongoDB.DictField(default={})
+    pets = mongoDB.DictField(default={})
+    meats = mongoDB.DictField(default={})
+
     total_reads = mongoDB.IntField()
 
 
@@ -21,3 +27,8 @@ class FoodPetResultModule(ToolResultModule):
     def name(cls):
         """Return Food and Pet module's unique identifier string."""
         return 'food_and_pet'
+
+    @classmethod
+    def result_model(cls):
+        """Return Food and Pet module's model class."""
+        return FoodPetResult

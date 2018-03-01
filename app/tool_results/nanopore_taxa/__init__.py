@@ -4,7 +4,7 @@ from app.extensions import mongoDB
 from app.tool_results.tool_module import ToolResult, ToolResultModule
 
 
-class NanoporeTaxaResult(ToolResult):
+class NanoporeTaxaResult(ToolResult):       # pylint: disable=too-few-public-methods
     """Nanopore tool's taxa result type."""
 
     # The taxa dict is a map from taxon name to abundance value
@@ -18,3 +18,8 @@ class NanoporeTaxaResultModule(ToolResultModule):
     def name(cls):
         """Return Nanopore Taxa module's unique identifier string."""
         return 'nanopore_taxa'
+
+    @classmethod
+    def result_model(cls):
+        """Return Nanopore Taxa module's model class."""
+        return NanoporeTaxaResult

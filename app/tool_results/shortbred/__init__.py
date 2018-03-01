@@ -4,7 +4,7 @@ from app.extensions import mongoDB
 from app.tool_results.tool_module import ToolResult, ToolResultModule
 
 
-class ShortbredResult(ToolResult):
+class ShortbredResult(ToolResult):      # pylint: disable=too-few-public-methods
     """Shortbred tool's result type."""
 
     abundances = mongoDB.DictField()
@@ -17,3 +17,8 @@ class ShortbredResultModule(ToolResultModule):
     def name(cls):
         """Return Shortbred module's unique identifier string."""
         return 'shortbred'
+
+    @classmethod
+    def result_model(cls):
+        """Return Shortbred module's model class."""
+        return ShortbredResult

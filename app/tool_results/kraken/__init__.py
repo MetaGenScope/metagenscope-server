@@ -4,7 +4,7 @@ from app.extensions import mongoDB
 from app.tool_results.tool_module import ToolResult, ToolResultModule
 
 
-class KrakenResult(ToolResult):
+class KrakenResult(ToolResult):     # pylint: disable=too-few-public-methods
     """Kraken tool's result type."""
 
     # The taxa dict is a map from taxon name to abundance value
@@ -18,3 +18,8 @@ class KrakenResultModule(ToolResultModule):
     def name(cls):
         """Return Kraken module's unique identifier string."""
         return 'kraken'
+
+    @classmethod
+    def result_model(cls):
+        """Return Kraken module's model class."""
+        return KrakenResult
