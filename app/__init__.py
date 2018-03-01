@@ -7,7 +7,6 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_bcrypt import Bcrypt
 from flask_cors import CORS
-import wtforms_json
 
 from app.api.v1.ping import ping_blueprint
 from app.api.v1.users import users_blueprint
@@ -40,7 +39,6 @@ def create_app():
     db.init_app(app)
     bcrypt.init_app(app)
     migrate.init_app(app, db)
-    wtforms_json.init()
 
     # Register application components
     register_tool_result_modules(app)

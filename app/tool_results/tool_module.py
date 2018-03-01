@@ -3,7 +3,7 @@
 from app.extensions import mongoDB
 
 
-class ToolResult(mongoDB.EmbeddedDocument): # pylint: disable=too-few-public-methods
+class ToolResult(mongoDB.EmbeddedDocument):  # pylint: disable=too-few-public-methods
     """Base mongo result class."""
 
     # Turns out there isn't much in common between ToolResult types...

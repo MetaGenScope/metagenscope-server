@@ -2,6 +2,7 @@
 
 from app.samples.sample_models import Sample
 from app.tool_results.kraken import KrakenResult
+from app.tool_results.kraken.tests.constants import TEST_TAXA
 
 from tests.base import BaseTestCase
 
@@ -11,15 +12,8 @@ class TestKrakenModel(BaseTestCase):
 
     def test_add_kraken_result(self):
         """Ensure Kraken result model is created correctly."""
-        taxa = {
-            'd__Viruses': 1733,
-            'd__Bacteria': 7396285,
-            'd__Archaea': 12,
-            'd__Bacteria|p__Proteobacteria': 7285377,
-            'd__Archaea|p__Euryarchaeota|c__Methanomicrobia': 2,
-            'd__Viruses|o__Caudovirales': 1694,
-        }
-        kraken = KrakenResult(taxa=taxa)
+
+        kraken = KrakenResult(taxa=TEST_TAXA)
         sample = Sample(name='SMPL_01', kraken=kraken).save()
         self.assertTrue(sample.kraken)
         tool_result = sample.kraken

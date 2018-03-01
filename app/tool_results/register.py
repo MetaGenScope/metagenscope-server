@@ -1,52 +1,59 @@
 """Base module for Tool Results."""
 
 from flask import request
-from flask_mongoengine.wtf import model_form
 
-from app.extensions import mongoDB
-from app.users.user_models import User
-from app.samples.sample_models import Sample
-from app.users.user_helpers import authenticate
 from app.api.endpoint_response import EndpointResponse
+from app.api.utils import slug2uuid, handle_mongo_lookup
+from app.samples.sample_models import Sample
+from app.users.user_models import User
+from app.users.user_helpers import authenticate
 
-@authenticate
+
 def receive_upload(cls, resp, sample_id):
     """Define handler for receiving uploads of analysis tool results."""
     response = EndpointResponse()
-    # TODO: Check Sample exists
-    print(sample_id)
-    # TODO: Ensure user has permission on Sample
-    auth_user = User.query.filter_by(id=resp).first()
-    print(auth_user)
-    # TODO: Upsert data
-    ModelForm = model_form(cls.result_model())  # pylint: disable=invalid-name
-    post_json = request.get_json()
-    tool_result = ModelForm.from_json(post_json)
-    if tool_result.validate():
-        tool_result.save()
-        response.success()
-        response.data = post_json
-    return response.json_and_code()
+
+    @handle_mongo_lookup(response, cls.__name__)
+    def save_tool_result():
+        """Validate and save tool result to Sample."""
+        sample = Sample.objects(uuid=sample_id)[0]
+        # TODO: Write actual validation:
+        #       - look up SampleGroup (SQL-land) that the sample belongs to
+        #       - ask SampleGroup whether auth_user has write access
+        #           + Check if auth_user is group owner
+        #           + Check if auth_user is member of any Organization with write access
+        auth_user = User.query.filter_by(id=resp).first()
+        if not auth_user:
+            response.message = 'Authorization failed.'
+            response.code = 403
+        else:
+            post_json = request.get_json()
+            tool_result = cls.result_model()(post_json)
+            setattr(sample, cls.name(), tool_result)
+            sample.save()
+            response.success(201)
+            response.data = post_json
+        return response.json_and_code()
+    return save_tool_result()
 
 
 def register_api_call(cls, router):
     """Register API endpoint for this display module type."""
-    endpoint_url = f'/samples/<sample_id>/{cls.name()}'
+    endpoint_url = f'/samples/<sample_slug>/{cls.name()}'
     endpoint_name = f'post_{cls.name()}'
-    view_function = lambda resp, sample_id: receive_upload(cls, resp, sample_id)
+
+    @authenticate
+    def view_function(resp, sample_slug):
+        """Wrap receive_upload to provide class."""
+        return receive_upload(cls, resp, slug2uuid(sample_slug))
+
     router.add_url_rule(endpoint_url,
                         endpoint_name,
                         view_function,
                         methods=['POST'])
 
-def register_modules(modules, router):
-    """Register list of modules."""
-    for module in modules:
-        # Register sub-document properties on Sample
-        module_name = module.name()
-        result_model = module.result_model()
-        result_field = mongoDB.EmbeddedDocumentField(result_model)
-        setattr(Sample, module_name, result_field)
 
-        # Register API endpoints
+def register_modules(modules, router):
+    """Register module API endpoints."""
+    for module in modules:
         register_api_call(module, router)
