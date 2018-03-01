@@ -20,7 +20,8 @@ COV = coverage.coverage(
     branch=True,
     include='app/*',
     omit=[
-        'tests/*'
+        'tests/*',
+        '*/test_*.py',
     ]
 )
 COV.start()
