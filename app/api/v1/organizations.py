@@ -12,8 +12,7 @@ from app.users.user_helpers import authenticate
 from app.sample_groups.sample_group_models import sample_group_schema
 
 
-# pylint: disable=invalid-name
-organizations_blueprint = Blueprint('organizations', __name__)
+organizations_blueprint = Blueprint('organizations', __name__)  # pylint: disable=invalid-name
 
 
 @organizations_blueprint.route('/organizations', methods=['POST'])
@@ -45,8 +44,8 @@ def add_organization(resp):
             'message': 'Sorry. That name already exists.'
         }
         return jsonify(response_object), 400
-    except exc.IntegrityError as e:
-        print(e)
+    except exc.IntegrityError as integrity_error:
+        print(integrity_error)
         db.session.rollback()
         response_object = {
             'status': 'fail',
@@ -135,8 +134,8 @@ def add_organization_user(resp, organization_slug):     # pylint: disable=too-ma
                 'message': f'${user.username} added to ${organization.name}'
             }
             return jsonify(response_object), 200
-        except Exception as e:      # pylint: disable=broad-except
-            response_object['message'] = f'Exception: ${str(e)}'
+        except Exception as integrity_error:      # pylint: disable=broad-except
+            response_object['message'] = f'Exception: ${str(integrity_error)}'
             return jsonify(response_object), 500
     except ValueError:
         return jsonify(response_object), 404

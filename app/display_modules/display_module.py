@@ -1,9 +1,8 @@
 """Base display module type."""
 
-from mongoengine.errors import ValidationError
-
-from app.query_results.query_result_models import QueryResultMeta, QueryResultWrapper
 from app.api.endpoint_response import EndpointResponse
+from app.api.utils import handle_mongo_lookup
+from app.query_results.query_result_models import QueryResultMeta, QueryResultWrapper
 
 
 class DisplayModule:
@@ -23,7 +22,10 @@ class DisplayModule:
     def api_call(cls, result_id):
         """Define handler for API requests that defers to display module type."""
         response = EndpointResponse()
-        try:
+
+        @handle_mongo_lookup(response, 'Query Result')
+        def fetch_data():
+            """Perform Query Result lookup and formatting."""
             query_result = QueryResultMeta.objects(id=result_id)[0]
             if cls.name() not in query_result:
                 msg = '{} is not in this QueryResult.'.format(cls.name())
@@ -33,13 +35,9 @@ class DisplayModule:
             else:
                 response.success()
                 response.data = cls.get_data(query_result[cls.name()])
-        except IndexError:
-            response.message = 'Query Result does not exist.'
-            response.code = 404
-        except ValidationError as validation_error:
-            response.message = f'{validation_error}'
-            response.code = 400
-        return response.json_and_code()
+            return response.json_and_code()
+
+        return fetch_data()
 
     @classmethod
     def register_api_call(cls, router):

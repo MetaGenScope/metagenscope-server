@@ -5,6 +5,7 @@ from flask_testing import TestCase
 from app import create_app, db
 from app.config import app_config
 from app.query_results.query_result_models import QueryResultMeta
+from app.samples.sample_models import Sample
 
 
 app = create_app()
@@ -28,5 +29,7 @@ class BaseTestCase(TestCase):
         # Postgres
         db.session.remove()
         db.drop_all()
+
         # Mongo
         QueryResultMeta.drop_collection()
+        Sample.drop_collection()

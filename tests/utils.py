@@ -8,6 +8,7 @@ from functools import wraps
 from app import db
 from app.users.user_models import User
 from app.organizations.organization_models import Organization
+from app.samples.sample_models import Sample
 from app.sample_groups.sample_group_models import SampleGroup
 
 
@@ -30,6 +31,10 @@ def add_organization(name, admin_email, created_at=datetime.datetime.utcnow()):
     db.session.commit()
     return organization
 
+def add_sample(name, metadata={}, created_at=datetime.datetime.utcnow()):   # pylint: disable=dangerous-default-value
+    """Wrap functionality for adding sample."""
+    return Sample(name=name, metadata=metadata, created_at=created_at).save()
+
 def add_sample_group(name, access_scheme='public', created_at=datetime.datetime.utcnow()):
     """Wrap functionality for adding sample group."""
     group = SampleGroup(name=name, access_scheme=access_scheme, created_at=created_at)
@@ -37,8 +42,7 @@ def add_sample_group(name, access_scheme='public', created_at=datetime.datetime.
     db.session.commit()
     return group
 
-# pylint: disable=invalid-name
-def with_user(f):
+def with_user(f):   # pylint: disable=invalid-name
     """Decorate API route calls requiring authentication."""
     @wraps(f)
     def decorated_function(self, *args, **kwargs):
