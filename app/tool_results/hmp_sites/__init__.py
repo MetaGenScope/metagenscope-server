@@ -7,9 +7,11 @@ from app.tool_results.tool_module import ToolResult, ToolResultModule
 class HmpSitesResult(ToolResult):       # pylint: disable=too-few-public-methods
     """HMP Sites tool's result type."""
 
-    gut = mongoDB.IntField()
-    skin = mongoDB.IntField()
-    throat = mongoDB.IntField()
+    gut = mongoDB.FloatField()
+    skin = mongoDB.FloatField()
+    throat = mongoDB.FloatField()
+    urogenital = mongoDB.FloatField()
+    airways = mongoDB.FloatField()
 
 
 class HmpSitesResultModule(ToolResultModule):
