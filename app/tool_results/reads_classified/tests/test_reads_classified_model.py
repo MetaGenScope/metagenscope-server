@@ -1,7 +1,5 @@
 """Test suite for Reads Classified tool result model."""
 
-from mongoengine import ValidationError
-
 from app.samples.sample_models import Sample
 from app.tool_results.reads_classified import ReadsClassifiedResult
 from app.tool_results.reads_classified.tests.constants import TEST_READS
