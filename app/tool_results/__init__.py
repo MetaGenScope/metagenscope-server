@@ -1,23 +1,33 @@
 """Modules for genomic analysis tool outputs."""
 
-# from app.tool_results.food_pet import FoodPetResultModule
-from app.tool_results.hmp_sites import HmpSitesResultModule
-from app.tool_results.kraken import KrakenResultModule
-from app.tool_results.metaphlan2 import Metaphlan2ResultModule
-from app.tool_results.mic_census import MicCensusResultModule
-from app.tool_results.reads_classified import ReadsClassifiedResultModule
-from app.tool_results.shortbred import ShortbredResultModule
+import importlib
+import inspect
+import pkgutil
+import sys
 
 # Re-export modules
 from app.tool_results.tool_module import ToolResult, ToolResultModule
 
 
-all_tool_result_modules = [    # pylint: disable=invalid-name
-    # FoodPetResultModule,     # Skip this module for now
-    HmpSitesResultModule,
-    KrakenResultModule,
-    Metaphlan2ResultModule,
-    MicCensusResultModule,
-    ReadsClassifiedResultModule,
-    ShortbredResultModule,
-]
+def get_tool_module(tool_module):
+    """Inspect ToolResult module and return its Module class."""
+    classmembers = inspect.getmembers(tool_module, inspect.isclass)
+    modules = [classmember for name, classmember in classmembers
+               if name.endswith('ResultModule') and name != 'ToolResultModule']
+    if not modules:
+        return None
+    return modules[0]
+
+
+def find_all_tool_modules():
+    """Find all Tool Result modules."""
+    package = sys.modules[__name__]
+    all_modules = pkgutil.iter_modules(package.__path__)
+    blacklist = ['register', 'tool_module', 'food_pet']
+    tool_module_names = [modname for importer, modname, ispkg in all_modules
+                         if modname not in blacklist]
+    tool_modules = [importlib.import_module(f'app.tool_results.{name}')
+                    for name in tool_module_names]
+    return [get_tool_module(module) for module in tool_modules if module is not None]
+
+all_tool_result_modules = find_all_tool_modules() # pylint: disable=invalid-name
