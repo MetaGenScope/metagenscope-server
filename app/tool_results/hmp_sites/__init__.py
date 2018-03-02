@@ -15,7 +15,9 @@ class HmpSitesResult(ToolResult):       # pylint: disable=too-few-public-methods
     airways = mongoDB.FloatField()
 
     def clean(self):
+        """Check that all vals are in range [0, 1] if not then error."""
         def validate(*vals):
+            """Confirm vals are in range [0,1]. """
             for val in vals:
                 if (val > 1) or (val < 0):
                     return False

@@ -1,9 +1,9 @@
 """Reads Classified tool module."""
+from math import isclose
 from mongoengine import ValidationError
 
 from app.extensions import mongoDB
 from app.tool_results.tool_module import ToolResult, ToolResultModule
-from math import isclose
 
 
 class ReadsClassifiedResult(ToolResult):  # pylint: disable=too-few-public-methods
@@ -16,6 +16,7 @@ class ReadsClassifiedResult(ToolResult):  # pylint: disable=too-few-public-metho
     unknown = mongoDB.IntField()
 
     def clean(self):
+        """Checl that the sum is near 1."""
         tot = sum([self.viral, self.archaea,
                    self.bacteria, self.host, self.unknown])
         if not isclose(tot, 1.0):
