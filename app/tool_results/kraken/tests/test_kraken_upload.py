@@ -15,7 +15,7 @@ class TestKrakenUploads(BaseTestCase):
     @with_user
     def test_upload_kraken(self, auth_headers, *_):
         """Ensure a raw Kraken tool result can be uploaded."""
-        sample = Sample(name='SMPL_01').save()
+        sample = Sample(name='SMPL_Kraken_01').save()
         sample_uuid = sample.uuid
         sample_slug = uuid2slug(sample_uuid)
         with self.client:

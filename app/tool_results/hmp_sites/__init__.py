@@ -1,4 +1,5 @@
 """HMP Sites tool module."""
+
 from mongoengine import ValidationError
 
 from app.extensions import mongoDB
@@ -8,6 +9,7 @@ from app.tool_results.tool_module import ToolResult, ToolResultModule
 class HmpSitesResult(ToolResult):       # pylint: disable=too-few-public-methods
     """HMP Sites tool's result type."""
 
+    # We do not provide a default=0 because 0 is a valid cosine similarity value
     gut = mongoDB.FloatField()
     skin = mongoDB.FloatField()
     throat = mongoDB.FloatField()
@@ -17,9 +19,9 @@ class HmpSitesResult(ToolResult):       # pylint: disable=too-few-public-methods
     def clean(self):
         """Check that all vals are in range [0, 1] if not then error."""
         def validate(*vals):
-            """Confirm vals are in range [0,1]. """
+            """Confirm values are in range [0,1], if they exist."""
             for val in vals:
-                if (val > 1) or (val < 0):
+                if val is not None and (val < 0 or val > 1):
                     return False
             return True
 
@@ -28,7 +30,7 @@ class HmpSitesResult(ToolResult):       # pylint: disable=too-few-public-methods
                         self.throat,
                         self.urogenital,
                         self.airways):
-            msg = f'HMPSitesResult values in bad range'
+            msg = 'HMPSitesResult values in bad range'
             raise ValidationError(msg)
 
 
@@ -44,3 +46,8 @@ class HmpSitesResultModule(ToolResultModule):
     def result_model(cls):
         """Return HMP Sites module's model class."""
         return HmpSitesResult
+
+    @classmethod
+    def make_result_model(cls, post_json):
+        """Process uploaded JSON (if necessary) and create result model."""
+        return cls.result_model()(**post_json)
