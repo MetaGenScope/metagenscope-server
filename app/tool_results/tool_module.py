@@ -23,3 +23,7 @@ class ToolResultModule:
     def result_model(cls):
         """Return the Tool Result module's model class."""
         raise NotImplementedError()
+
+    @classmethod
+    def make_result_model(cls, post_json):
+        return cls.result_model()(post_json)

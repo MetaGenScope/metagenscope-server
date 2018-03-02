@@ -28,7 +28,7 @@ def receive_upload(cls, resp, sample_id):
             response.code = 403
         else:
             post_json = request.get_json()
-            tool_result = cls.result_model()(post_json)
+            tool_result = cls.make_result_model(post_json)
             setattr(sample, cls.name(), tool_result)
             sample.save()
             response.success(201)
