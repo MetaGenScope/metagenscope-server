@@ -46,8 +46,3 @@ class HmpSitesResultModule(ToolResultModule):
     def result_model(cls):
         """Return HMP Sites module's model class."""
         return HmpSitesResult
-
-    @classmethod
-    def make_result_model(cls, post_json):
-        """Process uploaded JSON (if necessary) and create result model."""
-        return cls.result_model()(**post_json)

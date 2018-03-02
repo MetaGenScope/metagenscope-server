@@ -8,7 +8,7 @@ class ShortbredResult(ToolResult):      # pylint: disable=too-few-public-methods
     """Shortbred tool's result type."""
 
     # Abundances is of the form: {<amr_gene>: <abundance_value>}
-    abundances = mongoDB.DictField()
+    abundances = mongoDB.MapField(mongoDB.FloatField(), required=True)
 
 
 class ShortbredResultModule(ToolResultModule):
@@ -23,8 +23,3 @@ class ShortbredResultModule(ToolResultModule):
     def result_model(cls):
         """Return Shortbred module's model class."""
         return ShortbredResult
-
-    @classmethod
-    def make_result_model(cls, post_json):
-        """Process uploaded JSON (if necessary) and create result model."""
-        return cls.result_model()(post_json)

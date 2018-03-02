@@ -28,8 +28,3 @@ class ReadsClassifiedResultModule(ToolResultModule):
     def result_model(cls):
         """Return Reads Classified module's model class."""
         return ReadsClassifiedResult
-
-    @classmethod
-    def make_result_model(cls, post_json):
-        """Spread JSON values before creating result model."""
-        return cls.result_model()(**post_json)

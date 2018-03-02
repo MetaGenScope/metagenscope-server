@@ -8,7 +8,7 @@ class Metaphlan2Result(ToolResult):     # pylint: disable=too-few-public-methods
     """Metaphlan 2 tool's result type."""
 
     # Taxa is of the form: {<taxon_name>: <abundance_value>}
-    taxa = mongoDB.DictField()
+    taxa = mongoDB.MapField(mongoDB.IntField(), required=True)
 
 
 class Metaphlan2ResultModule(ToolResultModule):

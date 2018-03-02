@@ -40,8 +40,3 @@ class MicCensusResultModule(ToolResultModule):
     def result_model(cls):
         """Return Microbe Census module's model class."""
         return MicCensusResult
-
-    @classmethod
-    def make_result_model(cls, post_json):
-        """Process uploaded JSON (if necessary) and create result model."""
-        return cls.result_model()(**post_json)

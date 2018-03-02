@@ -8,7 +8,7 @@ class KrakenResult(ToolResult):     # pylint: disable=too-few-public-methods
     """Kraken tool's result type."""
 
     # Taxa is of the form: {<taxon_name>: <abundance_value>}
-    taxa = mongoDB.DictField()
+    taxa = mongoDB.MapField(mongoDB.IntField(), required=True)
 
 
 class KrakenResultModule(ToolResultModule):
