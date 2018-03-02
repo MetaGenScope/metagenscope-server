@@ -1,4 +1,5 @@
 """Microbe Census tool module."""
+from mongoengine import ValidationError
 
 from app.extensions import mongoDB
 from app.tool_results.tool_module import ToolResult, ToolResultModule
@@ -10,6 +11,19 @@ class MicCensusResult(ToolResult):      # pylint: disable=too-few-public-methods
     average_genome_size = mongoDB.IntField()
     total_bases = mongoDB.IntField()
     genome_equivalents = mongoDB.IntField()
+
+    def clean(self):
+        def validate(*vals):
+            for val in vals:
+                if val < 0:
+                    return False
+            return True
+
+        if not validate(self.average_genome_size,
+                        self.total_bases,
+                        self.genome_equivalents):
+            msg = f'MicCensusResult values must be non-negative'
+            raise ValidationError(msg)
 
 
 class MicCensusResultModule(ToolResultModule):

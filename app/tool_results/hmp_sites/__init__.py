@@ -1,4 +1,5 @@
 """HMP Sites tool module."""
+from mongoengine import ValidationError
 
 from app.extensions import mongoDB
 from app.tool_results.tool_module import ToolResult, ToolResultModule
@@ -12,6 +13,21 @@ class HmpSitesResult(ToolResult):       # pylint: disable=too-few-public-methods
     throat = mongoDB.FloatField()
     urogenital = mongoDB.FloatField()
     airways = mongoDB.FloatField()
+
+    def clean(self):
+        def validate(*vals):
+            for val in vals:
+                if (val > 1) or (val < 0):
+                    return False
+                return True
+
+        if not validate(self.gut,
+                        self.skin,
+                        self.throat,
+                        self.urogenital,
+                        self.airways):
+            msg = f'HMPSitesResult values in bad range'
+            raise ValidationError(msg)
 
 
 class HmpSitesResultModule(ToolResultModule):
