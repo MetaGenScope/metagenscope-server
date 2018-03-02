@@ -19,7 +19,7 @@ class HmpSitesResult(ToolResult):       # pylint: disable=too-few-public-methods
             for val in vals:
                 if (val > 1) or (val < 0):
                     return False
-                return True
+            return True
 
         if not validate(self.gut,
                         self.skin,

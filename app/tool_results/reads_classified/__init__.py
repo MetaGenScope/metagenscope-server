@@ -3,6 +3,7 @@ from mongoengine import ValidationError
 
 from app.extensions import mongoDB
 from app.tool_results.tool_module import ToolResult, ToolResultModule
+from math import isclose
 
 
 class ReadsClassifiedResult(ToolResult):  # pylint: disable=too-few-public-methods
@@ -17,8 +18,7 @@ class ReadsClassifiedResult(ToolResult):  # pylint: disable=too-few-public-metho
     def clean(self):
         tot = sum([self.viral, self.archaea,
                    self.bacteria, self.host, self.unknown])
-        tot = abs(tot - 1)
-        if tot > 0.0001:
+        if not isclose(tot, 1.0):
             msg = f'ReadsClassifiedResult fields do not sum to 1'
             raise ValidationError(msg)
 
