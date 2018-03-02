@@ -45,7 +45,8 @@ def register_api_call(cls, router):
     @authenticate
     def view_function(resp, sample_slug):
         """Wrap receive_upload to provide class."""
-        return receive_upload(cls, resp, slug2uuid(sample_slug))
+        sample_uuid = slug2uuid(sample_slug)
+        return receive_upload(cls, resp, sample_uuid)
 
     router.add_url_rule(endpoint_url,
                         endpoint_name,
