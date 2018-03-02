@@ -7,7 +7,7 @@ from app.tool_results.tool_module import ToolResult, ToolResultModule
 class Metaphlan2Result(ToolResult):     # pylint: disable=too-few-public-methods
     """Metaphlan 2 tool's result type."""
 
-    # The taxa dict is a map from taxon name to abundance value
+    # Taxa is of the form: {<taxon_name>: <abundance_value>}
     taxa = mongoDB.DictField()
 
 
