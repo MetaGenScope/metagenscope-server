@@ -30,4 +30,5 @@ def find_all_tool_modules():
 
     return [get_tool_module(module) for module in tool_modules if module is not None]
 
-all_tool_result_modules = find_all_tool_modules() # pylint: disable=invalid-name
+
+all_tool_result_modules = find_all_tool_modules()  # pylint: disable=invalid-name

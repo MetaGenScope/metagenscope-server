@@ -17,11 +17,7 @@ def receive_upload(cls, resp, sample_id):
     def save_tool_result():
         """Validate and save tool result to Sample."""
         sample = Sample.objects(uuid=sample_id)[0]
-        # TODO: Write actual validation:
-        #       - look up SampleGroup (SQL-land) that the sample belongs to
-        #       - ask SampleGroup whether auth_user has write access
-        #           + Check if auth_user is group owner
-        #           + Check if auth_user is member of any Organization with write access
+        # gh-21: Write actual validation:
         auth_user = User.query.filter_by(id=resp).first()
         if not auth_user:
             response.message = 'Authorization failed.'
