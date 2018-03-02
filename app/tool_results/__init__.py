@@ -9,16 +9,6 @@ import sys
 from app.tool_results.tool_module import ToolResult, ToolResultModule
 
 
-def get_tool_module(tool_module):
-    """Inspect ToolResult module and return its Module class."""
-    classmembers = inspect.getmembers(tool_module, inspect.isclass)
-    modules = [classmember for name, classmember in classmembers
-               if name.endswith('ResultModule') and name != 'ToolResultModule']
-    if not modules:
-        return None
-    return modules[0]
-
-
 def find_all_tool_modules():
     """Find all Tool Result modules."""
     package = sys.modules[__name__]
@@ -28,6 +18,16 @@ def find_all_tool_modules():
                          if modname not in blacklist]
     tool_modules = [importlib.import_module(f'app.tool_results.{name}')
                     for name in tool_module_names]
+
+    def get_tool_module(tool_module):
+        """Inspect ToolResult module and return its Module class."""
+        classmembers = inspect.getmembers(tool_module, inspect.isclass)
+        modules = [classmember for name, classmember in classmembers
+                   if name.endswith('ResultModule') and name != 'ToolResultModule']
+        if not modules:
+            return None
+        return modules[0]
+
     return [get_tool_module(module) for module in tool_modules if module is not None]
 
 all_tool_result_modules = find_all_tool_modules() # pylint: disable=invalid-name

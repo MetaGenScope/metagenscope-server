@@ -84,6 +84,12 @@ $ make cov
 
 MetaGenScope uses the GitFlow branching strategy along with Pull Requests for code reviews. Check out [this post](https://devblog.dwarvesf.com/post/git-best-practices/) by the Dwarves Foundation for more information.
 
+### Tool Result Modules
+
+`ToolResult` modules define database storage and API upload for outputs.
+
+To add a new `ToolResult` module write your new module `app/tool_results/my_new_module` following existing conventions. Make sure the main module class inherits from `ToolResultModule` and is named ending in `ResultModule`.
+
 ### Display Modules
 
 `DisplayModule`s provide the backing data for each front-end visualization type. They are in charge of:
@@ -94,7 +100,7 @@ MetaGenScope uses the GitFlow branching strategy along with Pull Requests for co
 
 These modules live in `app/display_modules/` and are self-contained: all models, API endpoint definitions, long-running tasks, and tests live within each module.
 
-Adding a new `DisplayModule` is easy:
+To add a new `DisplayModule`:
 
 1. Write your new module `app/display_modules/my_new_module` following existing conventions.
 2. Add the module to `all_display_modules` in `app/display_modules/__init__.py` to make sure it is picked up by the application.
