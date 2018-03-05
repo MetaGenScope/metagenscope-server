@@ -1,6 +1,8 @@
 """Query Result model definitions."""
 
 import datetime
+from uuid import uuid4
+
 from app.extensions import mongoDB
 
 
@@ -24,6 +26,7 @@ class QueryResultWrapper(mongoDB.EmbeddedDocument):   # pylint: disable=too-few-
 class QueryResultMeta(mongoDB.DynamicDocument):
     """Base mongo result class."""
 
+    uuid = mongoDB.UUIDField(required=True, primary_key=True, binary=False, default=uuid4)
     sample_group_id = mongoDB.UUIDField(binary=False)
     created_at = mongoDB.DateTimeField(default=datetime.datetime.utcnow)
     meta = {

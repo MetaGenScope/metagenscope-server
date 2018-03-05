@@ -20,8 +20,8 @@ def get_single_sample(sample_uuid):
     @handle_mongo_lookup(response, 'Sample')
     def fetch_sample():
         """Perform sample lookup and formatting."""
-        sample_id = UUID(sample_uuid)
-        sample = Sample.objects(uuid=sample_id)[0]
+        uuid = UUID(sample_uuid)
+        sample = Sample.objects.get(uuid=uuid)
         response.success()
         response.data = sample_schema.dump(sample).data
         return response.json_and_code()

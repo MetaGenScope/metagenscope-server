@@ -1,5 +1,7 @@
 """Base display module type."""
 
+from uuid import UUID
+
 from app.api.endpoint_response import EndpointResponse
 from app.api.utils import handle_mongo_lookup
 from app.query_results.query_result_models import QueryResultMeta, QueryResultWrapper
@@ -19,14 +21,15 @@ class DisplayModule:
         return my_query_result
 
     @classmethod
-    def api_call(cls, result_id):
+    def api_call(cls, result_uuid):
         """Define handler for API requests that defers to display module type."""
         response = EndpointResponse()
 
         @handle_mongo_lookup(response, 'Query Result')
         def fetch_data():
             """Perform Query Result lookup and formatting."""
-            query_result = QueryResultMeta.objects(id=result_id)[0]
+            uuid = UUID(result_uuid)
+            query_result = QueryResultMeta.objects.get(uuid=uuid)
             if cls.name() not in query_result:
                 msg = '{} is not in this QueryResult.'.format(cls.name())
                 response.message = msg
@@ -42,7 +45,7 @@ class DisplayModule:
     @classmethod
     def register_api_call(cls, router):
         """Register API endpoint for this display module type."""
-        endpoint_url = f'/query_results/<result_id>/{cls.name()}'
+        endpoint_url = f'/query_results/<result_uuid>/{cls.name()}'
         endpoint_name = f'get_{cls.name()}'
         view_function = cls.api_call
         router.add_url_rule(endpoint_url,

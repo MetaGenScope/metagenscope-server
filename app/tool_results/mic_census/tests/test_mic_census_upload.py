@@ -31,5 +31,5 @@ class TestMicCensusUploads(BaseTestCase):
             self.assertIn('success', data['status'])
 
         # Reload object to ensure HMP Sites result was stored properly
-        sample = Sample.objects(uuid=sample_uuid)[0]
+        sample = Sample.objects.get(uuid=sample_uuid)
         self.assertTrue(sample.mic_census)

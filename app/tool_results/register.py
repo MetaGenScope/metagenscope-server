@@ -18,7 +18,7 @@ def receive_upload(cls, resp, sample_id):
     @handle_mongo_lookup(response, cls.__name__)
     def save_tool_result():
         """Validate and save tool result to Sample."""
-        sample = Sample.objects(uuid=sample_id)[0]
+        sample = Sample.objects.get(uuid=sample_id)
         # gh-21: Write actual validation:
         auth_user = User.query.filter_by(id=resp).first()
         if not auth_user:
