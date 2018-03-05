@@ -1,6 +1,7 @@
 """Test suite for Sample Similarity result type."""
 
 import json
+from uuid import uuid4
 
 from tests.base import BaseTestCase
 from tests.factories.query_result import QueryResultMetaFactory
@@ -56,18 +57,18 @@ class TestSampleSimilarityModule(BaseTestCase):
             )
             data = json.loads(response.data.decode())
             self.assertEqual(response.status_code, 400)
-            message = ('\'foobarblah\' is not a valid ObjectId, '
-                       'it must be a 12-byte input or a 24-character hex string')
-            self.assertIn(message, data['message'])
+            self.assertIn('Invalid UUID provided.', data['message'])
             self.assertIn('fail', data['status'])
 
     # pylint: disable=invalid-name
     def test_get_missing_sample_similarity(self):
         """Ensure getting a missing single sample similarity behaves correctly."""
 
+        randome_uuid = uuid4()
+
         with self.client:
             response = self.client.get(
-                f'/api/v1/query_results/abcdefabcdefabcdefabcdef/sample_similarity',
+                f'/api/v1/query_results/{randome_uuid}/sample_similarity',
                 content_type='application/json',
             )
             data = json.loads(response.data.decode())

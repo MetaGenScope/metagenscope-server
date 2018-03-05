@@ -25,7 +25,10 @@ def find_all_display_modules():
             return None
         return modules[0]
 
-    return [get_display_model(module) for module in display_modules if module is not None]
+    results = [get_display_model(module) for module in display_modules]
+    results = [result for result in results if result is not None]
+
+    return results
 
 
 all_display_modules = find_all_display_modules()  # pylint: disable=invalid-name

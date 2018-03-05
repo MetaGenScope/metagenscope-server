@@ -2,7 +2,6 @@
 
 import json
 
-from app.api.utils import uuid2slug
 from app.samples.sample_models import Sample
 from app.tool_results.shortbred.tests.constants import TEST_ABUNDANCES
 from tests.base import BaseTestCase
@@ -16,11 +15,10 @@ class TestShortbredUploads(BaseTestCase):
     def test_upload_shortbred(self, auth_headers, *_):
         """Ensure a raw Shortbred tool result can be uploaded."""
         sample = Sample(name='SMPL_Shortbred_01').save()
-        sample_uuid = sample.uuid
-        sample_slug = uuid2slug(sample_uuid)
+        sample_uuid = str(sample.uuid)
         with self.client:
             response = self.client.post(
-                f'/api/v1/samples/{sample_slug}/shortbred',
+                f'/api/v1/samples/{sample_uuid}/shortbred',
                 headers=auth_headers,
                 data=json.dumps(dict(
                     abundances=TEST_ABUNDANCES,
@@ -40,5 +38,5 @@ class TestShortbredUploads(BaseTestCase):
             self.assertIn('success', data['status'])
 
         # Reload object to ensure HMP Sites result was stored properly
-        sample = Sample.objects(uuid=sample_uuid)[0]
+        sample = Sample.objects.get(uuid=sample_uuid)
         self.assertTrue(sample.shortbred)

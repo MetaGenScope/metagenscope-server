@@ -1,10 +1,11 @@
 """Organization API endpoint definitions."""
 
+from uuid import UUID
+
 from flask import Blueprint, jsonify, request
 from sqlalchemy import exc
 
 from app.api.constants import PAGE_SIZE
-from app.api.utils import slug2uuid
 from app.extensions import db
 from app.organizations.organization_models import Organization, organization_schema
 from app.users.user_models import User, user_schema
@@ -54,15 +55,15 @@ def add_organization(resp):
         return jsonify(response_object), 400
 
 
-@organizations_blueprint.route('/organizations/<organization_slug>', methods=['GET'])
-def get_single_organization(organization_slug):
+@organizations_blueprint.route('/organizations/<organization_uuid>', methods=['GET'])
+def get_single_organization(organization_uuid):
     """Get single organization details."""
     response_object = {
         'status': 'fail',
         'message': 'Organization does not exist'
     }
     try:
-        organization_id = slug2uuid(organization_slug)
+        organization_id = UUID(organization_uuid)
         organization = Organization.query.filter_by(id=organization_id).first()
         if not organization:
             return jsonify(response_object), 404
@@ -75,15 +76,15 @@ def get_single_organization(organization_slug):
         return jsonify(response_object), 404
 
 
-@organizations_blueprint.route('/organizations/<organization_slug>/users', methods=['GET'])
-def get_organization_users(organization_slug):
+@organizations_blueprint.route('/organizations/<organization_uuid>/users', methods=['GET'])
+def get_organization_users(organization_uuid):
     """Get single organization's users."""
     response_object = {
         'status': 'fail',
         'message': 'Organization does not exist'
     }
     try:
-        organization_id = slug2uuid(organization_slug)
+        organization_id = UUID(organization_uuid)
         organization = Organization.query.filter_by(id=organization_id).first()
         if not organization:
             return jsonify(response_object), 404
@@ -97,9 +98,9 @@ def get_organization_users(organization_slug):
         return jsonify(response_object), 404
 
 
-@organizations_blueprint.route('/organizations/<organization_slug>/users', methods=['POST'])
+@organizations_blueprint.route('/organizations/<organization_uuid>/users', methods=['POST'])
 @authenticate
-def add_organization_user(resp, organization_slug):     # pylint: disable=too-many-return-statements
+def add_organization_user(resp, organization_uuid):     # pylint: disable=too-many-return-statements
     """Add user to organization."""
     response_object = {
         'status': 'fail',
@@ -110,7 +111,7 @@ def add_organization_user(resp, organization_slug):     # pylint: disable=too-ma
         return jsonify(response_object), 400
     user_id = post_data.get('user_id')
     try:
-        organization_id = slug2uuid(organization_slug)
+        organization_id = UUID(organization_uuid)
         organization = Organization.query.filter_by(id=organization_id).first()
         if not organization:
             response_object['message'] = 'Organization does not exist'
@@ -141,18 +142,18 @@ def add_organization_user(resp, organization_slug):     # pylint: disable=too-ma
         return jsonify(response_object), 404
 
 
-@organizations_blueprint.route('/organizations/<organization_slug>/sample_groups',
+@organizations_blueprint.route('/organizations/<organization_uuid>/sample_groups',
                                methods=['GET'])
-@organizations_blueprint.route('/organizations/<organization_slug>/sample_groups/<int:page>',
+@organizations_blueprint.route('/organizations/<organization_uuid>/sample_groups/<int:page>',
                                methods=['GET'])
-def get_organization_sample_groups(organization_slug, page=1):
+def get_organization_sample_groups(organization_uuid, page=1):
     """Get single organization's sample groups."""
     response_object = {
         'status': 'fail',
         'message': 'Organization does not exist'
     }
     try:
-        organization_id = slug2uuid(organization_slug)
+        organization_id = UUID(organization_uuid)
         organization = Organization.query.filter_by(id=organization_id).first()
         if not organization:
             return jsonify(response_object), 404

@@ -101,14 +101,16 @@ def seed_db():
 
     mason_lab = Organization(name='Mason Lab', admin_email='benjamin.blair.chrobot@gmail.com')
     mason_lab.users = [bchrobot, dcdanko, cmason]
-    mason_lab.add_admin(bchrobot)
-    mason_lab.add_admin(dcdanko)
     mason_lab.sample_groups = [sample_group]
 
     db.session.add(mason_lab)
     db.session.commit()
 
-    QueryResultMeta(sample_group_id=sample_group.id,
+    mason_lab.add_admin(bchrobot)
+    mason_lab.add_admin(dcdanko)
+    db.session.commit()
+
+    foo = QueryResultMeta(sample_group_id=sample_group.id,
                     sample_similarity=sample_similarity,
                     taxon_abundance=taxon_abundance,
                     reads_classified=reads_classified,

@@ -1,7 +1,10 @@
 """Query Result model definitions."""
 
 import datetime
+from uuid import uuid4
+
 from app.extensions import mongoDB
+# from app.display_modules import all_display_modules
 
 
 QUERY_RESULT_STATUS = (('E', 'ERROR'),
@@ -24,6 +27,7 @@ class QueryResultWrapper(mongoDB.EmbeddedDocument):   # pylint: disable=too-few-
 class QueryResultMeta(mongoDB.DynamicDocument):
     """Base mongo result class."""
 
+    uuid = mongoDB.UUIDField(required=True, primary_key=True, binary=False, default=uuid4)
     sample_group_id = mongoDB.UUIDField(binary=False)
     created_at = mongoDB.DateTimeField(default=datetime.datetime.utcnow)
     meta = {
@@ -33,19 +37,8 @@ class QueryResultMeta(mongoDB.DynamicDocument):
     @property
     def result_types(self):
         """Return a list of all query result types available for this record."""
-        blacklist = ['id', 'sample_group_id', 'created_at']
+        blacklist = ['uuid', 'sample_group_id', 'created_at']
         all_fields = [k
-                      for k, v in self.__class__._fields.items()  # pylint: disable=no-member
-                      if k not in blacklist]
+                      for k, v in vars(self).items()  # pylint: disable=no-member
+                      if k not in blacklist and not k.startswith('_')]
         return [field for field in all_fields if hasattr(self, field)]
-
-    @classmethod
-    def build_result_type(cls, name):
-        """Build result type for query result model."""
-        out = type(name, (cls,), {})
-        return out
-
-    @classmethod
-    def add_property(cls, name, obj):
-        """Expose wrapper for setting attribute."""
-        setattr(cls, name, property(obj))
