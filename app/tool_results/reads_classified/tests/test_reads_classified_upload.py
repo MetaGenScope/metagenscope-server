@@ -2,7 +2,6 @@
 
 import json
 
-from app.api.utils import uuid2slug
 from app.samples.sample_models import Sample
 from app.tool_results.reads_classified.tests.constants import TEST_READS
 from tests.base import BaseTestCase
@@ -16,11 +15,10 @@ class TestReadsClassifiedUploads(BaseTestCase):
     def test_upload_reads_classified(self, auth_headers, *_):
         """Ensure a raw Reads Classified tool result can be uploaded."""
         sample = Sample(name='SMPL_Reads_01').save()
-        sample_uuid = sample.uuid
-        sample_slug = uuid2slug(sample_uuid)
+        sample_uuid = str(sample.uuid)
         with self.client:
             response = self.client.post(
-                f'/api/v1/samples/{sample_slug}/reads_classified',
+                f'/api/v1/samples/{sample_uuid}/reads_classified',
                 headers=auth_headers,
                 data=json.dumps(TEST_READS),
                 content_type='application/json',

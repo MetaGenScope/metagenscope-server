@@ -4,7 +4,6 @@ import json
 
 from app.samples.sample_models import Sample
 from app.tool_results.metaphlan2.tests.constants import TEST_TAXA
-from app.api.utils import uuid2slug
 from tests.base import BaseTestCase
 from tests.utils import with_user
 
@@ -16,11 +15,10 @@ class TestMetaphlan2Uploads(BaseTestCase):
     def test_upload_metaphlan2(self, auth_headers, *_):
         """Ensure a raw Metaphlan 2 tool result can be uploaded."""
         sample = Sample(name='SMPL_Metaphlan_01').save()
-        sample_uuid = sample.uuid
-        sample_slug = uuid2slug(sample_uuid)
+        sample_uuid = str(sample.uuid)
         with self.client:
             response = self.client.post(
-                f'/api/v1/samples/{sample_slug}/metaphlan2',
+                f'/api/v1/samples/{sample_uuid}/metaphlan2',
                 headers=auth_headers,
                 data=json.dumps(dict(
                     taxa=TEST_TAXA,

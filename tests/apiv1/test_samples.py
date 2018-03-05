@@ -2,7 +2,6 @@
 
 import json
 
-from app.api.utils import uuid2slug
 from tests.base import BaseTestCase
 from tests.utils import add_sample
 
@@ -13,10 +12,10 @@ class TestSampleModule(BaseTestCase):
     def test_get_single_sample(self):
         """Ensure get single group behaves correctly."""
         sample = add_sample(name='SMPL_01')
-        sample_slug = uuid2slug(sample.uuid)
+        sample_uuid = str(sample.uuid)
         with self.client:
             response = self.client.get(
-                f'/api/v1/samples/{sample_slug}',
+                f'/api/v1/samples/{sample_uuid}',
                 content_type='application/json',
             )
             data = json.loads(response.data.decode())

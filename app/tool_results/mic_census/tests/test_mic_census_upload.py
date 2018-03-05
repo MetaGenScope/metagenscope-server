@@ -2,7 +2,6 @@
 
 import json
 
-from app.api.utils import uuid2slug
 from app.samples.sample_models import Sample
 from app.tool_results.mic_census.tests.constants import TEST_CENSUS
 from tests.base import BaseTestCase
@@ -16,11 +15,10 @@ class TestMicCensusUploads(BaseTestCase):
     def test_upload_mic_census(self, auth_headers, *_):
         """Ensure a raw Microbe Census tool result can be uploaded."""
         sample = Sample(name='SMPL_MicCensus_01').save()
-        sample_uuid = sample.uuid
-        sample_slug = uuid2slug(sample_uuid)
+        sample_uuid = str(sample.uuid)
         with self.client:
             response = self.client.post(
-                f'/api/v1/samples/{sample_slug}/mic_census',
+                f'/api/v1/samples/{sample_uuid}/mic_census',
                 headers=auth_headers,
                 data=json.dumps(TEST_CENSUS),
                 content_type='application/json',

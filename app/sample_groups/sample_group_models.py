@@ -53,7 +53,6 @@ class SampleGroupSchema(BaseSchema):
     }
     __model__ = SampleGroup
 
-    slug = fields.Str()
     name = fields.Str()
     access_scheme = fields.Str()
     created_at = fields.Date()

@@ -4,7 +4,6 @@ import json
 
 from app.samples.sample_models import Sample
 from app.tool_results.kraken.tests.constants import TEST_TAXA
-from app.api.utils import uuid2slug
 from tests.base import BaseTestCase
 from tests.utils import with_user
 
@@ -16,11 +15,10 @@ class TestKrakenUploads(BaseTestCase):
     def test_upload_kraken(self, auth_headers, *_):
         """Ensure a raw Kraken tool result can be uploaded."""
         sample = Sample(name='SMPL_Kraken_01').save()
-        sample_uuid = sample.uuid
-        sample_slug = uuid2slug(sample_uuid)
+        sample_uuid = str(sample.uuid)
         with self.client:
             response = self.client.post(
-                f'/api/v1/samples/{sample_slug}/kraken',
+                f'/api/v1/samples/{sample_uuid}/kraken',
                 headers=auth_headers,
                 data=json.dumps(dict(
                     taxa=TEST_TAXA,

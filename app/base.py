@@ -1,13 +1,10 @@
 """Base modules used throughout application."""
 
-from uuid import UUID
-from marshmallow import Schema, pre_load, post_load, pre_dump, post_dump
-
-from app.api.utils import uuid2slug
+from marshmallow import Schema, pre_load, post_load, post_dump
 
 
 class BaseSchema(Schema):
-    """Base Schema that handles envelopes and slug generation."""
+    """Base Schema that handles envelopes."""
 
     __envelope__ = {
         'single': None,
@@ -31,14 +28,6 @@ class BaseSchema(Schema):
         """Make object from unwrapped envelope."""
         # pylint: disable=no-member
         return self.__model__(**data)
-
-    @pre_dump(pass_many=False)
-    # pylint: disable=no-self-use
-    def slugify_organization_id(self, data):
-        """Translate UUID into URL-safe slug."""
-        if hasattr(data, 'id') and isinstance(data.id, UUID):
-            data.slug = uuid2slug(data.id)
-        return data
 
     @post_dump(pass_many=True)
     def wrap_with_envelope(self, data, many):

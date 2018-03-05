@@ -4,7 +4,6 @@ import json
 
 from app.samples.sample_models import Sample
 from app.tool_results.hmp_sites.tests.constants import TEST_HMP
-from app.api.utils import uuid2slug
 from tests.base import BaseTestCase
 from tests.utils import with_user
 
@@ -16,11 +15,10 @@ class TestHmpSitesUploads(BaseTestCase):
     def test_upload_hmp_sites(self, auth_headers, *_):
         """Ensure a raw HMP Sites tool result can be uploaded."""
         sample = Sample(name='SMPL_HMP_01').save()
-        sample_uuid = sample.uuid
-        sample_slug = uuid2slug(sample_uuid)
+        sample_uuid = str(sample.uuid)
         with self.client:
             response = self.client.post(
-                f'/api/v1/samples/{sample_slug}/hmp_sites',
+                f'/api/v1/samples/{sample_uuid}/hmp_sites',
                 headers=auth_headers,
                 data=json.dumps(TEST_HMP),
                 content_type='application/json',

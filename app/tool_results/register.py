@@ -1,9 +1,11 @@
 """Base module for Tool Results."""
 
+from uuid import UUID
+
 from flask import request
 
 from app.api.endpoint_response import EndpointResponse
-from app.api.utils import slug2uuid, handle_mongo_lookup
+from app.api.utils import handle_mongo_lookup
 from app.samples.sample_models import Sample
 from app.users.user_models import User
 from app.users.user_helpers import authenticate
@@ -35,13 +37,13 @@ def receive_upload(cls, resp, sample_id):
 
 def register_api_call(cls, router):
     """Register API endpoint for this display module type."""
-    endpoint_url = f'/samples/<sample_slug>/{cls.name()}'
+    endpoint_url = f'/samples/<sample_uuid>/{cls.name()}'
     endpoint_name = f'post_{cls.name()}'
 
     @authenticate
-    def view_function(resp, sample_slug):
+    def view_function(resp, sample_uuid):
         """Wrap receive_upload to provide class."""
-        sample_uuid = slug2uuid(sample_slug)
+        sample_uuid = UUID(sample_uuid)
         return receive_upload(cls, resp, sample_uuid)
 
     router.add_url_rule(endpoint_url,
