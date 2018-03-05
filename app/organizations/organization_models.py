@@ -90,6 +90,7 @@ class OrganizationSchema(BaseSchema):
     }
     __model__ = Organization
 
+    uuid = fields.Str()
     name = fields.Str()
     admin_email = fields.Str()
     users = fields.Nested(UserSchema, many=True)

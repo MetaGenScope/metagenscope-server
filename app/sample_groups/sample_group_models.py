@@ -53,6 +53,7 @@ class SampleGroupSchema(BaseSchema):
     }
     __model__ = SampleGroup
 
+    uuid = fields.Str()
     name = fields.Str()
     access_scheme = fields.Str()
     created_at = fields.Date()

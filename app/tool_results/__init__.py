@@ -28,7 +28,9 @@ def find_all_tool_modules():
             return None
         return modules[0]
 
-    return [get_tool_module(module) for module in tool_modules if module is not None]
+    results = [get_tool_module(module) for module in tool_modules]
+    results = [result for result in results if result is not None]
+    return results
 
 
 all_tool_result_modules = find_all_tool_modules()  # pylint: disable=invalid-name

@@ -86,6 +86,7 @@ class UserSchema(BaseSchema):
     }
     __model__ = User
 
+    uuid = fields.Str()
     username = fields.Str()
     email = fields.Str()
 
