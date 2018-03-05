@@ -100,10 +100,7 @@ To add a new `ToolResult` module write your new module `app/tool_results/my_new_
 
 These modules live in `app/display_modules/` and are self-contained: all models, API endpoint definitions, long-running tasks, and tests live within each module.
 
-To add a new `DisplayModule`:
-
-1. Write your new module `app/display_modules/my_new_module` following existing conventions.
-2. Add the module to `all_display_modules` in `app/display_modules/__init__.py` to make sure it is picked up by the application.
+To add a new `DisplayModule` module write your new module `app/display_modules/my_new_module` following existing conventions. Make sure the main module class inherits from `DisplayModule` and is named ending in `Module`.
 
 ## Continuous Integration
 
