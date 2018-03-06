@@ -1,7 +1,7 @@
 version: 2
 
 jobs:
-  run-tests:
+  test_app:
     docker:
       - image: circleci/python:3.6.3-jessie
         environment:
@@ -43,10 +43,10 @@ jobs:
           key: v1-dependencies-{{ checksum "requirements.txt" }}
 
       - run:
-          name: Lint codebase
+          name: Lint app
           command: |
             . venv/bin/activate
-            make lint
+            make lint-app
 
       - run:
           name: Wait for DB
@@ -59,7 +59,7 @@ jobs:
             python manage.py recreate_db
 
       - run:
-          name: Run tests
+          name: Run application tests
           command: |
             . venv/bin/activate
             python manage.py cov
@@ -68,7 +68,7 @@ jobs:
           path: htmlcov
           destination: test-reports
 
-  build_staging_images:
+  build_app_staging:
     docker:
       - image: circleci/node:9.2.0
 
@@ -116,7 +116,7 @@ jobs:
             docker tag $MAIN_SERVICE:$COMMIT $DOCKER_ORG/$MAIN_SERVICE:$TAG
             docker push $DOCKER_ORG/$MAIN_SERVICE
 
-  deploy_staging:
+  deploy_app_staging:
     docker:
       - image: circleci/node:9.2.0
 
@@ -130,23 +130,118 @@ jobs:
             echo "$DROPLET_IP $DROPLET_HOST_KEY" > ~/tmp_auth_hosts
             ssh -A -o "UserKnownHostsFile ~/tmp_auth_hosts" $DROPLET_USER@$DROPLET_IP "cd /home/metagenscope/metagenscope-app && sh deploy.sh"
 
+  test_worker:
+    docker:
+      - image: circleci/python:3.6.3-jessie
+
+    working_directory: ~/repo
+
+    steps:
+      - checkout
+
+      # Download and cache dependencies
+      - restore_cache:
+          keys:
+          - v1-dependencies-{{ checksum "requirements.txt" }}
+          # fallback to using the latest cache if no exact match is found
+          - v1-dependencies-
+
+      - run:
+          name: Install Python Dependencies
+          command: |
+            python3 -m venv venv
+            . venv/bin/activate
+            pip install -r requirements.txt
+
+      - save_cache:
+          paths:
+            - ./venv
+          key: v1-dependencies-{{ checksum "requirements.txt" }}
+
+      - run:
+          name: Lint worker
+          command: |
+            . venv/bin/activate
+            make lint-worker
+
+  build_worker_staging:
+    docker:
+      - image: circleci/node:9.2.0
+
+    environment:
+      TAG: staging
+      DOCKER_ORG: metagenscope
+
+    steps:
+      - checkout
+
+      - setup_remote_docker
+
+      - run:
+          name: Set COMMIT env var
+          command: echo 'export COMMIT=${CIRCLE_SHA1::8}' >> $BASH_ENV
+
+      - run:
+          name: Sign in to Docker Hub
+          command: docker login -u $DOCKER_ID -p $DOCKER_PASSWORD
+
+      - run:
+          name: Build and push redis
+          environment:
+            DB_SERVICE: redis
+          command: |
+            docker build ./database_docker/redis -t $DB_SERVICE:$COMMIT
+            docker tag $DB_SERVICE:$COMMIT $DOCKER_ORG/$DB_SERVICE:$TAG
+            docker push $DOCKER_ORG/$DB_SERVICE
+
+      - run:
+          name: Build and push rabbitmq
+          environment:
+            DB_SERVICE: rabbitmq
+          command: |
+            docker build ./database_docker/rabbitmq -t $DB_SERVICE:$COMMIT
+            docker tag $DB_SERVICE:$COMMIT $DOCKER_ORG/$DB_SERVICE:$TAG
+            docker push $DOCKER_ORG/$DB_SERVICE
+
+      - run:
+          name: Build and push metagenscope-worker
+          environment:
+            DB_SERVICE: metagenscope-worker
+          command: |
+            docker build . -f Dockerfile-worker -t $DB_SERVICE:$COMMIT
+            docker tag $DB_SERVICE:$COMMIT $DOCKER_ORG/$DB_SERVICE:$TAG
+            docker push $DOCKER_ORG/$DB_SERVICE
+
 workflows:
   version: 2
-  test-and-deploy-staging:
+
+  app_staging_cd:
     jobs:
-      - run-tests:
+      - test_app:
           context: org-global
-      - build_staging_images:
-          context: org-global
-          filters:
-            branches:
-              only: develop
-          requires:
-            - run-tests
-      - deploy_staging:
+      - build_app_staging:
           context: org-global
           filters:
             branches:
               only: develop
           requires:
-            - build_staging_images
+            - test_app
+      - deploy_app_staging:
+          context: org-global
+          filters:
+            branches:
+              only: develop
+          requires:
+            - build_app_staging
+
+  worker_staging_cd:
+    jobs:
+      - test_worker:
+          context: org-global
+      - build_worker_staging:
+          context: org-global
+          filters:
+            branches:
+              only: develop
+          requires:
+            - test_worker
