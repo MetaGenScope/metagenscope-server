@@ -67,6 +67,6 @@ class DisplayModule:
         return out
 
     @classmethod
-    def get_analysis_result_wrapper_field(cls):
+    def get_analysis_result_wrapper_field(cls):  # pylint: disable=invalid-name
         """Return status wrapper for display module type."""
         raise NotImplementedError()
