@@ -4,7 +4,7 @@ from flask_testing import TestCase
 
 from app import create_app, db
 from app.config import app_config
-from app.query_results.query_result_models import QueryResultMeta
+from app.analysis_results.analysis_result_models import AnalysisResultMeta
 from app.samples.sample_models import Sample
 
 
@@ -31,5 +31,5 @@ class BaseTestCase(TestCase):
         db.drop_all()
 
         # Mongo
-        QueryResultMeta.drop_collection()
+        AnalysisResultMeta.drop_collection()
         Sample.drop_collection()

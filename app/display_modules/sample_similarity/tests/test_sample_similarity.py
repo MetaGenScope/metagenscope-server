@@ -4,7 +4,7 @@ import json
 from uuid import uuid4
 
 from tests.base import BaseTestCase
-from tests.factories.query_result import QueryResultMetaFactory
+from tests.factories.analysis_result import AnalysisResultMetaFactory
 
 
 class TestSampleSimilarityModule(BaseTestCase):
@@ -13,10 +13,10 @@ class TestSampleSimilarityModule(BaseTestCase):
     def test_get_sample_similarity(self):
         """Ensure getting a single sample similarity behaves correctly."""
 
-        query_result = QueryResultMetaFactory(processed=True)
+        analysis_result = AnalysisResultMetaFactory(processed=True)
         with self.client:
             response = self.client.get(
-                f'/api/v1/query_results/{query_result.id}/sample_similarity',
+                f'/api/v1/analysis_results/{analysis_result.id}/sample_similarity',
                 content_type='application/json',
             )
             data = json.loads(response.data.decode())
@@ -35,15 +35,15 @@ class TestSampleSimilarityModule(BaseTestCase):
     def test_get_pending_sample_similarity(self):
         """Ensure getting a pending single sample similarity behaves correctly."""
 
-        query_result = QueryResultMetaFactory()
+        analysis_result = AnalysisResultMetaFactory()
         with self.client:
             response = self.client.get(
-                f'/api/v1/query_results/{query_result.id}/sample_similarity',
+                f'/api/v1/analysis_results/{analysis_result.id}/sample_similarity',
                 content_type='application/json',
             )
             data = json.loads(response.data.decode())
             self.assertEqual(response.status_code, 404)
-            self.assertIn('Query Result has not finished processing.', data['message'])
+            self.assertIn('Analysis Result has not finished processing.', data['message'])
             self.assertIn('fail', data['status'])
 
     # pylint: disable=invalid-name
@@ -52,7 +52,7 @@ class TestSampleSimilarityModule(BaseTestCase):
 
         with self.client:
             response = self.client.get(
-                f'/api/v1/query_results/foobarblah/sample_similarity',
+                f'/api/v1/analysis_results/foobarblah/sample_similarity',
                 content_type='application/json',
             )
             data = json.loads(response.data.decode())
@@ -64,14 +64,14 @@ class TestSampleSimilarityModule(BaseTestCase):
     def test_get_missing_sample_similarity(self):
         """Ensure getting a missing single sample similarity behaves correctly."""
 
-        randome_uuid = uuid4()
+        random_uuid = uuid4()
 
         with self.client:
             response = self.client.get(
-                f'/api/v1/query_results/{randome_uuid}/sample_similarity',
+                f'/api/v1/analysis_results/{random_uuid}/sample_similarity',
                 content_type='application/json',
             )
             data = json.loads(response.data.decode())
             self.assertEqual(response.status_code, 404)
-            self.assertIn('Query Result does not exist.', data['message'])
+            self.assertIn('Analysis Result does not exist.', data['message'])
             self.assertIn('fail', data['status'])

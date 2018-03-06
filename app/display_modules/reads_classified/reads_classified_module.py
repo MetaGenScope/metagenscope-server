@@ -19,7 +19,7 @@ class ReadsClassifiedModule(DisplayModule):
         return 'reads_classified'
 
     @classmethod
-    def get_query_result_wrapper_field(cls):
+    def get_analysis_result_wrapper_field(cls):
         """Return status wrapper for Reads Classified type."""
         return EmbeddedDoc(ReadsClassifiedResult)
 

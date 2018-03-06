@@ -7,11 +7,11 @@ from app.display_modules.reads_classified import (
     ReadsClassifiedResult,
     ReadsClassifiedModule,
 )
-from app.query_results.query_result_models import QueryResultMeta
+from app.analysis_results.analysis_result_models import AnalysisResultMeta
 from tests.base import BaseTestCase
 
 
-ReadsClassifiedResultWrapper = ReadsClassifiedModule.get_query_result_wrapper()
+ReadsClassifiedResultWrapper = ReadsClassifiedModule.get_analysis_result_wrapper()
 
 
 class TestReadsClassifiedResult(BaseTestCase):
@@ -36,7 +36,7 @@ class TestReadsClassifiedResult(BaseTestCase):
                                                  sample_names=sample_names,
                                                  data=data)
         wrapper = ReadsClassifiedResultWrapper(data=reads_classified)
-        result = QueryResultMeta(reads_classified=wrapper).save()
+        result = AnalysisResultMeta(reads_classified=wrapper).save()
         self.assertTrue(result.id)
         self.assertTrue(result.reads_classified)
 
@@ -59,7 +59,7 @@ class TestReadsClassifiedResult(BaseTestCase):
                                                  sample_names=sample_names,
                                                  data=data)
         wrapper = ReadsClassifiedResultWrapper(data=reads_classified)
-        result = QueryResultMeta(reads_classified=wrapper)
+        result = AnalysisResultMeta(reads_classified=wrapper)
         self.assertRaises(ValidationError, result.save)
 
     def test_add_value_count_mismatch(self):
@@ -77,5 +77,5 @@ class TestReadsClassifiedResult(BaseTestCase):
                                                  sample_names=sample_names,
                                                  data=data)
         wrapper = ReadsClassifiedResultWrapper(data=reads_classified)
-        result = QueryResultMeta(reads_classified=wrapper)
+        result = AnalysisResultMeta(reads_classified=wrapper)
         self.assertRaises(ValidationError, result.save)

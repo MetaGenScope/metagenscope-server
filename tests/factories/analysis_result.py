@@ -1,6 +1,6 @@
 # pylint: disable=missing-docstring,too-few-public-methods
 
-"""Factory for generating Query Result models for testing."""
+"""Factory for generating Analysis Result models for testing."""
 
 import random
 
@@ -11,14 +11,14 @@ from app.display_modules.sample_similarity import (
     SampleSimilarityResult,
     SampleSimilarityDisplayModule,
 )
-from app.query_results.query_result_models import QueryResultMeta
+from app.analysis_results.analysis_result_models import AnalysisResultMeta
 
 # Define aliases
-SampleSimilarityResultWrapper = SampleSimilarityDisplayModule.get_query_result_wrapper()
+SampleSimilarityResultWrapper = SampleSimilarityDisplayModule.get_analysis_result_wrapper()
 
 
 class ToolFactory(factory.mongoengine.MongoEngineFactory):
-    """Factory for Query Result's Sample Similarity's tool."""
+    """Factory for Analysis Result's Sample Similarity's tool."""
     class Meta:
         model = ToolDocument
 
@@ -27,7 +27,7 @@ class ToolFactory(factory.mongoengine.MongoEngineFactory):
 
 
 class SampleSimilarityFactory(factory.mongoengine.MongoEngineFactory):
-    """Factory for Query Result's Sample Similarity."""
+    """Factory for Analysis Result's Sample Similarity."""
     class Meta:
         model = SampleSimilarityResult
 
@@ -61,7 +61,7 @@ class SampleSimilarityFactory(factory.mongoengine.MongoEngineFactory):
         return [record(i) for i in range(20)]
 
 class SampleSimilarityWrapperFactory(factory.mongoengine.MongoEngineFactory):
-    """Factory for Query Result's Sample Similarity status wrapper."""
+    """Factory for Analysis Result's Sample Similarity status wrapper."""
     class Meta:
         model = SampleSimilarityResultWrapper
 
@@ -75,11 +75,11 @@ class SampleSimilarityWrapperFactory(factory.mongoengine.MongoEngineFactory):
         )
 
 
-class QueryResultMetaFactory(factory.mongoengine.MongoEngineFactory):
-    """Factory for Query Result meta."""
+class AnalysisResultMetaFactory(factory.mongoengine.MongoEngineFactory):
+    """Factory for Analysis Result meta."""
 
     class Meta:
-        model = QueryResultMeta
+        model = AnalysisResultMeta
 
     sample_group_id = None
     sample_similarity = factory.SubFactory(SampleSimilarityWrapperFactory)

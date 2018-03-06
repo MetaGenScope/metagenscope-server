@@ -19,7 +19,7 @@ class TaxonAbundanceDisplayModule(DisplayModule):
         return 'taxon_abundance'
 
     @classmethod
-    def get_query_result_wrapper_field(cls):
+    def get_analysis_result_wrapper_field(cls):
         """Return status wrapper for Taxon Abundance type."""
         return EmbeddedDoc(TaxonAbundanceResult)
 

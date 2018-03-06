@@ -14,10 +14,10 @@ from seed.abrf_2017 import (
 )
 
 
-SampleSimilarityResultWrapper = SampleSimilarityDisplayModule.get_query_result_wrapper()
-TaxonAbundanceResultWrapper = TaxonAbundanceDisplayModule.get_query_result_wrapper()
-ReadsClassifiedResultWrapper = ReadsClassifiedModule.get_query_result_wrapper()
-HMPResultWrapper = HMPModule.get_query_result_wrapper()
+SampleSimilarityResultWrapper = SampleSimilarityDisplayModule.get_analysis_result_wrapper()
+TaxonAbundanceResultWrapper = TaxonAbundanceDisplayModule.get_analysis_result_wrapper()
+ReadsClassifiedResultWrapper = ReadsClassifiedModule.get_analysis_result_wrapper()
+HMPResultWrapper = HMPModule.get_analysis_result_wrapper()
 
 sample_similarity = SampleSimilarityResultWrapper(status='S', data=load_sample_similarity())
 taxon_abundance = TaxonAbundanceResultWrapper(status='S', data=load_taxon_abundance())

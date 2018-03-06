@@ -8,7 +8,7 @@ from mongoengine import DoesNotExist
 
 from app.base import BaseSchema
 from app.extensions import db
-from app.query_results.query_result_models import QueryResultMeta
+from app.analysis_results.analysis_result_models import AnalysisResultMeta
 
 
 # pylint: disable=too-few-public-methods
@@ -36,10 +36,10 @@ class SampleGroup(db.Model):
         self.created_at = created_at
 
     @property
-    def query_result(self):
-        """Get sample group's query result model."""
+    def analysis_result(self):
+        """Get sample group's analysis result model."""
         try:
-            return QueryResultMeta.objects.get(sample_group_id=self.id)
+            return AnalysisResultMeta.objects.get(sample_group_id=self.id)
         except DoesNotExist:
             return None
 
