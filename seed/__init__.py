@@ -19,6 +19,7 @@ TaxonAbundanceResultWrapper = TaxonAbundanceDisplayModule.get_analysis_result_wr
 ReadsClassifiedResultWrapper = ReadsClassifiedModule.get_analysis_result_wrapper()
 HMPResultWrapper = HMPModule.get_analysis_result_wrapper()
 
+# pylint: disable=invalid-name
 sample_similarity = SampleSimilarityResultWrapper(status='S', data=load_sample_similarity())
 taxon_abundance = TaxonAbundanceResultWrapper(status='S', data=load_taxon_abundance())
 reads_classified = ReadsClassifiedResultWrapper(status='S', data=load_reads_classified())
