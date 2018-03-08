@@ -45,7 +45,6 @@ class SampleGroup(db.Model):
     sample_placeholders = db.relationship(SamplePlaceholder)
     sample_ids = association_proxy('sample_placeholders', 'sample_id')
 
-
     def __init__(
             self, name, access_scheme='public',
             created_at=datetime.datetime.utcnow()):

@@ -5,6 +5,7 @@ from mongoengine.errors import NotUniqueError
 from app.samples.sample_models import Sample
 from tests.base import BaseTestCase
 
+
 class TestSampleModel(BaseTestCase):
     """Test suite for Sample model."""
 
