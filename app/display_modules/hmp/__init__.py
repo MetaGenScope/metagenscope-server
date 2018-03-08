@@ -5,5 +5,20 @@ This chart shows the average similarity between bacterial communities in the
 samples and human body sites from the Human Microbiome Project.
 """
 
-# Re-export modules
-from app.display_modules.hmp.hmp_module import HMPModule, HMPResult, HMPDatum
+from app.display_modules.display_module import DisplayModule
+from app.display_modules.hmp.hmp_models import HMPResult
+from app.display_modules.hmp.hmp_tasks import HMPGroupTask
+
+
+class HMPModule(DisplayModule):
+    """HMP display module."""
+
+    @classmethod
+    def name(cls):
+        """Return module's unique identifier string."""
+        return 'hmp'
+
+    @classmethod
+    def get_result_model(cls):
+        """Return data model for HMP type."""
+        return HMPResult

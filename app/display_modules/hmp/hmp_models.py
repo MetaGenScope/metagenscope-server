@@ -1,29 +1,13 @@
-"""HMP display module."""
+"""HMP display models."""
 
 from mongoengine import ValidationError
 
-from app.display_modules.display_module import DisplayModule
 from app.extensions import mongoDB as mdb
 
 
 # Define aliases
-EmbeddedDoc = mdb.EmbeddedDocumentField         # pylint: disable=invalid-name
 EmDocList = mdb.EmbeddedDocumentListField       # pylint: disable=invalid-name
 StringList = mdb.ListField(mdb.StringField())   # pylint: disable=invalid-name
-
-
-class HMPModule(DisplayModule):
-    """HMP display module."""
-
-    @classmethod
-    def name(cls):
-        """Return module's unique identifier string."""
-        return 'hmp'
-
-    @classmethod
-    def get_analysis_result_wrapper_field(cls):
-        """Return status wrapper for HMP type."""
-        return EmbeddedDoc(HMPResult)
 
 
 class HMPDatum(mdb.EmbeddedDocument):       # pylint: disable=too-few-public-methods

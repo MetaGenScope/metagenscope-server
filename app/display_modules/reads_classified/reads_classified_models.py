@@ -1,27 +1,8 @@
-"""Reads Classified display module."""
+"""Reads Classified display models."""
 
 from mongoengine import ValidationError
 
-from app.display_modules.display_module import DisplayModule
 from app.extensions import mongoDB as mdb
-
-
-# Define aliases
-EmbeddedDoc = mdb.EmbeddedDocumentField   # pylint: disable=invalid-name
-
-
-class ReadsClassifiedModule(DisplayModule):
-    """Reads Classified display module."""
-
-    @classmethod
-    def name(cls):
-        """Return module's unique identifier string."""
-        return 'reads_classified'
-
-    @classmethod
-    def get_analysis_result_wrapper_field(cls):
-        """Return status wrapper for Reads Classified type."""
-        return EmbeddedDoc(ReadsClassifiedResult)
 
 
 class ReadsClassifiedDatum(mdb.EmbeddedDocument):       # pylint: disable=too-few-public-methods

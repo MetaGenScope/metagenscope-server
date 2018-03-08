@@ -5,6 +5,7 @@ from uuid import UUID
 from app.analysis_results.analysis_result_models import AnalysisResultMeta, AnalysisResultWrapper
 from app.api.endpoint_response import EndpointResponse
 from app.api.utils import handle_mongo_lookup
+from app.extensions import mongoDB
 
 
 class DisplayModule:
@@ -55,18 +56,19 @@ class DisplayModule:
 
     @classmethod
     def get_analysis_result_wrapper(cls):
-        """Create wrapper for analysis result field."""
-        mongo_field = cls.get_analysis_result_wrapper_field()
+        """Create wrapper for analysis result data field."""
+        module_result_model = cls.get_result_model()
+        mongo_field = mongoDB.EmbeddedDocumentField(module_result_model)
+        # Convert snake-cased name() to upper camel-case class name
         words = cls.name().split('_')
-        # Upper snake case name() result
         words = [word[0].upper() + word[1:] for word in words]
         class_name = ''.join(words) + 'ResultWrapper'
-        out = type(class_name,
-                   (AnalysisResultWrapper,),
-                   {'data': mongo_field})
-        return out
+        # Create wrapper class
+        return type(class_name,
+                    (AnalysisResultWrapper,),
+                    {'data': mongo_field})
 
     @classmethod
-    def get_analysis_result_wrapper_field(cls):  # pylint: disable=invalid-name
-        """Return status wrapper for display module type."""
+    def get_result_model(cls):  # pylint: disable=invalid-name
+        """Return data model for display module type."""
         raise NotImplementedError()
