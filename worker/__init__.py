@@ -1,8 +1,16 @@
-"""Asynchronous worker application for processing MetaGenScope queries."""
+"""
+Asynchronous worker application for processing MetaGenScope queries.
 
-from worker.celery import create_app
+Celery w/ Flask facory pattern from:
+  https://blog.miguelgrinberg.com/post/celery-and-the-flask-application-factory-pattern
 
-celery = create_app()  # pylint: disable=invalid-name
+  - The app.app_context().push() caused some problems with automated testing of
+    module loading. Adjusted tests to exclude ./worker. This shouldn't cause issues
+    running the Flask app as `worker` is never imported.
+"""
 
-if __name__ == '__main__':
-    celery.start()
+from app import create_app
+from app.extensions import celery
+
+app = create_app()
+app.app_context().push()

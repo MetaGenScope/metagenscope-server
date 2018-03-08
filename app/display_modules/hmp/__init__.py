@@ -7,7 +7,7 @@ samples and human body sites from the Human Microbiome Project.
 
 from app.display_modules.display_module import DisplayModule
 from app.display_modules.hmp.hmp_models import HMPResult
-from app.display_modules.hmp.hmp_tasks import HMPGroupTask
+from app.display_modules.hmp.hmp_tasks import HMPTask
 
 
 class HMPModule(DisplayModule):
@@ -22,3 +22,8 @@ class HMPModule(DisplayModule):
     def get_result_model(cls):
         """Return data model for HMP type."""
         return HMPResult
+
+    @classmethod
+    def get_result_task(cls):
+        """Return middleware task for HMP type."""
+        return HMPTask

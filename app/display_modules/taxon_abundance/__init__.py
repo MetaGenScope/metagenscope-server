@@ -15,6 +15,7 @@ from app.display_modules.taxon_abundance.taxon_abundance_models import (
     TaxonAbundanceNode,
     TaxonAbundanceEdge,
 )
+from app.display_modules.taxon_abundance.taxon_abundance_tasks import TaxonAbundanceTask
 
 
 class TaxonAbundanceDisplayModule(DisplayModule):
@@ -29,3 +30,8 @@ class TaxonAbundanceDisplayModule(DisplayModule):
     def get_result_model(cls):
         """Return status wrapper for Taxon Abundance type."""
         return TaxonAbundanceResult
+
+    @classmethod
+    def get_result_task(cls):
+        """Return middleware task for Taxon Abundance type."""
+        return TaxonAbundanceTask

@@ -5,13 +5,14 @@ import datetime
 from uuid import uuid4
 
 from marshmallow import fields
+from mongoengine import Document, EmbeddedDocumentField
 
 from app.base import BaseSchema
 from app.extensions import mongoDB
 from app.tool_results import all_tool_result_modules
 
 
-class BaseSample(mongoDB.Document):
+class BaseSample(Document):
     """Sample model."""
 
     uuid = mongoDB.UUIDField(required=True, primary_key=True, binary=False, default=uuid4)
@@ -24,7 +25,7 @@ class BaseSample(mongoDB.Document):
 
 # Create actual Sample class based on modules present at runtime
 Sample = type('Sample', (BaseSample,), {
-    module.name(): mongoDB.EmbeddedDocumentField(module.result_model())
+    module.name(): EmbeddedDocumentField(module.result_model())
     for module in all_tool_result_modules})
 
 

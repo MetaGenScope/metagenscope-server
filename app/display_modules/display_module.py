@@ -17,6 +17,16 @@ class DisplayModule:
         raise NotImplementedError()
 
     @classmethod
+    def get_result_model(cls):
+        """Return data model for display module type."""
+        raise NotImplementedError()
+
+    @classmethod
+    def get_result_task(cls):
+        """Return middleware task for display module type."""
+        raise NotImplementedError()
+
+    @classmethod
     def get_data(cls, my_query_result):
         """Transform my_query_result to data."""
         return my_query_result
@@ -67,8 +77,3 @@ class DisplayModule:
         return type(class_name,
                     (AnalysisResultWrapper,),
                     {'data': mongo_field})
-
-    @classmethod
-    def get_result_model(cls):  # pylint: disable=invalid-name
-        """Return data model for display module type."""
-        raise NotImplementedError()

@@ -11,6 +11,7 @@ from app.display_modules.reads_classified.reads_classified_models import (
     ReadsClassifiedResult,
     ReadsClassifiedDatum,
 )
+from app.display_modules.reads_classified.reads_classified_tasks import ReadsClassifiedTask
 
 
 class ReadsClassifiedModule(DisplayModule):
@@ -25,3 +26,8 @@ class ReadsClassifiedModule(DisplayModule):
     def get_result_model(cls):
         """Return data model for Reads Classified type."""
         return ReadsClassifiedResult
+
+    @classmethod
+    def get_result_task(cls):
+        """Return middleware task for Reads Classified type."""
+        return ReadsClassifiedTask
