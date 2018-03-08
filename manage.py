@@ -35,33 +35,29 @@ manager.add_command('db', MigrateCommand)
 @manager.command
 def test():
     """Run the tests without code coverage."""
-    test_dirs = ['./tests/', './app/']
-    test_suits = [unittest.TestLoader().discover(path, pattern='test*.py')
-                  for path in test_dirs]
-    results = [unittest.TextTestRunner(verbosity=2).run(suite) for suite in test_suits]
-    for result in results:
-        if not result.wasSuccessful():
-            return 1
-    return 0
+    tests = unittest.TestLoader().discover('./tests', pattern='test*.py')
+    tests.addTests(unittest.TestLoader().discover('./app', pattern='test*.py'))
+    result = unittest.TextTestRunner(verbosity=2).run(tests)
+    if result.wasSuccessful():
+        return 0
+    return 1
 
 
 @manager.command
 def cov():
     """Run the unit tests with coverage."""
-    test_dirs = ['./tests/', './app/']
-    test_suits = [unittest.TestLoader().discover(path, pattern='test*.py')
-                  for path in test_dirs]
-    results = [unittest.TextTestRunner(verbosity=2).run(suite) for suite in test_suits]
-    for result in results:
-        if not result.wasSuccessful():
-            return 1
-    COV.stop()
-    COV.save()
-    print('Coverage Summary:')
-    COV.report()
-    COV.html_report()
-    COV.erase()
-    return 0
+    tests = unittest.TestLoader().discover('./tests', pattern='test*.py')
+    tests.addTests(unittest.TestLoader().discover('./app', pattern='test*.py'))
+    result = unittest.TextTestRunner(verbosity=2).run(tests)
+    if result.wasSuccessful():
+        COV.stop()
+        COV.save()
+        print('Coverage Summary:')
+        COV.report()
+        COV.html_report()
+        COV.erase()
+        return 0
+    return 1
 
 
 @manager.command
