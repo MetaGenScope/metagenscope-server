@@ -114,9 +114,9 @@ def taxa_tool_tsne(tool_name, samples):
         'y_label': f'{tool_name} tsne y',
     }
 
-    metaphlan_dict = {sample.name: getattr(sample, tool_name).taxa
-                      for sample in samples}
-    samples = get_clean_samples(metaphlan_dict)
+    sample_dict = {sample.name: getattr(sample, tool_name).taxa
+                   for sample in samples}
+    samples = get_clean_samples(sample_dict)
     taxa_tsne = run_tsne(samples)
     sample_names = list(samples.keys())
     tsne_labeled = label_tsne(taxa_tsne, sample_names, tool_name)
