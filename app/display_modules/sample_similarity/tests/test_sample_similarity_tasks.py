@@ -41,7 +41,11 @@ class TestSampleSimilarityTasks(BaseTestCase):
             self.assertNotIn('somebadkingdom', feature_set)
 
     def test_tsne_returns_data(self):
-        """Ensure run_tsne method removes features below threshold."""
+        """
+        Ensure run_tsne method returns array of the correct size.
+
+        tSNE is non-deterministic so that is as close as we can get to a real test.
+        """
         sample_dict = {f'SMPL_{i}': dict(create_kraken().taxa) for i in range(3)}
         tsne_output = run_tsne(sample_dict)
         self.assertEqual((3, 2), tsne_output.shape)
