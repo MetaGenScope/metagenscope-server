@@ -1,6 +1,10 @@
 """Display module utilities."""
 
+from app.extensions import celery
+from app.sample_groups.sample_group_models import SampleGroup
 
+
+@celery.task()
 def categories_from_metadata(samples, min_size=2):
     """
     Create dict of categories and their values from sample metadata.
@@ -36,3 +40,11 @@ def categories_from_metadata(samples, min_size=2):
                   if len(category_values) >= min_size}
 
     return categories
+
+
+@celery.task()
+def fetch_samples(sample_group_id):
+    """Return sample list for a SampleGroup based on ID."""
+    sample_group = SampleGroup.query.filter_by(id=sample_group_id).first()
+    samples = sample_group.samples
+    return samples

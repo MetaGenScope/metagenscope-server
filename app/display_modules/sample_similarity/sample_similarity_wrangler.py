@@ -1,0 +1,33 @@
+"""Tasks for generating Sample Similarity results."""
+
+from celery import group
+
+from app.display_modules.display_wrangler import DisplayModuleWrangler
+from app.display_modules.sample_similarity.sample_similarity_tasks import (
+    taxa_tool_tsne,
+    sample_similarity_reducer,
+)
+from app.display_modules.utils import categories_from_metadata, fetch_samples
+from app.tool_results.kraken import KrakenResultModule
+from app.tool_results.metaphlan2 import Metaphlan2ResultModule
+
+
+class SampleSimilarityWrangler(DisplayModuleWrangler):  # pylint: disable=abstract-method
+    """Task for generating Reads Classified results."""
+
+    @staticmethod
+    def required_tool_results():
+        """Enumerate which ToolResult modules a sample must have."""
+        return [KrakenResultModule, Metaphlan2ResultModule]
+
+    def run_group(self, sample_group_id):
+        """Gather samples and process."""
+        categories_task = categories_from_metadata.s()
+        kraken_task = taxa_tool_tsne.s(KrakenResultModule.name())
+        metaphlan2_task = taxa_tool_tsne.s(Metaphlan2ResultModule.name())
+
+        middle_tasks = [categories_task, kraken_task, metaphlan2_task]
+        tsne_chain = (fetch_samples.s() | group(middle_tasks) | sample_similarity_reducer.s())
+        result = tsne_chain(sample_group_id)
+
+        return result

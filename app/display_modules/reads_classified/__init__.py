@@ -11,7 +11,7 @@ from app.display_modules.reads_classified.reads_classified_models import (
     ReadsClassifiedResult,
     ReadsClassifiedDatum,
 )
-from app.display_modules.reads_classified.reads_classified_tasks import ReadsClassifiedTask
+from app.display_modules.reads_classified.reads_classified_wrangler import ReadsClassifiedWrangler
 
 
 class ReadsClassifiedModule(DisplayModule):
@@ -28,6 +28,6 @@ class ReadsClassifiedModule(DisplayModule):
         return ReadsClassifiedResult
 
     @classmethod
-    def get_result_task(cls):
-        """Return middleware task for Reads Classified type."""
-        return ReadsClassifiedTask
+    def get_result_wrangler(cls):
+        """Return middleware wrangler for Reads Classified type."""
+        return ReadsClassifiedWrangler

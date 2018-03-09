@@ -22,8 +22,8 @@ class DisplayModule:
         raise NotImplementedError()
 
     @classmethod
-    def get_result_task(cls):
-        """Return middleware task for display module type."""
+    def get_result_wrangler(cls):
+        """Return middleware wrangler for display module type."""
         raise NotImplementedError()
 
     @classmethod

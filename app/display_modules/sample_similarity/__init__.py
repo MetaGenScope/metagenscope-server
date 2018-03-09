@@ -17,7 +17,9 @@ from app.display_modules.sample_similarity.sample_similarity_models import (
     SampleSimilarityResult,
     ToolDocument,
 )
-from app.display_modules.sample_similarity.sample_similarity_tasks import SampleSimilarityTask
+from app.display_modules.sample_similarity.sample_similarity_wrangler import (
+    SampleSimilarityWrangler,
+)
 
 
 class SampleSimilarityDisplayModule(DisplayModule):
@@ -34,6 +36,6 @@ class SampleSimilarityDisplayModule(DisplayModule):
         return SampleSimilarityResult
 
     @classmethod
-    def get_result_task(cls):
-        """Return middleware task for Sample Similarity type."""
-        return SampleSimilarityTask
+    def get_result_wrangler(cls):
+        """Return middleware wrangler for Sample Similarity type."""
+        return SampleSimilarityWrangler

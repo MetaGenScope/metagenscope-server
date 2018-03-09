@@ -2,7 +2,6 @@
 
 import os
 
-from celery import Task
 from mongoengine import connect
 
 from app.config import app_config
@@ -14,8 +13,8 @@ def mark_original(method):
     return method
 
 
-class DisplayModuleTask(Task):
-    """Base DisplayModule task."""
+class DisplayModuleWrangler:
+    """Base DisplayModule wrangler."""
 
     _db = None
 
@@ -28,27 +27,30 @@ class DisplayModuleTask(Task):
             self._db = connect(host=host)
         return self._db
 
-    @classmethod
-    def required_tool_results(cls):
+    @staticmethod
+    def required_tool_results():
         """Enumerate which ToolResult modules a sample must have for this task to run."""
         raise NotImplementedError()
 
+    @staticmethod
     @mark_original
-    def run_sample(self, sample_id):
+    def run_sample(sample_id):
         """Gather single sample and process."""
         raise NotImplementedError()
 
+    @staticmethod
     @mark_original
-    def run_group(self, sample_group_id):
+    def run_group(sample_group_id):
         """Gather group of samples and process."""
         raise NotImplementedError()
 
-    def run(self, **kwargs):  # pylint: disable=arguments-differ
+    @classmethod
+    def run(cls, **kwargs):  # pylint: disable=arguments-differ
         """Dispatch appropriate handler based on kwargs and valid handler overrides."""
-        if 'sample' in kwargs and not hasattr(self.run_sample, 'is_original'):
-            return self.run_sample(kwargs.get('errormessage'))
-        elif 'sample_group_id' in kwargs and not hasattr(self.run_group, 'is_original'):
-            return self.run_group(kwargs.get('errormessage'))
+        if 'sample' in kwargs and not hasattr(cls.run_sample, 'is_original'):
+            return cls.run_sample(kwargs.get('errormessage'))
+        elif 'sample_group_id' in kwargs and not hasattr(cls.run_group, 'is_original'):
+            return cls.run_group(kwargs.get('errormessage'))
 
         message = ('run expected either sample_id or sample_group_id as '
                    'arguments but received neither.')
