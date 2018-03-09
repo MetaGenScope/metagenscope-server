@@ -20,7 +20,8 @@ class SampleSimilarityWrangler(DisplayModuleWrangler):  # pylint: disable=abstra
         """Enumerate which ToolResult modules a sample must have."""
         return [KrakenResultModule, Metaphlan2ResultModule]
 
-    def run_group(self, sample_group_id):
+    @staticmethod
+    def run_group(sample_group_id):
         """Gather samples and process."""
         categories_task = categories_from_metadata.s()
         kraken_task = taxa_tool_tsne.s(KrakenResultModule.name())
