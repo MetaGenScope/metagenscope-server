@@ -52,7 +52,6 @@ class TestSampleSimilarityTasks(BaseTestCase):
         tsne_output = run_tsne(sample_dict)
         self.assertEqual((3, 2), tsne_output.shape)
 
-
     def test_taxa_tool_tsne_task(self):
         """Ensure taxa_tool_tsne task returns correct results."""
         samples = [Sample(name=f'SMPL_{i}', kraken=create_kraken()) for i in range(3)]
