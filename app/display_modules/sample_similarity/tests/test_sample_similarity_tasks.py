@@ -3,6 +3,7 @@
 from app.display_modules.sample_similarity.sample_similarity_tasks import (
     get_clean_samples,
     run_tsne,
+    label_tsne,
     taxa_tool_tsne,
 )
 from app.samples.sample_models import Sample
@@ -51,6 +52,17 @@ class TestSampleSimilarityTasks(BaseTestCase):
         sample_dict = {f'SMPL_{i}': dict(create_kraken().taxa) for i in range(3)}
         tsne_output = run_tsne(sample_dict)
         self.assertEqual((3, 2), tsne_output.shape)
+
+    def test_label_tsne(self):
+        """Ensure results are labeled correctly."""
+        tsne_results = [[0, 1],
+                        [2, 3],
+                        [4, 5]]
+        sample_names = ['SMPL_0', 'SMPL_1', 'SMPL_2']
+        tool_label = 'kraken'
+        labeled_samples = label_tsne(tsne_results, sample_names, tool_label)
+        self.assertIn('kraken_x', labeled_samples['SMPL_0'])
+        self.assertEqual(1, labeled_samples['SMPL_0']['kraken_y'])
 
     def test_taxa_tool_tsne_task(self):
         """Ensure taxa_tool_tsne task returns correct results."""
