@@ -34,6 +34,17 @@ def find_all_display_modules():
     results = [get_display_model(module) for module in display_packages]
     results = [result for result in results if result is not None]
 
+    # Check for duplicate unique module identifiers
+    identifiers = {}
+    for module in results:
+        identifier = module.name()
+        cls_name = module.__name__
+        if identifier in identifiers:
+            message = (f'Identifier {identifier} is not unique! '
+                       f'Returned by {cls_name} and {identifiers[identifier]}')
+            raise ValueError(message)
+        identifiers[identifier] = cls_name
+
     return results
 
 

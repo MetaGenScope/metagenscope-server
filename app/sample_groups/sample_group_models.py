@@ -74,6 +74,21 @@ class SampleGroup(db.Model):
         self.sample_ids = []
 
     @property
+    def tools_present(self):
+        """Return list of names for Tool Results present across all Samples in this group."""
+        # Cache samples
+        samples = self.samples
+
+        tools_present_in_all = set([])
+        for i, sample in enumerate(samples):
+            tool_results = set(sample.tool_result_names)
+            if i == 0:
+                tools_present_in_all |= tool_results
+            else:
+                tools_present_in_all &= tool_results
+        return list(tools_present_in_all)
+
+    @property
     def analysis_result(self):
         """Get sample group's analysis result model."""
         try:

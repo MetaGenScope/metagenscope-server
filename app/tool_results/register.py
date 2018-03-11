@@ -6,6 +6,7 @@ from flask import request
 
 from app.api.endpoint_response import EndpointResponse
 from app.api.utils import handle_mongo_lookup
+from app.display_modules.conductor import DisplayModuleConductor
 from app.samples.sample_models import Sample
 from app.users.user_models import User
 from app.users.user_helpers import authenticate
@@ -31,6 +32,10 @@ def receive_upload(cls, resp, sample_id):
             sample.save()
             response.success(201)
             response.data = post_json
+
+            # Kick off middleware tasks
+            DisplayModuleConductor(sample_id, cls).shake_that_baton()
+
         return response.json_and_code()
     return save_tool_result()
 

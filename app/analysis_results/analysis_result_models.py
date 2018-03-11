@@ -39,6 +39,6 @@ class AnalysisResultMeta(mongoDB.DynamicDocument):
         """Return a list of all analysis result types available for this record."""
         blacklist = ['uuid', 'sample_group_id', 'created_at']
         all_fields = [k
-                      for k, v in vars(self).items()  # pylint: disable=no-member
+                      for k, v in vars(self).items()
                       if k not in blacklist and not k.startswith('_')]
         return [field for field in all_fields if hasattr(self, field)]

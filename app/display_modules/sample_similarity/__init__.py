@@ -20,10 +20,17 @@ from app.display_modules.sample_similarity.sample_similarity_models import (
 from app.display_modules.sample_similarity.sample_similarity_wrangler import (
     SampleSimilarityWrangler,
 )
+from app.tool_results.kraken import KrakenResultModule
+from app.tool_results.metaphlan2 import Metaphlan2ResultModule
 
 
 class SampleSimilarityDisplayModule(DisplayModule):
     """Sample Similarity display module."""
+
+    @staticmethod
+    def required_tool_results():
+        """Enumerate which ToolResult modules a sample must have."""
+        return [KrakenResultModule, Metaphlan2ResultModule]
 
     @classmethod
     def name(cls):
@@ -36,6 +43,6 @@ class SampleSimilarityDisplayModule(DisplayModule):
         return SampleSimilarityResult
 
     @classmethod
-    def get_result_wrangler(cls):
+    def get_wrangler(cls):
         """Return middleware wrangler for Sample Similarity type."""
         return SampleSimilarityWrangler

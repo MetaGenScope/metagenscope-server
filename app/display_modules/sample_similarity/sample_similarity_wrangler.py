@@ -12,16 +12,11 @@ from app.tool_results.kraken import KrakenResultModule
 from app.tool_results.metaphlan2 import Metaphlan2ResultModule
 
 
-class SampleSimilarityWrangler(DisplayModuleWrangler):  # pylint: disable=abstract-method
+class SampleSimilarityWrangler(DisplayModuleWrangler):
     """Task for generating Reads Classified results."""
 
     @staticmethod
-    def required_tool_results():
-        """Enumerate which ToolResult modules a sample must have."""
-        return [KrakenResultModule, Metaphlan2ResultModule]
-
-    @staticmethod
-    def run_group(sample_group_id):
+    def run_sample_group(sample_group_id):
         """Gather samples and process."""
         categories_task = categories_from_metadata.s()
         kraken_task = taxa_tool_tsne.s(KrakenResultModule.name())

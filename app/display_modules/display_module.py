@@ -22,9 +22,20 @@ class DisplayModule:
         raise NotImplementedError()
 
     @classmethod
-    def get_result_wrangler(cls):
+    def get_wrangler(cls):
         """Return middleware wrangler for display module type."""
         raise NotImplementedError()
+
+    @staticmethod
+    def required_tool_results():
+        """Enumerate which ToolResult modules a sample must have for this task to run."""
+        raise NotImplementedError()
+
+    @classmethod
+    def is_dependent_on_tool(cls, tool_result_cls):
+        """Return True if this display module is dependent on a given Tool Result type."""
+        required_tools = cls.required_tool_results()
+        return tool_result_cls in required_tools
 
     @classmethod
     def get_data(cls, my_query_result):

@@ -17,6 +17,11 @@ from app.display_modules.reads_classified.reads_classified_wrangler import Reads
 class ReadsClassifiedModule(DisplayModule):
     """Reads Classified display module."""
 
+    @staticmethod
+    def required_tool_results():
+        """Enumerate which ToolResult modules a sample must have."""
+        return []
+
     @classmethod
     def name(cls):
         """Return module's unique identifier string."""
@@ -28,6 +33,6 @@ class ReadsClassifiedModule(DisplayModule):
         return ReadsClassifiedResult
 
     @classmethod
-    def get_result_wrangler(cls):
+    def get_wrangler(cls):
         """Return middleware wrangler for Reads Classified type."""
         return ReadsClassifiedWrangler

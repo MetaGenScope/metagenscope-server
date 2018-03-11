@@ -22,6 +22,15 @@ class BaseSample(Document):
 
     meta = {'allow_inheritance': True}
 
+    @property
+    def tool_result_names(self):
+        """Return a list of all tool results present for this Sample."""
+        blacklist = ['uuid', 'name', 'metadata', 'created_at']
+        all_fields = [k
+                      for k, v in vars(self).items()
+                      if k not in blacklist and not k.startswith('_')]
+        return [field for field in all_fields if getattr(self, field, None) is not None]
+
 
 # Create actual Sample class based on modules present at runtime
 Sample = type('Sample', (BaseSample,), {
