@@ -58,7 +58,7 @@ class DisplayModuleConductor:
 
     def direct_sample_groups(self):
         """Kick off computation for affected sample groups' relevant DisplayModules."""
-        query_filter = SampleGroup.sample_ids.any(sample_id=self.sample_id)
+        query_filter = SampleGroup.sample_ids.contains(self.sample_id)
         sample_groups = SampleGroup.query.filter(query_filter)
         for sample_group in sample_groups:
             self.direct_sample_group(sample_group)
