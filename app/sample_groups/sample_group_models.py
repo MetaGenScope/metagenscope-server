@@ -2,16 +2,31 @@
 
 import datetime
 
-from sqlalchemy.dialects.postgresql import UUID
 from marshmallow import fields
 from mongoengine import DoesNotExist
+from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy.ext.associationproxy import association_proxy
 
+from app.analysis_results.analysis_result_models import AnalysisResultMeta
 from app.base import BaseSchema
 from app.extensions import db
-from app.query_results.query_result_models import QueryResultMeta
+from app.samples.sample_models import Sample
 
 
-# pylint: disable=too-few-public-methods
+class SamplePlaceholder(db.Model):  # pylint: disable=too-few-public-methods
+    """Placeholder for Mongo Sample in SampleGroup<->Sample relationship."""
+
+    sample_id = db.Column(UUID(as_uuid=True), primary_key=True)
+    sample_group_id = db.Column(UUID(as_uuid=True),
+                                db.ForeignKey('sample_groups.id'),
+                                primary_key=True)
+
+    def __init__(self, sample_id=None, sample_group_id=None):
+        """Initialize SampleGroup<->SamplePlaceholder model."""
+        self.sample_id = sample_id
+        self.sample_group_id = sample_group_id
+
+
 class SampleGroup(db.Model):
     """MetaGenScope Sample Group model."""
 
@@ -27,6 +42,9 @@ class SampleGroup(db.Model):
     access_scheme = db.Column(db.String(128), default='public', nullable=False)
     created_at = db.Column(db.DateTime, nullable=False)
 
+    sample_placeholders = db.relationship(SamplePlaceholder)
+    sample_ids = association_proxy('sample_placeholders', 'sample_id')
+
     def __init__(
             self, name, access_scheme='public',
             created_at=datetime.datetime.utcnow()):
@@ -36,15 +54,50 @@ class SampleGroup(db.Model):
         self.created_at = created_at
 
     @property
-    def query_result(self):
-        """Get sample group's query result model."""
+    def samples(self):
+        """
+        Get SampleGroup's associated Samples.
+
+        This will hit Mongo every time it is called! Responsibility for caching
+        the result lies on the calling method.
+        """
+        return Sample.objects(uuid__in=self.sample_ids)
+
+    @samples.setter
+    def samples(self, value):
+        """Set SampleGroup's samples."""
+        self.sample_ids = [sample.uuid for sample in value]
+
+    @samples.deleter
+    def samples(self):
+        """Remove SampleGroup's samples."""
+        self.sample_ids = []
+
+    @property
+    def tools_present(self):
+        """Return list of names for Tool Results present across all Samples in this group."""
+        # Cache samples
+        samples = self.samples
+
+        tools_present_in_all = set([])
+        for i, sample in enumerate(samples):
+            tool_results = set(sample.tool_result_names)
+            if i == 0:
+                tools_present_in_all |= tool_results
+            else:
+                tools_present_in_all &= tool_results
+        return list(tools_present_in_all)
+
+    @property
+    def analysis_result(self):
+        """Get sample group's analysis result model."""
         try:
-            return QueryResultMeta.objects.get(sample_group_id=self.id)
+            return AnalysisResultMeta.objects.get(sample_group_id=self.id)
         except DoesNotExist:
             return None
 
 
-class SampleGroupSchema(BaseSchema):
+class SampleGroupSchema(BaseSchema):  # pylint: disable=too-few-public-methods
     """Serializer for Sample Group."""
 
     __envelope__ = {

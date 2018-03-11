@@ -18,6 +18,11 @@ class Config(object):
     TOKEN_EXPIRATION_DAYS = 30
     TOKEN_EXPIRATION_SECONDS = 0
 
+    CELERY_BROKER_URL = os.environ.get('CELERY_BROKER_URL')
+    RESULT_BACKEND = os.environ.get('CELERY_RESULT_BACKEND')
+    RESULT_EXPIRES = 3600     # Expire results after one hour
+    RESULT_CACHE_MAX = None   # Do not limit cache
+
 
 class DevelopmentConfig(Config):
     """Configurations for Development."""
@@ -37,6 +42,9 @@ class TestingConfig(Config):
     TOKEN_EXPIRATION_DAYS = 0
     TOKEN_EXPIRATION_SECONDS = 3
 
+    CELERY_BROKER_URL = os.environ.get('CELERY_BROKER_TEST_URL')
+    RESULT_BACKEND = os.environ.get('CELERY_RESULT_TEST_BACKEND')
+
 
 class StagingConfig(Config):
     """Configurations for Staging."""
@@ -52,6 +60,9 @@ class ProductionConfig(Config):
     TESTING = False
     SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL')
     MONGODB_HOST = os.environ.get('MONGODB_HOST')
+
+    CELERY_BROKER_URL = os.environ.get('CELERY_BROKER_URL')
+    RESULT_BACKEND = os.environ.get('CELERY_RESULT_BACKEND')
 
 
 # pylint: disable=invalid-name

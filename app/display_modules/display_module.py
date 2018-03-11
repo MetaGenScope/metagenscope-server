@@ -2,9 +2,10 @@
 
 from uuid import UUID
 
+from app.analysis_results.analysis_result_models import AnalysisResultMeta, AnalysisResultWrapper
 from app.api.endpoint_response import EndpointResponse
 from app.api.utils import handle_mongo_lookup
-from app.query_results.query_result_models import QueryResultMeta, QueryResultWrapper
+from app.extensions import mongoDB
 
 
 class DisplayModule:
@@ -16,6 +17,27 @@ class DisplayModule:
         raise NotImplementedError()
 
     @classmethod
+    def get_result_model(cls):
+        """Return data model for display module type."""
+        raise NotImplementedError()
+
+    @classmethod
+    def get_wrangler(cls):
+        """Return middleware wrangler for display module type."""
+        raise NotImplementedError()
+
+    @staticmethod
+    def required_tool_results():
+        """Enumerate which ToolResult modules a sample must have for this task to run."""
+        raise NotImplementedError()
+
+    @classmethod
+    def is_dependent_on_tool(cls, tool_result_cls):
+        """Return True if this display module is dependent on a given Tool Result type."""
+        required_tools = cls.required_tool_results()
+        return tool_result_cls in required_tools
+
+    @classmethod
     def get_data(cls, my_query_result):
         """Transform my_query_result to data."""
         return my_query_result
@@ -25,16 +47,16 @@ class DisplayModule:
         """Define handler for API requests that defers to display module type."""
         response = EndpointResponse()
 
-        @handle_mongo_lookup(response, 'Query Result')
+        @handle_mongo_lookup(response, 'Analysis Result')
         def fetch_data():
-            """Perform Query Result lookup and formatting."""
+            """Perform Analysis Result lookup and formatting."""
             uuid = UUID(result_uuid)
-            query_result = QueryResultMeta.objects.get(uuid=uuid)
+            query_result = AnalysisResultMeta.objects.get(uuid=uuid)
             if cls.name() not in query_result:
-                msg = '{} is not in this QueryResult.'.format(cls.name())
+                msg = '{} is not in this AnalysisResult.'.format(cls.name())
                 response.message = msg
             elif query_result[cls.name()]['status'] != 'S':
-                response.message = 'Query Result has not finished processing.'
+                response.message = 'Analysis Result has not finished processing.'
             else:
                 response.success()
                 response.data = cls.get_data(query_result[cls.name()])
@@ -45,7 +67,7 @@ class DisplayModule:
     @classmethod
     def register_api_call(cls, router):
         """Register API endpoint for this display module type."""
-        endpoint_url = f'/query_results/<result_uuid>/{cls.name()}'
+        endpoint_url = f'/analysis_results/<result_uuid>/{cls.name()}'
         endpoint_name = f'get_{cls.name()}'
         view_function = cls.api_call
         router.add_url_rule(endpoint_url,
@@ -54,19 +76,15 @@ class DisplayModule:
                             methods=['GET'])
 
     @classmethod
-    def get_query_result_wrapper(cls):
-        """Create wrapper for query result field."""
-        mongo_field = cls.get_query_result_wrapper_field()
+    def get_analysis_result_wrapper(cls):
+        """Create wrapper for analysis result data field."""
+        module_result_model = cls.get_result_model()
+        mongo_field = mongoDB.EmbeddedDocumentField(module_result_model)
+        # Convert snake-cased name() to upper camel-case class name
         words = cls.name().split('_')
-        # Upper snake case name() result
         words = [word[0].upper() + word[1:] for word in words]
         class_name = ''.join(words) + 'ResultWrapper'
-        out = type(class_name,
-                   (QueryResultWrapper,),
-                   {'data': mongo_field})
-        return out
-
-    @classmethod
-    def get_query_result_wrapper_field(cls):
-        """Return status wrapper for display module type."""
-        raise NotImplementedError()
+        # Create wrapper class
+        return type(class_name,
+                    (AnalysisResultWrapper,),
+                    {'data': mongo_field})

@@ -29,9 +29,9 @@ def get_single_result(group_uuid):
             'data': data,
         }
 
-        query_result = sample_group.query_result
-        if query_result:
-            response_object['data']['sample_group']['query_result_id'] = str(query_result.id)
+        analysis_result = sample_group.analysis_result
+        if analysis_result:
+            response_object['data']['sample_group']['analysis_result_id'] = str(analysis_result.id)
         return jsonify(response_object), 200
     except ValueError:
         return jsonify(response_object), 404

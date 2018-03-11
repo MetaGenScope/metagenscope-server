@@ -1,28 +1,14 @@
-"""Sample Similarity display module."""
+"""Sample Similarity display models."""
 
 from mongoengine import ValidationError
 
-from app.display_modules.display_module import DisplayModule
 from app.extensions import mongoDB as mdb
+from app.display_modules.utils import create_result_wrapper
 
 
 # Define aliases
 EmbeddedDoc = mdb.EmbeddedDocumentField         # pylint: disable=invalid-name
 StringList = mdb.ListField(mdb.StringField())   # pylint: disable=invalid-name
-
-
-class SampleSimilarityDisplayModule(DisplayModule):
-    """Sample Similarity display module."""
-
-    @classmethod
-    def name(cls):
-        """Return module's unique identifier string."""
-        return 'sample_similarity'
-
-    @classmethod
-    def get_query_result_wrapper_field(cls):
-        """Return status wrapper for Sample Similarity type."""
-        return EmbeddedDoc(SampleSimilarityResult)
 
 
 class ToolDocument(mdb.EmbeddedDocument):   # pylint: disable=too-few-public-methods
@@ -35,7 +21,9 @@ class ToolDocument(mdb.EmbeddedDocument):   # pylint: disable=too-few-public-met
 class SampleSimilarityResult(mdb.EmbeddedDocument):     # pylint: disable=too-few-public-methods
     """Sample Similarity document type."""
 
+    # Categories dict is of the form: {<category_name>: [<category_value>, ...]}
     categories = mdb.MapField(field=StringList, required=True)
+    # Tools dict is of the form: {<tool_name>: <ToolDocument>}
     tools = mdb.MapField(field=EmbeddedDoc(ToolDocument), required=True)
     data_records = mdb.ListField(mdb.DictField(), required=True)
 
@@ -55,3 +43,7 @@ class SampleSimilarityResult(mdb.EmbeddedDocument):     # pylint: disable=too-fe
                 if (xname not in record) or (yname not in record):
                     msg = 'Record must x and y for all tools.'
                     raise ValidationError(msg)
+
+
+SampleSimilarityResultWrapper = create_result_wrapper('SampleSimilarityResultWrapper',  # pylint: disable=invalid-name
+                                                      SampleSimilarityResult)

@@ -9,7 +9,7 @@ from flask_migrate import MigrateCommand, upgrade
 from app import create_app, db
 from app.users.user_models import User
 from app.organizations.organization_models import Organization
-from app.query_results.query_result_models import QueryResultMeta
+from app.analysis_results.analysis_result_models import AnalysisResultMeta
 from app.samples.sample_models import Sample
 from app.sample_groups.sample_group_models import SampleGroup
 
@@ -35,7 +35,8 @@ manager.add_command('db', MigrateCommand)
 @manager.command
 def test():
     """Run the tests without code coverage."""
-    tests = unittest.TestLoader().discover('.', pattern='test*.py')
+    tests = unittest.TestLoader().discover('./tests', pattern='test*.py')
+    tests.addTests(unittest.TestLoader().discover('./app', pattern='test*.py'))
     result = unittest.TextTestRunner(verbosity=2).run(tests)
     if result.wasSuccessful():
         return 0
@@ -45,7 +46,8 @@ def test():
 @manager.command
 def cov():
     """Run the unit tests with coverage."""
-    tests = unittest.TestLoader().discover('.', pattern='test*.py')
+    tests = unittest.TestLoader().discover('./tests', pattern='test*.py')
+    tests.addTests(unittest.TestLoader().discover('./app', pattern='test*.py'))
     result = unittest.TextTestRunner(verbosity=2).run(tests)
     if result.wasSuccessful():
         COV.stop()
@@ -79,7 +81,7 @@ def recreate_db():
     upgrade()
 
     # Empty Mongo database
-    QueryResultMeta.drop_collection()
+    AnalysisResultMeta.drop_collection()
     Sample.drop_collection()
 
 

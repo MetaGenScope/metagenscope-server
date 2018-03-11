@@ -2,26 +2,7 @@
 
 from mongoengine import ValidationError
 
-from app.display_modules.display_module import DisplayModule
 from app.extensions import mongoDB as mdb
-
-
-# Define aliases
-EmbeddedDoc = mdb.EmbeddedDocumentField         # pylint: disable=invalid-name
-
-
-class TaxonAbundanceDisplayModule(DisplayModule):
-    """Taxon Abundance display module."""
-
-    @classmethod
-    def name(cls):
-        """Return module's unique identifier string."""
-        return 'taxon_abundance'
-
-    @classmethod
-    def get_query_result_wrapper_field(cls):
-        """Return status wrapper for Taxon Abundance type."""
-        return EmbeddedDoc(TaxonAbundanceResult)
 
 
 class TaxonAbundanceNode(mdb.EmbeddedDocument):     # pylint: disable=too-few-public-methods

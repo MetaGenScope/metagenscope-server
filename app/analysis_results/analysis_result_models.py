@@ -1,44 +1,44 @@
-"""Query Result model definitions."""
+"""Analysis Results model definitions."""
 
 import datetime
 from uuid import uuid4
 
 from app.extensions import mongoDB
-# from app.display_modules import all_display_modules
 
 
-QUERY_RESULT_STATUS = (('E', 'ERROR'),
-                       ('P', 'PENDING'),
-                       ('W', 'WORKING'),
-                       ('S', 'SUCCESS'))
+ANALYSIS_RESULT_STATUS = (('E', 'ERROR'),
+                          ('P', 'PENDING'),
+                          ('W', 'WORKING'),
+                          ('S', 'SUCCESS'))
 
 
-class QueryResultWrapper(mongoDB.EmbeddedDocument):   # pylint: disable=too-few-public-methods
+class AnalysisResultWrapper(mongoDB.EmbeddedDocument):   # pylint: disable=too-few-public-methods
     """Base mongo result class."""
 
     status = mongoDB.StringField(required=True,
                                  max_length=1,
-                                 choices=QUERY_RESULT_STATUS,
+                                 choices=ANALYSIS_RESULT_STATUS,
                                  default='P')
 
     meta = {'allow_inheritance': True}
 
 
-class QueryResultMeta(mongoDB.DynamicDocument):
+class AnalysisResultMeta(mongoDB.DynamicDocument):
     """Base mongo result class."""
 
     uuid = mongoDB.UUIDField(required=True, primary_key=True, binary=False, default=uuid4)
     sample_group_id = mongoDB.UUIDField(binary=False)
     created_at = mongoDB.DateTimeField(default=datetime.datetime.utcnow)
+
     meta = {
         'indexes': ['sample_group_id']
     }
 
     @property
     def result_types(self):
-        """Return a list of all query result types available for this record."""
+        """Return a list of all analysis result types available for this record."""
         blacklist = ['uuid', 'sample_group_id', 'created_at']
         all_fields = [k
-                      for k, v in vars(self).items()  # pylint: disable=no-member
+                      for k, v in vars(self).items()
                       if k not in blacklist and not k.startswith('_')]
         return [field for field in all_fields if hasattr(self, field)]

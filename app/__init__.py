@@ -9,16 +9,16 @@ from flask_bcrypt import Bcrypt
 from flask_cors import CORS
 
 from app.api.constants import URL_PREFIX
+from app.api.v1.analysis_results import analysis_results_blueprint
 from app.api.v1.auth import auth_blueprint
 from app.api.v1.organizations import organizations_blueprint
 from app.api.v1.ping import ping_blueprint
-from app.api.v1.query_results import query_results_blueprint
 from app.api.v1.samples import samples_blueprint
 from app.api.v1.sample_groups import sample_groups_blueprint
 from app.api.v1.users import users_blueprint
 from app.config import app_config
 from app.display_modules import all_display_modules
-from app.extensions import mongoDB, db, migrate, bcrypt
+from app.extensions import mongoDB, db, migrate, bcrypt, celery
 from app.tool_results import ToolResultModule, all_tool_result_modules
 from app.tool_results.register import register_modules
 
@@ -47,6 +47,9 @@ def create_app():
     register_blueprints(app)
     register_error_handlers(app)
 
+    # Update Celery config
+    celery.conf.update(app.config)
+
     return app
 
 
@@ -67,10 +70,10 @@ def register_display_modules(app):
 
 def register_blueprints(app):
     """Register API endpoint blueprints for app."""
+    app.register_blueprint(analysis_results_blueprint, url_prefix=URL_PREFIX)
     app.register_blueprint(auth_blueprint, url_prefix=URL_PREFIX)
     app.register_blueprint(organizations_blueprint, url_prefix=URL_PREFIX)
     app.register_blueprint(ping_blueprint, url_prefix=URL_PREFIX)
-    app.register_blueprint(query_results_blueprint, url_prefix=URL_PREFIX)
     app.register_blueprint(samples_blueprint, url_prefix=URL_PREFIX)
     app.register_blueprint(sample_groups_blueprint, url_prefix=URL_PREFIX)
     app.register_blueprint(users_blueprint, url_prefix=URL_PREFIX)
