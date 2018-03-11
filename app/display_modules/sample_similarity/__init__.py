@@ -11,6 +11,7 @@ points can be adjust to reflect the analyses of different tools.
 """
 
 from app.display_modules.display_module import DisplayModule
+from app.display_modules.sample_similarity.constants import MODULE_NAME
 
 # Re-export modules
 from app.display_modules.sample_similarity.sample_similarity_models import (
@@ -35,7 +36,7 @@ class SampleSimilarityDisplayModule(DisplayModule):
     @classmethod
     def name(cls):
         """Return module's unique identifier string."""
-        return 'sample_similarity'
+        return MODULE_NAME
 
     @classmethod
     def get_result_model(cls):
