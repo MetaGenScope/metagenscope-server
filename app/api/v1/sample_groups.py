@@ -24,7 +24,7 @@ def add_sample_group(resp):
     response = EndpointResponse()
     post_data = request.get_json()
     if not post_data:
-        response.message = 'Invalid payload.'
+        response.message = 'Invalid Sample Group creation payload.'
         response.code = 400
         return response.json_and_code()
     try:
