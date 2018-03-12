@@ -19,6 +19,7 @@ SampleSimilarityResultWrapper = SampleSimilarityDisplayModule.get_analysis_resul
 
 class ToolFactory(factory.mongoengine.MongoEngineFactory):
     """Factory for Analysis Result's Sample Similarity's tool."""
+
     class Meta:
         model = ToolDocument
 
@@ -28,6 +29,7 @@ class ToolFactory(factory.mongoengine.MongoEngineFactory):
 
 class SampleSimilarityFactory(factory.mongoengine.MongoEngineFactory):
     """Factory for Analysis Result's Sample Similarity."""
+
     class Meta:
         model = SampleSimilarityResult
 
@@ -46,6 +48,7 @@ class SampleSimilarityFactory(factory.mongoengine.MongoEngineFactory):
     @factory.lazy_attribute
     def data_records(self):
         name = factory.Faker('company').generate({}).replace(' ', '_')
+
         def record(i):
             result = {'SampleID': f'{name}__seq{i}'}
             for category, category_values in self.categories.items():
@@ -60,8 +63,10 @@ class SampleSimilarityFactory(factory.mongoengine.MongoEngineFactory):
 
         return [record(i) for i in range(20)]
 
+
 class SampleSimilarityWrapperFactory(factory.mongoengine.MongoEngineFactory):
     """Factory for Analysis Result's Sample Similarity status wrapper."""
+
     class Meta:
         model = SampleSimilarityResultWrapper
 
