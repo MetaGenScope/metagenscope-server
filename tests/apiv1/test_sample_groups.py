@@ -3,11 +3,48 @@
 import json
 
 from tests.base import BaseTestCase
-from tests.utils import add_sample_group
+from tests.utils import add_sample_group, with_user
 
 
 class TestSampleGroupModule(BaseTestCase):
     """Tests for the SampleGroup module."""
+
+    @with_user
+    def test_add_sample_group(self, auth_headers, *_):
+        """Ensure a new sample group can be added to the database."""
+        group_name = 'The Most Sampled of Groups'
+        with self.client:
+            response = self.client.post(
+                '/api/v1/sample_groups',
+                headers=auth_headers,
+                data=json.dumps(dict(
+                    name=group_name,
+                )),
+                content_type='application/json',
+            )
+            data = json.loads(response.data.decode())
+            self.assertEqual(response.status_code, 201)
+            self.assertIn('success', data['status'])
+            self.assertEqual(group_name, data['data']['sample_group']['name'])
+
+    @with_user
+    def test_add_duplicate_sample_group(self, auth_headers, *_):
+        """Ensure failure for non-unique Sample Group name."""
+        group_name = 'The Most Sampled of Groups'
+        add_sample_group(name=group_name)
+        with self.client:
+            response = self.client.post(
+                '/api/v1/sample_groups',
+                headers=auth_headers,
+                data=json.dumps(dict(
+                    name=group_name,
+                )),
+                content_type='application/json',
+            )
+            data = json.loads(response.data.decode())
+            self.assertEqual(response.status_code, 400)
+            self.assertIn('fail', data['status'])
+            self.assertTrue(data['message'].startswith('Integrity error'))
 
     def test_get_single_sample_groups(self):
         """Ensure get single group behaves correctly."""
@@ -15,7 +52,7 @@ class TestSampleGroupModule(BaseTestCase):
         group_uuid = str(group.id)
         with self.client:
             response = self.client.get(
-                f'/api/v1/sample_group/{group_uuid}',
+                f'/api/v1/sample_groups/{group_uuid}',
                 content_type='application/json',
             )
             data = json.loads(response.data.decode())

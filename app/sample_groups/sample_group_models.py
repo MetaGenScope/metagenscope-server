@@ -2,7 +2,7 @@
 
 import datetime
 
-from marshmallow import fields
+from marshmallow import fields, pre_dump
 from mongoengine import DoesNotExist
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.ext.associationproxy import association_proxy
@@ -110,6 +110,15 @@ class SampleGroupSchema(BaseSchema):  # pylint: disable=too-few-public-methods
     name = fields.Str()
     access_scheme = fields.Str()
     created_at = fields.Date()
+
+    @pre_dump(pass_many=False)
+    # pylint: disable=no-self-use
+    def add_analysis_result(self, sample_group):
+        """Add analysis result's ID, if it exists."""
+        analysis_result = sample_group.analysis_result
+        if analysis_result:
+            sample_group.analysis_result_id = str(analysis_result.id)
+        return sample_group
 
 
 sample_group_schema = SampleGroupSchema()   # pylint: disable=invalid-name

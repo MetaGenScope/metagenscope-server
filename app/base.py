@@ -33,7 +33,7 @@ class BaseSchema(Schema):
 
     @pre_dump(pass_many=False)
     # pylint: disable=no-self-use
-    def slugify_organization_id(self, data):
+    def standardize_uuid_property(self, data):
         """Translate UUID into URL-safe slug."""
         if hasattr(data, 'id') and isinstance(data.id, UUID):
             data.uuid = data.id
