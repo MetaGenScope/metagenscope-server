@@ -1,8 +1,7 @@
 """Test suite for Sample module."""
 
 import json
-
-# from app.sample_groups.sample_group_models import SampleGroup
+from uuid import UUID, uuid4
 
 from tests.base import BaseTestCase
 from tests.utils import add_sample, add_sample_group, with_user
@@ -33,10 +32,29 @@ class TestSampleModule(BaseTestCase):
             self.assertIn('uuid', data['data']['sample'])
             self.assertEqual(sample_name, data['data']['sample']['name'])
 
-        # Reload sample group
-        # sample_group = SampleGroup.query.filter_by(id=sample_group.id).one()
-        sample_uuid = data['data']['sample']['uuid']
+        sample_uuid = UUID(data['data']['sample']['uuid'])
         self.assertIn(sample_uuid, sample_group.sample_ids)
+
+    @with_user
+    def test_add_sample_missing_group(self, auth_headers, *_):
+        """Ensure adding a sample with an invalid group uuid fails."""
+        sample_group_uuid = str(uuid4())
+        with self.client:
+            response = self.client.post(
+                f'/api/v1/samples',
+                headers=auth_headers,
+                data=json.dumps(dict(
+                    name='Exciting Research Starts Here',
+                    sample_group_uuid=sample_group_uuid,
+                )),
+                content_type='application/json',
+            )
+            data = json.loads(response.data.decode())
+            self.assertEqual(response.status_code, 400)
+            self.assertIn('fail', data['status'])
+            message = f'Sample Group with uuid \'{sample_group_uuid}\' does not exist!'
+            self.assertEqual(message, data['message'])
+
 
     def test_get_single_sample(self):
         """Ensure get single group behaves correctly."""
