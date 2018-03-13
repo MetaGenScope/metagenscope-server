@@ -112,11 +112,11 @@ def seed_db():
     mason_lab.add_admin(dcdanko)
     db.session.commit()
 
-    foo = QueryResultMeta(sample_group_id=sample_group.id,
-                    sample_similarity=sample_similarity,
-                    taxon_abundance=taxon_abundance,
-                    reads_classified=reads_classified,
-                    hmp=hmp).save()
+    AnalysisResultMeta(sample_group_id=sample_group.id,
+                       sample_similarity=sample_similarity,
+                       taxon_abundance=taxon_abundance,
+                       reads_classified=reads_classified,
+                       hmp=hmp).save()
 
 
 if __name__ == '__main__':

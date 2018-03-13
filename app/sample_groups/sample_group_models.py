@@ -110,6 +110,7 @@ class SampleGroupSchema(BaseSchema):  # pylint: disable=too-few-public-methods
     name = fields.Str()
     access_scheme = fields.Str()
     created_at = fields.Date()
+    analysis_result_id = fields.Str()
 
     @pre_dump(pass_many=False)
     # pylint: disable=no-self-use
