@@ -11,7 +11,6 @@ from app.api.endpoint_response import EndpointResponse
 from app.api.utils import handle_mongo_lookup
 from app.extensions import db
 from app.samples.sample_models import Sample, sample_schema
-from app.sample_groups.sample_group_models import SampleGroup
 from app.users.user_helpers import authenticate
 
 
@@ -31,21 +30,13 @@ def add_sample_group(resp):
         return response.json_and_code()
     try:
         # Get params
-        sample_group_uuid = post_data.get('sample_group_uuid')
         sample_name = post_data.get('name')
-        # Find Sample Group (will raise exception)
-        sample_group = SampleGroup.query.filter_by(id=sample_group_uuid).one()
         # Create Sample
         sample = Sample(name=sample_name).save()
-        # Add Sample to Sample Group
-        sample_group.sample_ids.append(sample.uuid)
         db.session.commit()
         # Update respone
         response.success(201)
         response.data = sample_schema.dump(sample).data
-    except NoResultFound:
-        response.message = f'Sample Group with uuid \'{sample_group_uuid}\' does not exist!'
-        response.code = 400
     except ValidationError as validation_error:
         # Most likely a duplicate Sample Name error
         response.message = f'Validation error: {str(validation_error)}'
