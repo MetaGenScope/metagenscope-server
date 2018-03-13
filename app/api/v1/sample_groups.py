@@ -9,7 +9,7 @@ from sqlalchemy.orm.exc import NoResultFound
 from app.api.endpoint_response import EndpointResponse
 from app.extensions import db
 from app.sample_groups.sample_group_models import SampleGroup, sample_group_schema
-from app.sample_groups.sample_models import Sample
+from app.samples.sample_models import Sample
 from app.users.user_helpers import authenticate
 
 

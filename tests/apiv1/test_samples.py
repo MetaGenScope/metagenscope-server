@@ -1,7 +1,6 @@
 """Test suite for Sample module."""
 
 import json
-from uuid import UUID, uuid4
 
 from tests.base import BaseTestCase
 from tests.utils import add_sample, with_user
