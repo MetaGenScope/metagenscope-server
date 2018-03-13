@@ -60,7 +60,7 @@ def get_single_result(group_uuid):
 
 @sample_groups_blueprint.route('/sample_groups/<group_uuid>/add_samples', methods=['POST'])
 @authenticate
-def add_samples_to_group(group_uuid, request):
+def add_samples_to_group(group_uuid, resp):
     """Get single sample group model."""
     response = EndpointResponse()
     post_data = request.get_json()
