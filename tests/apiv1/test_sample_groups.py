@@ -32,7 +32,7 @@ class TestSampleGroupModule(BaseTestCase):
         sample = add_sample(name='SMPL_01')
         sample_uuid = str(sample.uuid)
         sample_group = add_sample_group(name='A Great Name')
-        endpoint = '/api/v1/sample_groups/' + str(sample_group.id)
+        endpoint = '/api/v1/sample_groups/' + str(sample_group.id) + '/add_samples'
         with self.client:
             response = self.client.post(
                 endpoint,
@@ -42,9 +42,9 @@ class TestSampleGroupModule(BaseTestCase):
                 )),
                 content_type='application/json',
             )
-            self.assertEqual(response.status_code, 201)
-            data = json.loads(response.data.decode())
+            self.assertEqual(response.status_code, 200)
             self.assertIn('success', data['status'])
+            data = json.loads(response.data.decode())
             self.assertIn(sample_uuid, sample_group.sample_ids)
 
     @with_user
