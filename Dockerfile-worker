@@ -17,4 +17,4 @@ COPY . /usr/src/app
 RUN chmod +x /usr/src/app/startup.sh /usr/src/app/wait-for-it.sh
 
 # Run the worker
-ENTRYPOINT celery worker -A worker.celery --loglevel=info
+CMD celery worker -A worker.celery --loglevel=info
