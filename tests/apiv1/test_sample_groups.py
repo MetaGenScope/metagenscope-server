@@ -42,8 +42,8 @@ class TestSampleGroupModule(BaseTestCase):
                 )),
                 content_type='application/json',
             )
-            data = json.loads(response.data.decode())
             self.assertEqual(response.status_code, 201)
+            data = json.loads(response.data.decode())
             self.assertIn('success', data['status'])
             self.assertIn(sample_uuid, sample_group.sample_ids)
 
