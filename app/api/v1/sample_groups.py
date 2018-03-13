@@ -76,7 +76,7 @@ def add_samples_to_group(group_uuid, resp):
     try:
         sample_uuids = [UUID(uuid) for uuid in post_data.get('sample_uuids')]
         for sample_uuid in sample_uuids:
-            sample = Sample.query.filter_by(id=sample_uuid).one()
+            sample = Sample.objects.get(uuid=sample_uuid)
             sample_group.sample_ids.append(sample.uuid)
         db.session.commit()
         response.data = sample_group_schema.dump(sample_group).data
