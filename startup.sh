@@ -3,6 +3,12 @@
 echoerr() { if [[ $QUIET -ne 1 ]]; then echo "$@" 1>&2; fi }
 
 # process arguments
+#
+# iterate through arguments waiting for 
+# everything before '--' to complete 
+# then executing everything after '--'
+#
+# '$#' is equal to the number of positional parameters
 while [[ $# -gt 0 ]]
 do
     case "$1" in
