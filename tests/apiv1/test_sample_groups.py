@@ -32,7 +32,7 @@ class TestSampleGroupModule(BaseTestCase):
         sample = add_sample(name='SMPL_01')
         sample_uuid = str(sample.uuid)
         sample_group = add_sample_group(name='A Great Name')
-        endpoint = '/api/v1/sample_groups/' + sample_group.uuid
+        endpoint = '/api/v1/sample_groups/' + sample_group.id
         with self.client:
             response = self.client.post(
                 endpoint,
