@@ -52,6 +52,18 @@ Spin up server (runs on `http://127.0.0.1:5000/`):
 $ python manage.py runserver
 ```
 
+A startup script is provided to ensure that the application does not attempt to start before all service dependencis are accepting connections. It can be used like so:
+
+```
+$ ./startup.sh [host:port[, host:port, ...]] -- [command]
+```
+
+An example of waiting for Postgres and Mongo DBs running on localhost before starting the application would look like this:
+
+```
+$ ./startup.sh localhost:5435 localhost:27020 -- python manage.py runserver
+```
+
 ## Testing
 
 The entry point to test suite tools is the `Makefile`.
