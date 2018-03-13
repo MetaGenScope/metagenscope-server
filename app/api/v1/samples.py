@@ -5,7 +5,6 @@ from uuid import UUID
 from flask import Blueprint, request
 from mongoengine.errors import ValidationError
 from sqlalchemy.exc import IntegrityError
-from sqlalchemy.orm.exc import NoResultFound
 
 from app.api.endpoint_response import EndpointResponse
 from app.api.utils import handle_mongo_lookup
