@@ -1,13 +1,20 @@
 #!/bin/bash
 
+# Usage:
+#     startup.sh [host:port[, host:port, ...]] -- [command]
+#
+# Iterate through arguments before '--', waiting for each
+# service to accept TCP connections. Finally, execute
+# everything after '--'.
+#
+# Ex.
+#     Wait for Postgres and Mongo DBs running on localhost
+#     before starting the application would look like this.
+#
+#     startup.sh localhost:5435 localhost:27020 -- python manage.py runserver
+
 echoerr() { if [[ $QUIET -ne 1 ]]; then echo "$@" 1>&2; fi }
 
-# process arguments
-#
-# iterate through arguments waiting for 
-# everything before '--' to complete 
-# then executing everything after '--'
-#
 # '$#' is equal to the number of positional parameters
 while [[ $# -gt 0 ]]
 do
