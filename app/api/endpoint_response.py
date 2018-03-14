@@ -8,7 +8,7 @@ class EndpointResponse:
 
     def __init__(self):
         """Initialize EndpointResponse."""
-        self.status = 'fail'
+        self.status = 'error'
         self.code = 404
         self.message = ''
         self.data = {}

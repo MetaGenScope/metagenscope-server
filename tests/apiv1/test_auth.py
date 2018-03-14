@@ -27,8 +27,7 @@ class TestAuthBlueprint(BaseTestCase):
             )
             data = json.loads(response.data.decode())
             self.assertTrue(data['status'] == 'success')
-            self.assertTrue(data['message'] == 'Successfully registered.')
-            self.assertTrue(data['auth_token'])
+            self.assertTrue(data['data']['auth_token'])
             self.assertTrue(response.content_type == 'application/json')
             self.assertEqual(response.status_code, 201)
 
@@ -80,7 +79,7 @@ class TestAuthBlueprint(BaseTestCase):
             )
             data = json.loads(response.data.decode())
             self.assertEqual(response.status_code, 400)
-            self.assertIn('Invalid payload.', data['message'])
+            self.assertIn('Invalid registration payload.', data['message'])
             self.assertIn('error', data['status'])
 
     def test_user_registration_invalid_json_keys_no_username(self):
@@ -127,19 +126,18 @@ class TestAuthBlueprint(BaseTestCase):
     def test_registered_user_login(self):
         """Ensure login works for registered user."""
         with self.client:
-            add_user('test', 'test@test.com', 'test')
+            add_user('test', 'test+registered@test.com', 'test')
             response = self.client.post(
                 '/api/v1/auth/login',
                 data=json.dumps(dict(
-                    email='test@test.com',
+                    email='test+registered@test.com',
                     password='test'
                 )),
                 content_type='application/json'
             )
             data = json.loads(response.data.decode())
             self.assertTrue(data['status'] == 'success')
-            self.assertTrue(data['message'] == 'Successfully logged in.')
-            self.assertTrue(data['auth_token'])
+            self.assertTrue(data['data']['auth_token'])
             self.assertTrue(response.content_type == 'application/json')
             self.assertEqual(response.status_code, 200)
 
@@ -149,7 +147,7 @@ class TestAuthBlueprint(BaseTestCase):
             response = self.client.post(
                 '/api/v1/auth/login',
                 data=json.dumps(dict(
-                    email='test@test.com',
+                    email='test+unregistered@test.com',
                     password='test'
                 )),
                 content_type='application/json'
@@ -171,7 +169,6 @@ class TestAuthBlueprint(BaseTestCase):
             )
             data = json.loads(response.data.decode())
             self.assertTrue(data['status'] == 'success')
-            self.assertTrue(data['message'] == 'Successfully logged out.')
             self.assertEqual(response.status_code, 200)
 
     @with_user

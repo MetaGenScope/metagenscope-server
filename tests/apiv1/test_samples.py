@@ -50,7 +50,7 @@ class TestSampleModule(BaseTestCase):
             )
             data = json.loads(response.data.decode())
             self.assertEqual(response.status_code, 400)
-            self.assertIn('fail', data['status'])
+            self.assertIn('error', data['status'])
             message = f'Sample Group with uuid \'{sample_group_uuid}\' does not exist!'
             self.assertEqual(message, data['message'])
 
