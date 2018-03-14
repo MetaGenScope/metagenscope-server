@@ -3,13 +3,12 @@
 from uuid import UUID
 
 from flask import Blueprint, current_app, request
-from flask_api.exceptions import ParseError
-from mongoengine.errors import ValidationError
+from flask_api.exceptions import NotFound, ParseError
+from mongoengine.errors import ValidationError, DoesNotExist
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm.exc import NoResultFound
 
 from app.api.exceptions import InvalidRequest, InternalError
-from app.api.utils import handle_mongo_lookup
 from app.extensions import db
 from app.samples.sample_models import Sample, sample_schema
 from app.sample_groups.sample_group_models import SampleGroup
@@ -21,8 +20,7 @@ samples_blueprint = Blueprint('samples', __name__)    # pylint: disable=invalid-
 
 @samples_blueprint.route('/samples', methods=['POST'])
 @authenticate
-# pylint: disable=unused-argument
-def add_sample(resp):
+def add_sample(resp):  # pylint: disable=unused-argument
     """Add sample."""
     try:
         post_data = request.get_json()
@@ -60,13 +58,12 @@ def add_sample(resp):
 @samples_blueprint.route('/samples/<sample_uuid>', methods=['GET'])
 def get_single_sample(sample_uuid):
     """Get single sample details."""
-
-    @handle_mongo_lookup('Sample')
-    def fetch_sample():
-        """Perform sample lookup and formatting."""
+    try:
         uuid = UUID(sample_uuid)
         sample = Sample.objects.get(uuid=uuid)
         result = sample_schema.dump(sample).data
         return result, 200
-
-    return fetch_sample()
+    except ValueError:
+        raise ParseError('Invalid UUID provided.')
+    except DoesNotExist:
+        raise NotFound('Sample does not exist.')
