@@ -92,7 +92,7 @@ class TestAuthBlueprint(BaseTestCase):
             )
             data = json.loads(response.data.decode())
             self.assertEqual(response.status_code, 400)
-            self.assertIn('Invalid payload.', data['message'])
+            self.assertIn('Invalid registration payload.', data['message'])
             self.assertIn('error', data['status'])
 
     def test_user_registration_invalid_json_keys_no_email(self):
@@ -106,7 +106,7 @@ class TestAuthBlueprint(BaseTestCase):
             )
             data = json.loads(response.data.decode())
             self.assertEqual(response.status_code, 400)
-            self.assertIn('Invalid payload.', data['message'])
+            self.assertIn('Invalid registration payload.', data['message'])
             self.assertIn('error', data['status'])
 
     def test_user_registration_invalid_json_keys_no_password(self):
@@ -120,7 +120,7 @@ class TestAuthBlueprint(BaseTestCase):
             )
             data = json.loads(response.data.decode())
             self.assertEqual(response.status_code, 400)
-            self.assertIn('Invalid payload.', data['message'])
+            self.assertIn('Invalid registration payload.', data['message'])
             self.assertIn('error', data['status'])
 
     def test_registered_user_login(self):

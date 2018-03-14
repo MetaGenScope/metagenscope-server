@@ -64,7 +64,7 @@ class TestSampleGroupModule(BaseTestCase):
             data = json.loads(response.data.decode())
             self.assertEqual(response.status_code, 400)
             self.assertIn('error', data['status'])
-            self.assertTrue(data['message'].startswith('Integrity error'))
+            self.assertEqual('Sample Group with that name already exists.', data['message'])
 
     def test_get_single_sample_groups(self):
         """Ensure get single group behaves correctly."""

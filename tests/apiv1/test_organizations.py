@@ -100,9 +100,9 @@ class TestOrganizationModule(BaseTestCase):
                 content_type='application/json',
             )
             data = json.loads(response.data.decode())
-            self.assertEqual(response.status_code, 404)
-            self.assertIn('badly formed hexadecimal UUID string', data['message'])
+            self.assertEqual(response.status_code, 400)
             self.assertIn('error', data['status'])
+            self.assertIn('Invalid organization UUID.', data['message'])
 
     def test_single_organization_users(self):
         """Ensure getting users for an organization behaves correctly."""
@@ -235,5 +235,6 @@ class TestOrganizationModule(BaseTestCase):
             )
             data = json.loads(response.data.decode())
             self.assertEqual(response.status_code, 403)
-            self.assertIn('You do not have permission to perform that action.', data['message'])
+            self.assertIn('You do not have permission to add a user to that group.',
+                          data['message'])
             self.assertIn('error', data['status'])
