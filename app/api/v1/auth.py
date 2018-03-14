@@ -66,23 +66,18 @@ def login_user():
         response.code = 400
         response.message = 'Invalid login payload.'
         return response.json_and_code()
-    try:
-        email = post_data.get('email')
-        password = post_data.get('password')
-        # Fetch the user data
-        user = User.query.filter_by(email=email).first()
-        if user and bcrypt.check_password_hash(user.password, password):
-            auth_token = user.encode_auth_token(user.id)
-            if auth_token:
-                response.success(200)
-                response.data = {'auth_token': auth_token.decode()}
-                return response.json_and_code()
-        response.code = 404
-        response.message = 'User does not exist.'
-    except Exception as e:  # pylint: disable=broad-except
-        print(e)
-        response.error = 500
-        response.message = 'Try again.'
+    email = post_data.get('email')
+    password = post_data.get('password')
+    # Fetch the user data
+    user = User.query.filter_by(email=email).first()
+    if user and bcrypt.check_password_hash(user.password, password):
+        auth_token = user.encode_auth_token(user.id)
+        if auth_token:
+            response.success(200)
+            response.data = {'auth_token': auth_token.decode()}
+            return response.json_and_code()
+    response.code = 404
+    response.message = 'User does not exist.'
     return response.json_and_code()
 
 

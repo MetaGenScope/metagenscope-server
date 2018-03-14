@@ -2,7 +2,8 @@
 
 import os
 
-from flask import Flask, jsonify, Blueprint
+from flask import jsonify, Blueprint
+from flask_api import FlaskAPI
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_bcrypt import Bcrypt
@@ -26,7 +27,7 @@ from app.tool_results.register import register_modules
 def create_app():
     """Create and bootstrap app."""
     # Instantiate the app
-    app = Flask(__name__)
+    app = FlaskAPI(__name__)
 
     # Enable CORS
     CORS(app)

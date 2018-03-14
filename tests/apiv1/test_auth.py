@@ -241,8 +241,7 @@ class TestAuthBlueprint(BaseTestCase):
             )
             data = json.loads(response.data.decode())
             self.assertTrue(data['status'] == 'error')
-            self.assertTrue(
-                data['message'] == 'Something went wrong. Please contact us.')
+            self.assertTrue(data['message'] == 'User is not active')
             self.assertEqual(response.status_code, 401)
 
     @with_user
@@ -258,6 +257,5 @@ class TestAuthBlueprint(BaseTestCase):
             )
             data = json.loads(response.data.decode())
             self.assertTrue(data['status'] == 'error')
-            self.assertTrue(
-                data['message'] == 'Something went wrong. Please contact us.')
+            self.assertTrue(data['message'] == 'User is not active')
             self.assertEqual(response.status_code, 401)

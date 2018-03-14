@@ -18,6 +18,12 @@ class Config(object):
     TOKEN_EXPIRATION_DAYS = 30
     TOKEN_EXPIRATION_SECONDS = 0
 
+    # Flask-API renderer
+    DEFAULT_RENDERERS = [
+        'app.api.renderers.EnvelopeJSONRenderer',
+        'flask_api.renderers.BrowsableAPIRenderer',
+    ]
+
     CELERY_BROKER_URL = os.environ.get('CELERY_BROKER_URL')
     RESULT_BACKEND = os.environ.get('CELERY_RESULT_BACKEND')
     RESULT_EXPIRES = 3600     # Expire results after one hour
