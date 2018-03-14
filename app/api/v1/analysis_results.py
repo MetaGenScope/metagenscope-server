@@ -15,7 +15,7 @@ def get_single_result(result_uuid):
     """Get single analysis result."""
     response = EndpointResponse()
 
-    @handle_mongo_lookup(response, 'Analysis Result')
+    @handle_mongo_lookup('Analysis Result')
     def fetch_result():
         """Perform database lookup."""
         analysis_result = AnalysisResultMeta.objects.get(uuid=result_uuid)

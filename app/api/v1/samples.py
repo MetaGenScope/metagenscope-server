@@ -63,7 +63,7 @@ def get_single_sample(sample_uuid):
     """Get single sample details."""
     response = EndpointResponse()
 
-    @handle_mongo_lookup(response, 'Sample')
+    @handle_mongo_lookup('Sample')
     def fetch_sample():
         """Perform sample lookup and formatting."""
         uuid = UUID(sample_uuid)

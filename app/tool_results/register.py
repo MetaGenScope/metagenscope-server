@@ -16,7 +16,7 @@ def receive_upload(cls, resp, sample_id):
     """Define handler for receiving uploads of analysis tool results."""
     response = EndpointResponse()
 
-    @handle_mongo_lookup(response, cls.__name__)
+    @handle_mongo_lookup(cls.__name__)
     def save_tool_result():
         """Validate and save tool result to Sample."""
         sample = Sample.objects.get(uuid=sample_id)

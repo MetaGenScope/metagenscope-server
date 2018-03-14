@@ -47,7 +47,7 @@ class DisplayModule:
         """Define handler for API requests that defers to display module type."""
         response = EndpointResponse()
 
-        @handle_mongo_lookup(response, 'Analysis Result')
+        @handle_mongo_lookup('Analysis Result')
         def fetch_data():
             """Perform Analysis Result lookup and formatting."""
             uuid = UUID(result_uuid)

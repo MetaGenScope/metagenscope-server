@@ -2,11 +2,12 @@
 
 from functools import wraps
 
+from flask_api.exceptions import NotFound, ParseError
 from mongoengine.errors import ValidationError
 from mongoengine import DoesNotExist
 
 
-def handle_mongo_lookup(response, object_name):
+def handle_mongo_lookup(object_name):
     """Handle errors from fetching single Mongo object by ID."""
     def wrapper(f):     # pylint: disable=invalid-name,missing-docstring
         @wraps(f)
@@ -14,17 +15,12 @@ def handle_mongo_lookup(response, object_name):
             try:
                 return f(*args, **kwargs)
             except DoesNotExist:
-                response.message = f'{object_name} does not exist.'
-                response.code = 404
+                raise NotFound(f'{object_name} does not exist.')
             except ValueError as value_error:
                 if str(value_error) == 'badly formed hexadecimal UUID string':
-                    response.message = 'Invalid UUID provided.'
-                    response.code = 400
-                else:
-                    raise value_error
+                    raise ParseError('Invalid UUID provided.')
+                raise value_error
             except ValidationError as validation_error:
-                response.message = f'{validation_error}'
-                response.code = 400
-            return response.json_and_code()
+                raise ParseError(str(validation_error))
         return decorated
     return wrapper
