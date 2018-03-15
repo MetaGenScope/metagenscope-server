@@ -3,41 +3,45 @@
 from uuid import UUID
 
 from flask import request
+from flask_api.exceptions import NotFound, ParseError, PermissionDenied
+from mongoengine.errors import ValidationError, DoesNotExist
+from sqlalchemy.orm.exc import NoResultFound
 
-from app.api.endpoint_response import EndpointResponse
-from app.api.utils import handle_mongo_lookup
 from app.display_modules.conductor import DisplayModuleConductor
 from app.samples.sample_models import Sample
 from app.users.user_models import User
 from app.users.user_helpers import authenticate
 
 
-def receive_upload(cls, resp, sample_id):
+def receive_upload(cls, resp, sample_uuid):
     """Define handler for receiving uploads of analysis tool results."""
-    response = EndpointResponse()
+    try:
+        uuid = UUID(sample_uuid)
+        sample = Sample.objects.get(uuid=uuid)
+    except ValueError:
+        raise ParseError('Invalid UUID provided.')
+    except DoesNotExist:
+        raise NotFound('Sample does not exist.')
 
-    @handle_mongo_lookup(cls.__name__)
-    def save_tool_result():
-        """Validate and save tool result to Sample."""
-        sample = Sample.objects.get(uuid=sample_id)
-        # gh-21: Write actual validation:
-        auth_user = User.query.filter_by(id=resp).first()
-        if not auth_user:
-            response.message = 'Authorization failed.'
-            response.code = 403
-        else:
-            post_json = request.get_json()
-            tool_result = cls.make_result_model(post_json)
-            setattr(sample, cls.name(), tool_result)
-            sample.save()
-            response.success(201)
-            response.data = post_json
+    # gh-21: Write actual validation:
+    try:
+        auth_user = User.query.filter_by(id=resp).one()
+        print(auth_user)
+    except NoResultFound:
+        raise PermissionDenied('Authorization failed.')
 
-            # Kick off middleware tasks
-            DisplayModuleConductor(sample_id, cls).shake_that_baton()
+    try:
+        post_json = request.get_json()
+        tool_result = cls.make_result_model(post_json)
+        setattr(sample, cls.name(), tool_result)
+        sample.save()
+    except ValidationError as validation_error:
+        raise ParseError(str(validation_error))
 
-        return response.json_and_code()
-    return save_tool_result()
+    # Kick off middleware tasks
+    DisplayModuleConductor(sample_uuid, cls).shake_that_baton()
+
+    return post_json, 201
 
 
 def register_api_call(cls, router):
@@ -48,7 +52,6 @@ def register_api_call(cls, router):
     @authenticate
     def view_function(resp, sample_uuid):
         """Wrap receive_upload to provide class."""
-        sample_uuid = UUID(sample_uuid)
         return receive_upload(cls, resp, sample_uuid)
 
     router.add_url_rule(endpoint_url,
