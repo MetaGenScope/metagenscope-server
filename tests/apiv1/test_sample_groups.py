@@ -2,6 +2,7 @@
 
 import json
 
+from app.sample_groups.sample_group_models import SampleGroup
 from tests.base import BaseTestCase
 from tests.utils import add_sample, add_sample_group, with_user
 
@@ -26,6 +27,11 @@ class TestSampleGroupModule(BaseTestCase):
             self.assertEqual(response.status_code, 201)
             self.assertIn('success', data['status'])
             self.assertEqual(group_name, data['data']['sample_group']['name'])
+
+            # Ensure Analysis Result was created
+            sample_group_id = data['data']['sample_group']['uuid']
+            sample_group = SampleGroup.query.filter_by(id=sample_group_id).one()
+            self.assertTrue(sample_group.analysis_result)
 
     @with_user
     def test_add_samples_to_group(self, auth_headers, *_):

@@ -7,6 +7,7 @@ from flask_api.exceptions import ParseError, NotFound
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm.exc import NoResultFound
 
+from app.analysis_results.analysis_result_models import AnalysisResultMeta
 from app.api.exceptions import InvalidRequest, InternalError
 from app.extensions import db
 from app.sample_groups.sample_group_models import SampleGroup, sample_group_schema
@@ -14,14 +15,12 @@ from app.samples.sample_models import Sample
 from app.users.user_helpers import authenticate
 
 
-# pylint: disable=invalid-name
-sample_groups_blueprint = Blueprint('sample_groups', __name__)
+sample_groups_blueprint = Blueprint('sample_groups', __name__)  # pylint: disable=invalid-name
 
 
 @sample_groups_blueprint.route('/sample_groups', methods=['POST'])
 @authenticate
-# pylint: disable=unused-argument
-def add_sample_group(resp):
+def add_sample_group(resp):  # pylint: disable=unused-argument
     """Add sample group."""
     try:
         post_data = request.get_json()
@@ -36,7 +35,8 @@ def add_sample_group(resp):
         raise InvalidRequest('Sample Group with that name already exists.')
 
     try:
-        sample_group = SampleGroup(name=name)
+        analysis_result = AnalysisResultMeta().save()
+        sample_group = SampleGroup(name=name, analysis_result=analysis_result)
         db.session.add(sample_group)
         db.session.commit()
         result = sample_group_schema.dump(sample_group).data

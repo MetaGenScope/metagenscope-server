@@ -3,6 +3,9 @@
 import datetime
 from uuid import uuid4
 
+from marshmallow import fields
+
+from app.base import BaseSchema
 from app.extensions import mongoDB
 
 
@@ -27,7 +30,6 @@ class AnalysisResultMeta(mongoDB.DynamicDocument):
     """Base mongo result class."""
 
     uuid = mongoDB.UUIDField(required=True, primary_key=True, binary=False, default=uuid4)
-    sample_group_id = mongoDB.UUIDField(binary=False)
     created_at = mongoDB.DateTimeField(default=datetime.datetime.utcnow)
 
     meta = {
@@ -37,8 +39,25 @@ class AnalysisResultMeta(mongoDB.DynamicDocument):
     @property
     def result_types(self):
         """Return a list of all analysis result types available for this record."""
-        blacklist = ['uuid', 'sample_group_id', 'created_at']
+        blacklist = ['uuid', 'created_at']
         all_fields = [k
                       for k, v in vars(self).items()
                       if k not in blacklist and not k.startswith('_')]
         return [field for field in all_fields if hasattr(self, field)]
+
+
+class AnalysisResultMetaSchema(BaseSchema):
+    """Serializer for AnalysisResultMeta model."""
+
+    __envelope__ = {
+        'single': 'analysis_result',
+        'many': 'analysis_results',
+    }
+    __model__ = AnalysisResultMeta
+
+    uuid = fields.Str()
+    result_types = fields.List(fields.Str())
+    created_at = fields.Date()
+
+
+analysis_result_schema = AnalysisResultMetaSchema()   # pylint: disable=invalid-name
