@@ -25,18 +25,33 @@ class DisplayModuleConductor:
         self.downstream_modules = [module for module in all_display_modules
                                    if module.is_dependent_on_tool(self.tool_result_cls)]
 
-    def direct_sample(self):
-        """Kick off computation for the affected sample's relevant DisplayModules."""
-        sample = Sample.objects.get(uuid=self.sample_id)
-        tools_present = set(sample.tool_result_names)
+    def get_valid_modules(self, tools_present):
+        """
+        Determine which dispaly modules can be computed based on tool results present.
 
-        # Determine which dispaly modules can actually be computed based on tool results present
+        Parameters
+        ----------
+        tools_present : set<str>
+            A set of of tool result names.
+
+        Returns
+        -------
+        list<DisplayModule>
+            A list of all DisplayModules to be recomputed based on the tools present.
+
+        """
         valid_modules = []
         for module in self.downstream_modules:
             dependencies = set([tool.name() for tool in module.required_tool_results()])
             if dependencies <= tools_present:
                 valid_modules.append(module)
+        return valid_modules
 
+    def direct_sample(self):
+        """Kick off computation for the affected sample's relevant DisplayModules."""
+        sample = Sample.objects.get(uuid=self.sample_id)
+        tools_present = set(sample.tool_result_names)
+        valid_modules = self.get_valid_modules(tools_present)
         for module in valid_modules:
             # Pass off middleware execution to Wrangler
             module.get_wrangler().run_sample(sample_id=self.sample_id)
@@ -44,14 +59,7 @@ class DisplayModuleConductor:
     def direct_sample_group(self, sample_group):
         """Kick off computation for a sample group's relevant DisplayModules."""
         tools_present_in_all = set(sample_group.tools_present)
-
-        # Validate each module
-        valid_modules = []
-        for module in self.downstream_modules:
-            dependencies = set([tool.name() for tool in module.required_tool_results()])
-            if dependencies <= tools_present_in_all:
-                valid_modules.append(module)
-
+        valid_modules = self.get_valid_modules(tools_present_in_all)
         for module in valid_modules:
             # Pass off middleware execution to Wrangler
             module.get_wrangler().run_sample_group(sample_group_id=sample_group.id)
