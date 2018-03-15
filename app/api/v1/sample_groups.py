@@ -2,11 +2,12 @@
 
 from uuid import UUID
 
-from flask import Blueprint, request
+from flask import Blueprint, current_app, request
+from flask_api.exceptions import ParseError, NotFound
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm.exc import NoResultFound
 
-from app.api.endpoint_response import EndpointResponse
+from app.api.exceptions import InvalidRequest, InternalError
 from app.extensions import db
 from app.sample_groups.sample_group_models import SampleGroup, sample_group_schema
 from app.samples.sample_models import Sample
@@ -22,55 +23,56 @@ sample_groups_blueprint = Blueprint('sample_groups', __name__)
 # pylint: disable=unused-argument
 def add_sample_group(resp):
     """Add sample group."""
-    response = EndpointResponse()
-    post_data = request.get_json()
-    if not post_data:
-        response.message = 'Invalid Sample Group creation payload.'
-        response.code = 400
-        return response.json_and_code()
     try:
-        name = post_data.get('name')
+        post_data = request.get_json()
+        name = post_data['name']
+    except TypeError:
+        raise ParseError('Missing Sample Group creation payload.')
+    except KeyError:
+        raise ParseError('Invalid Sample Group creation payload.')
+
+    sample_group = SampleGroup.query.filter_by(name=name).first()
+    if sample_group is not None:
+        raise InvalidRequest('Sample Group with that name already exists.')
+
+    try:
         sample_group = SampleGroup(name=name)
         db.session.add(sample_group)
         db.session.commit()
-        response.success(201)
-        response.data = sample_group_schema.dump(sample_group).data
+        result = sample_group_schema.dump(sample_group).data
+        return result, 201
     except IntegrityError as integrity_error:
-        print(integrity_error)
+        current_app.logger.exception('Sample Group could not be created.')
         db.session.rollback()
-        response.message = f'Integrity error: {str(integrity_error)}'
-        response.code = 400
-    return response.json_and_code()
+        raise InternalError(str(integrity_error))
 
 
 @sample_groups_blueprint.route('/sample_groups/<group_uuid>', methods=['GET'])
 def get_single_result(group_uuid):
     """Get single sample group model."""
-    response = EndpointResponse()
     try:
         sample_group_id = UUID(group_uuid)
         sample_group = SampleGroup.query.filter_by(id=sample_group_id).one()
-        response.data = sample_group_schema.dump(sample_group).data
-        response.success()
-    except (ValueError, NoResultFound):
-        response.message = 'Sample Group does not exist'
-        response.code = 404
-    return response.json_and_code()
+        result = sample_group_schema.dump(sample_group).data
+        return result, 200
+    except ValueError:
+        raise ParseError('Invalid Sample Group UUID.')
+    except NoResultFound:
+        raise NotFound('Sample Group does not exist')
 
 
 @sample_groups_blueprint.route('/sample_groups/<group_uuid>/samples', methods=['POST'])
 @authenticate
 def add_samples_to_group(resp, group_uuid):  # pylint: disable=unused-argument
     """Add samples to a sample group."""
-    response = EndpointResponse()
-    post_data = request.get_json()
     try:
+        post_data = request.get_json()
         sample_group_id = UUID(group_uuid)
         sample_group = SampleGroup.query.filter_by(id=sample_group_id).one()
-    except (ValueError, NoResultFound):
-        response.message = 'Sample Group does not exist'
-        response.code = 404
-        return response.json_and_code()
+    except ValueError:
+        raise ParseError('Invalid Sample Group UUID.')
+    except NoResultFound:
+        raise NotFound('Sample Group does not exist')
 
     try:
         sample_uuids = [UUID(uuid) for uuid in post_data.get('sample_uuids')]
@@ -78,17 +80,12 @@ def add_samples_to_group(resp, group_uuid):  # pylint: disable=unused-argument
             sample = Sample.objects.get(uuid=sample_uuid)
             sample_group.sample_ids.append(sample.uuid)
         db.session.commit()
-        response.data = sample_group_schema.dump(sample_group).data
-        response.success()
+        result = sample_group_schema.dump(sample_group).data
+        return result, 200
     except NoResultFound:
         db.session.rollback()
-        response.message = f'Sample UUID \'{sample_uuid}\' does not exist'
-        response.code = 400
-        return response.json_and_code()
+        raise InvalidRequest(f'Sample UUID \'{sample_uuid}\' does not exist')
     except IntegrityError as integrity_error:
-        print(integrity_error)
+        current_app.logger.exception('Samples could not be added to Sample Group.')
         db.session.rollback()
-        response.message = f'Integrity error: {str(integrity_error)}'
-        response.code = 500
-
-    return response.json_and_code()
+        raise InternalError(str(integrity_error))

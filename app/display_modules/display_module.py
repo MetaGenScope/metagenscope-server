@@ -1,10 +1,13 @@
 """Base display module type."""
 
+import json
 from uuid import UUID
 
+from flask_api.exceptions import NotFound, ParseError
+from mongoengine.errors import DoesNotExist
+
 from app.analysis_results.analysis_result_models import AnalysisResultMeta, AnalysisResultWrapper
-from app.api.endpoint_response import EndpointResponse
-from app.api.utils import handle_mongo_lookup
+from app.api.exceptions import InvalidRequest
 from app.extensions import mongoDB
 
 
@@ -45,24 +48,22 @@ class DisplayModule:
     @classmethod
     def api_call(cls, result_uuid):
         """Define handler for API requests that defers to display module type."""
-        response = EndpointResponse()
-
-        @handle_mongo_lookup(response, 'Analysis Result')
-        def fetch_data():
-            """Perform Analysis Result lookup and formatting."""
+        try:
             uuid = UUID(result_uuid)
             query_result = AnalysisResultMeta.objects.get(uuid=uuid)
-            if cls.name() not in query_result:
-                msg = '{} is not in this AnalysisResult.'.format(cls.name())
-                response.message = msg
-            elif query_result[cls.name()]['status'] != 'S':
-                response.message = 'Analysis Result has not finished processing.'
-            else:
-                response.success()
-                response.data = cls.get_data(query_result[cls.name()])
-            return response.json_and_code()
+        except ValueError:
+            raise ParseError('Invalid UUID provided.')
+        except DoesNotExist:
+            raise NotFound('Analysis Result does not exist.')
 
-        return fetch_data()
+        if cls.name() not in query_result:
+            raise InvalidRequest(f'{cls.name()} is not in this AnalysisResult.')
+
+        module_results = getattr(query_result, cls.name())
+        result = cls.get_data(module_results)
+        # Conversion to dict is necessary to avoid object not callable TypeError
+        result_dict = json.loads(result.to_json())
+        return result_dict, 200
 
     @classmethod
     def register_api_call(cls, router):

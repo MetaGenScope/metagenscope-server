@@ -12,7 +12,6 @@ class TestSampleSimilarityModule(BaseTestCase):
 
     def test_get_sample_similarity(self):
         """Ensure getting a single sample similarity behaves correctly."""
-
         analysis_result = AnalysisResultMetaFactory(processed=True)
         with self.client:
             response = self.client.get(
@@ -31,10 +30,8 @@ class TestSampleSimilarityModule(BaseTestCase):
             self.assertTrue(len(sample_similarity['data_records']) > 0)
             self.assertIn('SampleID', sample_similarity['data_records'][0])
 
-    # pylint: disable=invalid-name
-    def test_get_pending_sample_similarity(self):
+    def test_get_pending_sample_similarity(self):  # pylint: disable=invalid-name
         """Ensure getting a pending single sample similarity behaves correctly."""
-
         analysis_result = AnalysisResultMetaFactory()
         with self.client:
             response = self.client.get(
@@ -42,14 +39,13 @@ class TestSampleSimilarityModule(BaseTestCase):
                 content_type='application/json',
             )
             data = json.loads(response.data.decode())
-            self.assertEqual(response.status_code, 404)
-            self.assertIn('Analysis Result has not finished processing.', data['message'])
-            self.assertIn('fail', data['status'])
+            self.assertEqual(response.status_code, 200)
+            self.assertIn('success', data['status'])
+            self.assertIn('status', data['data'])
+            self.assertEqual(data['data']['status'], 'P')
 
-    # pylint: disable=invalid-name
-    def test_get_malformed_id_sample_similarity(self):
+    def test_get_malformed_id_sample_similarity(self):  # pylint: disable=invalid-name
         """Ensure getting a malformed ID for a single sample similarity behaves correctly."""
-
         with self.client:
             response = self.client.get(
                 f'/api/v1/analysis_results/foobarblah/sample_similarity',
@@ -58,12 +54,10 @@ class TestSampleSimilarityModule(BaseTestCase):
             data = json.loads(response.data.decode())
             self.assertEqual(response.status_code, 400)
             self.assertIn('Invalid UUID provided.', data['message'])
-            self.assertIn('fail', data['status'])
+            self.assertIn('error', data['status'])
 
-    # pylint: disable=invalid-name
-    def test_get_missing_sample_similarity(self):
+    def test_get_missing_sample_similarity(self):  # pylint: disable=invalid-name
         """Ensure getting a missing single sample similarity behaves correctly."""
-
         random_uuid = uuid4()
 
         with self.client:
@@ -74,4 +68,4 @@ class TestSampleSimilarityModule(BaseTestCase):
             data = json.loads(response.data.decode())
             self.assertEqual(response.status_code, 404)
             self.assertIn('Analysis Result does not exist.', data['message'])
-            self.assertIn('fail', data['status'])
+            self.assertIn('error', data['status'])

@@ -5,6 +5,7 @@ import uuid
 import jwt
 
 from flask import current_app
+from flask_api.exceptions import AuthenticationFailed
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.ext.associationproxy import association_proxy
 from marshmallow import fields
@@ -60,8 +61,7 @@ class User(db.Model):
                 current_app.config.get('SECRET_KEY'),
                 algorithm='HS256'
             )
-        # pylint: disable=broad-except
-        except Exception as e:
+        except Exception as e:  # pylint: disable=broad-except
             return e
 
     @staticmethod
@@ -72,9 +72,9 @@ class User(db.Model):
             payload = jwt.decode(auth_token, secret)
             return uuid.UUID(payload['sub'])
         except jwt.ExpiredSignatureError:
-            return 'Signature expired. Please log in again.'
+            raise AuthenticationFailed('Signature expired. Please log in again.')
         except jwt.InvalidTokenError:
-            return 'Invalid token. Please log in again.'
+            raise AuthenticationFailed('Invalid token. Please log in again.')
 
 
 class UserSchema(BaseSchema):

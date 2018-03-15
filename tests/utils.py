@@ -63,7 +63,7 @@ def with_user(f):   # pylint: disable=invalid-name
             auth_headers = dict(
                 Authorization='Bearer ' + json.loads(
                     resp_login.data.decode()
-                )['auth_token']
+                )['data']['auth_token']
             )
 
         return f(self, auth_headers, login_user, *args, **kwargs)

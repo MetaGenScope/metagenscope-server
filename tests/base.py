@@ -1,5 +1,7 @@
 """Defines base test suite to use for MetaGenScope tests."""
 
+import logging
+
 from flask_testing import TestCase
 
 from app import create_app, db
@@ -24,6 +26,9 @@ class BaseTestCase(TestCase):
         db.create_all()
         db.session.commit()
 
+        # Disable logging
+        logging.disable(logging.CRITICAL)
+
     def tearDown(self):
         """Tear down test DBs."""
         # Postgres
@@ -33,3 +38,6 @@ class BaseTestCase(TestCase):
         # Mongo
         AnalysisResultMeta.drop_collection()
         Sample.drop_collection()
+
+        # Enable logging
+        logging.disable(logging.NOTSET)

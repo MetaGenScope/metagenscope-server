@@ -50,9 +50,8 @@ class TestSampleModule(BaseTestCase):
             )
             data = json.loads(response.data.decode())
             self.assertEqual(response.status_code, 400)
-            self.assertIn('fail', data['status'])
-            message = f'Sample Group with uuid \'{sample_group_uuid}\' does not exist!'
-            self.assertEqual(message, data['message'])
+            self.assertIn('error', data['status'])
+            self.assertEqual('Sample Group does not exist!', data['message'])
 
     def test_get_single_sample(self):
         """Ensure get single group behaves correctly."""
