@@ -29,7 +29,7 @@ class TestSampleGroupModule(BaseTestCase):
             self.assertEqual(group_name, data['data']['sample_group']['name'])
 
             # Ensure Analysis Result was created
-            sample_group_id = data['data']['sample_group']['id']
+            sample_group_id = data['data']['sample_group']['uuid']
             sample_group = SampleGroup.query.filter_by(id=sample_group_id).one()
             self.assertTrue(sample_group.analysis_result)
 
