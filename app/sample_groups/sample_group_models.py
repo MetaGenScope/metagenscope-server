@@ -3,7 +3,6 @@
 import datetime
 
 from marshmallow import fields, pre_dump
-from mongoengine import DoesNotExist
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.ext.associationproxy import association_proxy
 
@@ -45,13 +44,16 @@ class SampleGroup(db.Model):
     sample_placeholders = db.relationship(SamplePlaceholder)
     sample_ids = association_proxy('sample_placeholders', 'sample_id')
 
+    analysis_result_uuid = db.Column(UUID(as_uuid=True), nullable=False)
+
     def __init__(
-            self, name, access_scheme='public',
+            self, name, analysis_result, access_scheme='public',
             created_at=datetime.datetime.utcnow()):
         """Initialize MetaGenScope User model."""
         self.name = name
         self.access_scheme = access_scheme
         self.created_at = created_at
+        self.analysis_result_uuid = analysis_result.uuid
 
     @property
     def samples(self):
@@ -91,10 +93,12 @@ class SampleGroup(db.Model):
     @property
     def analysis_result(self):
         """Get sample group's analysis result model."""
-        try:
-            return AnalysisResultMeta.objects.get(sample_group_id=self.id)
-        except DoesNotExist:
-            return None
+        return AnalysisResultMeta.objects.get(uuid=self.analysis_result_uuid)
+
+    @analysis_result.setter
+    def analysis_result(self, new_analysis_result):
+        """Store new analysis result UUID (caller must still commit session!)."""
+        self.analysis_result_uuid = new_analysis_result.uuid
 
 
 class SampleGroupSchema(BaseSchema):  # pylint: disable=too-few-public-methods
@@ -110,16 +114,7 @@ class SampleGroupSchema(BaseSchema):  # pylint: disable=too-few-public-methods
     name = fields.Str()
     access_scheme = fields.Str()
     created_at = fields.Date()
-    analysis_result_id = fields.Str()
-
-    @pre_dump(pass_many=False)
-    # pylint: disable=no-self-use
-    def add_analysis_result(self, sample_group):
-        """Add analysis result's ID, if it exists."""
-        analysis_result = sample_group.analysis_result
-        if analysis_result:
-            sample_group.analysis_result_id = str(analysis_result.id)
-        return sample_group
+    analysis_result_uuid = fields.Str()
 
 
 sample_group_schema = SampleGroupSchema()   # pylint: disable=invalid-name

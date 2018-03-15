@@ -27,7 +27,6 @@ class AnalysisResultMeta(mongoDB.DynamicDocument):
     """Base mongo result class."""
 
     uuid = mongoDB.UUIDField(required=True, primary_key=True, binary=False, default=uuid4)
-    sample_group_id = mongoDB.UUIDField(binary=False)
     created_at = mongoDB.DateTimeField(default=datetime.datetime.utcnow)
 
     meta = {
@@ -37,7 +36,7 @@ class AnalysisResultMeta(mongoDB.DynamicDocument):
     @property
     def result_types(self):
         """Return a list of all analysis result types available for this record."""
-        blacklist = ['uuid', 'sample_group_id', 'created_at']
+        blacklist = ['uuid', 'created_at']
         all_fields = [k
                       for k, v in vars(self).items()
                       if k not in blacklist and not k.startswith('_')]

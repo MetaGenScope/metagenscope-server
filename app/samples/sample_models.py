@@ -7,6 +7,7 @@ from uuid import uuid4
 from marshmallow import fields
 from mongoengine import Document, EmbeddedDocumentField
 
+from app.analysis_results.analysis_result_models import AnalysisResultMeta
 from app.base import BaseSchema
 from app.extensions import mongoDB
 from app.tool_results import all_tool_result_modules
@@ -18,6 +19,7 @@ class BaseSample(Document):
     uuid = mongoDB.UUIDField(required=True, primary_key=True, binary=False, default=uuid4)
     name = mongoDB.StringField(unique=True)
     metadata = mongoDB.DictField(default={})
+    analysis_result = mongoDB.ReferenceField(AnalysisResultMeta)
     created_at = mongoDB.DateTimeField(default=datetime.datetime.utcnow)
 
     meta = {'allow_inheritance': True}

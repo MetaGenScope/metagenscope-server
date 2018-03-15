@@ -6,6 +6,7 @@ import json
 from functools import wraps
 
 from app import db
+from app.analysis_results.analysis_result_models import AnalysisResultMeta
 from app.users.user_models import User
 from app.organizations.organization_models import Organization
 from app.samples.sample_models import Sample
@@ -37,9 +38,13 @@ def add_sample(name, metadata={}, created_at=datetime.datetime.utcnow()):   # py
     return Sample(name=name, metadata=metadata, created_at=created_at).save()
 
 
-def add_sample_group(name, access_scheme='public', created_at=datetime.datetime.utcnow()):
+def add_sample_group(name, analysis_result=None,
+                     access_scheme='public', created_at=datetime.datetime.utcnow()):
     """Wrap functionality for adding sample group."""
-    group = SampleGroup(name=name, access_scheme=access_scheme, created_at=created_at)
+    if not analysis_result:
+        analysis_result = AnalysisResultMeta().save()
+    group = SampleGroup(name=name, analysis_result=analysis_result,
+                        access_scheme=access_scheme, created_at=created_at)
     db.session.add(group)
     db.session.commit()
     return group
