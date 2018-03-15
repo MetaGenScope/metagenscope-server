@@ -3,6 +3,9 @@
 import datetime
 from uuid import uuid4
 
+from marshmallow import fields
+
+from app.base import BaseSchema
 from app.extensions import mongoDB
 
 
@@ -41,3 +44,19 @@ class AnalysisResultMeta(mongoDB.DynamicDocument):
                       for k, v in vars(self).items()
                       if k not in blacklist and not k.startswith('_')]
         return [field for field in all_fields if hasattr(self, field)]
+
+class AnalysisResultMetaSchema(BaseSchema):
+    """Serializer for AnalysisResultMeta model."""
+
+    __envelope__ = {
+        'single': 'analysis_result',
+        'many': 'analysis_results',
+    }
+    __model__ = AnalysisResultMeta
+
+    uuid = fields.Str()
+    result_types = fields.List(fields.Str())
+    created_at = fields.Date()
+
+
+analysis_result_schema = AnalysisResultMetaSchema()   # pylint: disable=invalid-name
