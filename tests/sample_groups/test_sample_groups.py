@@ -32,7 +32,7 @@ class TestSampleGroupModel(BaseTestCase):
         db.session.add(duplicate_group)
         self.assertRaises(IntegrityError, db.session.commit)
 
-    def test_sample_group_analysis_result(self):
+    def test_sample_group_analysis_result(self):  # pylint: disable=invalid-name
         """Ensure sample group's analysis result can be accessed."""
         analysis_result = AnalysisResultMeta().save()
         sample_group = add_sample_group('Sample Group One', analysis_result=analysis_result)

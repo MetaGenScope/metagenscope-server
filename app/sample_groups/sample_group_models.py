@@ -2,7 +2,7 @@
 
 import datetime
 
-from marshmallow import fields, pre_dump
+from marshmallow import fields
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.ext.associationproxy import association_proxy
 
