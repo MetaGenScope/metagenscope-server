@@ -11,7 +11,7 @@ class EndpointResponse:
         self.status = 'fail'
         self.code = 404
         self.message = ''
-        self.data = None
+        self.data = {}
 
     def success(self, code=200):
         """Set response as successful."""

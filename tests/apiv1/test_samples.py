@@ -15,14 +15,13 @@ class TestSampleModule(BaseTestCase):
         """Ensure a new sample can be added to the database."""
         sample_name = 'Exciting Research Starts Here'
         sample_group = add_sample_group(name='A Great Name')
-        sample_group_uuid = str(sample_group.id)
         with self.client:
             response = self.client.post(
                 f'/api/v1/samples',
                 headers=auth_headers,
                 data=json.dumps(dict(
                     name=sample_name,
-                    sample_group_uuid=sample_group_uuid,
+                    sample_group_uuid=str(sample_group.id),
                 )),
                 content_type='application/json',
             )
@@ -54,7 +53,6 @@ class TestSampleModule(BaseTestCase):
             self.assertIn('fail', data['status'])
             message = f'Sample Group with uuid \'{sample_group_uuid}\' does not exist!'
             self.assertEqual(message, data['message'])
-
 
     def test_get_single_sample(self):
         """Ensure get single group behaves correctly."""
