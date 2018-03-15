@@ -28,24 +28,24 @@ class TestSampleGroupModule(BaseTestCase):
             self.assertEqual(group_name, data['data']['sample_group']['name'])
 
     @with_user
-    def test_add_sample_to_group(self, auth_headers, *_):
-        sample = add_sample(name='SMPL_01')
-        sample_uuid = str(sample.uuid)
+    def test_add_samples_to_group(self, auth_headers, *_):
+        """Ensure samples can be added to a sample group."""
         sample_group = add_sample_group(name='A Great Name')
-        endpoint = '/api/v1/sample_groups/' + str(sample_group.id) + '/add_samples'
+        sample = add_sample(name='SMPL_01')
+        endpoint = f'/api/v1/sample_groups/{str(sample_group.id)}/samples'
         with self.client:
             response = self.client.post(
                 endpoint,
                 headers=auth_headers,
                 data=json.dumps(dict(
-                    sample_uuids=[sample_uuid],
+                    sample_uuids=[str(sample.uuid)],
                 )),
                 content_type='application/json',
             )
             self.assertEqual(response.status_code, 200)
             data = json.loads(response.data.decode())
             self.assertIn('success', data['status'])
-            self.assertIn(sample_uuid, [str(uuid) for uuid in sample_group.sample_ids])
+            self.assertIn(sample.uuid, sample_group.sample_ids)
 
     @with_user
     def test_add_duplicate_sample_group(self, auth_headers, *_):

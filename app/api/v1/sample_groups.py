@@ -58,17 +58,15 @@ def get_single_result(group_uuid):
     return response.json_and_code()
 
 
-@sample_groups_blueprint.route('/sample_groups/<group_uuid>/add_samples', methods=['POST'])
+@sample_groups_blueprint.route('/sample_groups/<group_uuid>/samples', methods=['POST'])
 @authenticate
-# pylint: disable=unused-argument
-def add_samples_to_group(resp, group_uuid):
-    """Get single sample group model."""
+def add_samples_to_group(resp, group_uuid):  # pylint: disable=unused-argument
+    """Add samples to a sample group."""
     response = EndpointResponse()
     post_data = request.get_json()
     try:
         sample_group_id = UUID(group_uuid)
         sample_group = SampleGroup.query.filter_by(id=sample_group_id).one()
-
     except (ValueError, NoResultFound):
         response.message = 'Sample Group does not exist'
         response.code = 404
@@ -83,8 +81,14 @@ def add_samples_to_group(resp, group_uuid):
         response.data = sample_group_schema.dump(sample_group).data
         response.success()
     except NoResultFound:
+        db.session.rollback()
         response.message = f'Sample UUID \'{sample_uuid}\' does not exist'
         response.code = 400
         return response.json_and_code()
+    except IntegrityError as integrity_error:
+        print(integrity_error)
+        db.session.rollback()
+        response.message = f'Integrity error: {str(integrity_error)}'
+        response.code = 500
 
     return response.json_and_code()
