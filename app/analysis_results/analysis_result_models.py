@@ -45,6 +45,7 @@ class AnalysisResultMeta(mongoDB.DynamicDocument):
                       if k not in blacklist and not k.startswith('_')]
         return [field for field in all_fields if hasattr(self, field)]
 
+
 class AnalysisResultMetaSchema(BaseSchema):
     """Serializer for AnalysisResultMeta model."""
 
