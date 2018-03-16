@@ -52,7 +52,7 @@ def fetch_samples(sample_group_id):
 
 
 @celery.task()
-def persist_result(analysis_result_id, result_name, result):
+def persist_result(result, analysis_result_id, result_name):
     """Persist results to an Analysis Result model."""
     analysis_result = AnalysisResultMeta.objects.get(uuid=analysis_result_id)
     wrapper = getattr(analysis_result, result_name)

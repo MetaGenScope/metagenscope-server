@@ -51,9 +51,9 @@ class TestDisplayModuleUtilityTasks(BaseTestCase):
         analysis_result = AnalysisResultMeta(sample_similarity=wrapper).save()
         sample_similarity = create_mvp_sample_similarity()
 
-        persist_result.delay(analysis_result.uuid,
-                             'sample_similarity',
-                             sample_similarity).get()
+        persist_result.delay(sample_similarity,
+                             analysis_result.uuid,
+                             'sample_similarity').get()
         analysis_result.reload()
         self.assertIn('sample_similarity', analysis_result)
         self.assertIn('status', analysis_result['sample_similarity'])

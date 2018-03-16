@@ -4,6 +4,9 @@ import numpy as np
 from sklearn.manifold import TSNE
 
 from app.extensions import celery
+from app.display_modules.sample_similarity.sample_similarity_models import (
+    SampleSimilarityResult,
+)
 from app.tool_results.kraken import KrakenResultModule
 from app.tool_results.metaphlan2 import Metaphlan2ResultModule
 
@@ -100,14 +103,14 @@ def label_tsne(tsne_results, sample_names, tool_label):
         Dictionary of the form: {<sample_name>: <coordinate>}.
 
     """
-    tsne_labeled = {sample_names[i]: {f'{tool_label}_x': tsne_results[i][0],
-                                      f'{tool_label}_y': tsne_results[i][1]}
+    tsne_labeled = {sample_names[i]: {f'{tool_label}_x': float(tsne_results[i][0]),
+                                      f'{tool_label}_y': float(tsne_results[i][1])}
                     for i in range(len(sample_names))}
     return tsne_labeled
 
 
 @celery.task()
-def taxa_tool_tsne(tool_name, samples):
+def taxa_tool_tsne(samples, tool_name):
     """Run tSNE for tool results stored as 'taxa' property."""
     tool = {
         'x_label': f'{tool_name} tsne x',
@@ -125,25 +128,26 @@ def taxa_tool_tsne(tool_name, samples):
 
 
 @celery.task()
-def sample_similarity_reducer(categories, kraken_results, metaphlan2_results):
+def sample_similarity_reducer(args, samples):
     """Combine Sample Similarity components."""
-    kralen_tool, kraken_labeled = kraken_results
-    metaphlan_tool, metaphlan_labeled = metaphlan2_results
+    categories = args[0]
+    kralen_tool, kraken_labeled = args[1]
+    metaphlan_tool, metaphlan_labeled = args[2]
 
-    samples = []
-    for sample_id in kraken_labeled.keys():
-        sample = {'SampleID': sample_id}
-        sample.update(kraken_labeled[sample_id])
-        sample.update(metaphlan_labeled[sample_id])
-        samples.append(sample)
+    data_records = []
+    for sample in samples:
+        sample_id = sample.name
+        data_record = {'SampleID': sample_id}
+        data_record.update(kraken_labeled[sample_id])
+        data_record.update(metaphlan_labeled[sample_id])
+        for category_name in categories.keys():
+            category_value = sample.metadata.get(category_name, 'None')
+            data_record[category_name] = category_value
+        data_records.append(data_record)
 
-    result = {
-        'categories': categories,
-        'tools': {
-            KrakenResultModule.name(): kralen_tool,
-            Metaphlan2ResultModule.name(): metaphlan_tool,
-        },
-        'samples': samples,
+    tools = {
+        KrakenResultModule.name(): kralen_tool,
+        Metaphlan2ResultModule.name(): metaphlan_tool,
     }
 
-    return result
+    return SampleSimilarityResult(categories=categories, tools=tools, data_records=data_records)

@@ -1,6 +1,6 @@
 """Tasks for generating Sample Similarity results."""
 
-from celery import group
+from celery import chord
 
 from app.analysis_results.analysis_result_models import AnalysisResultWrapper
 from app.display_modules.display_wrangler import DisplayModuleWrangler
@@ -19,23 +19,27 @@ class SampleSimilarityWrangler(DisplayModuleWrangler):
     """Task for generating Reads Classified results."""
 
     categories_task = categories_from_metadata.s()
-    kraken_task = taxa_tool_tsne.s(KrakenResultModule.name())
-    metaphlan2_task = taxa_tool_tsne.s(Metaphlan2ResultModule.name())
+    kraken_task = taxa_tool_tsne.s(tool_name=KrakenResultModule.name())
+    metaphlan2_task = taxa_tool_tsne.s(tool_name=Metaphlan2ResultModule.name())
 
     @classmethod
     def run_sample_group(cls, sample_group_id):
         """Gather samples and process."""
         sample_group = SampleGroup.query.filter_by(id=sample_group_id).first()
+        samples = sample_group.samples
 
         # Set state on Analysis Group
         analysis_group = sample_group.analysis_result
         wrapper = AnalysisResultWrapper(status='W')
         setattr(analysis_group, MODULE_NAME, wrapper)
+        analysis_group.save()
 
+        reducer = sample_similarity_reducer.s(samples)
         persist_task = persist_result.s(analysis_group.uuid, MODULE_NAME)
 
-        middle_tasks = [cls.categories_task, cls.kraken_task, cls.metaphlan2_task]
-        tsne_chain = (group(middle_tasks) | sample_similarity_reducer.s() | persist_task)
-        result = tsne_chain(sample_group.samples)
+        categories_task = categories_from_metadata.s(samples)
+        kraken_task = taxa_tool_tsne.s(samples, KrakenResultModule.name())
+        metaphlan2_task = taxa_tool_tsne.s(samples, Metaphlan2ResultModule.name())
+        middle_tasks = [categories_task, kraken_task, metaphlan2_task]
 
-        return result
+        return chord(middle_tasks)(reducer | persist_task)
