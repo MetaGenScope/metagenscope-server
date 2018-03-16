@@ -5,7 +5,7 @@ from app.analysis_results.analysis_result_models import AnalysisResultMeta, Anal
 from app.display_modules.sample_similarity.tests.sample_similarity_factory import (
     create_mvp_sample_similarity,
 )
-from app.display_modules.utils import fetch_samples, persist_result
+from app.display_modules.utils import categories_from_metadata, fetch_samples, persist_result
 from app.samples.sample_models import Sample
 
 from tests.base import BaseTestCase
@@ -14,6 +14,24 @@ from tests.utils import add_sample_group
 
 class TestDisplayModuleUtilityTasks(BaseTestCase):
     """Test suite for Display Module utility tasks."""
+
+    def test_categories_from_metadata(self):
+        """Ensure categories_from_metadata task works."""
+        metadata1 = {
+            'valid_category': 'foo',
+            'invalid_category': 'bar',
+        }
+        metadata2 = {
+            'valid_category': 'baz',
+        }
+        sample1 = Sample(name='Sample01', metadata=metadata1).save()
+        sample2 = Sample(name='Sample02', metadata=metadata2).save()
+        result = categories_from_metadata.delay([sample1, sample2]).get()
+        self.assertEqual(1, len(result.keys()))
+        self.assertNotIn('invalid_category', result)
+        self.assertIn('valid_category', result)
+        self.assertIn('foo', result['valid_category'])
+        self.assertIn('baz', result['valid_category'])
 
     def test_fetch_samples(self):
         """Ensure fetch_samples task works."""
@@ -38,3 +56,5 @@ class TestDisplayModuleUtilityTasks(BaseTestCase):
                              sample_similarity).get()
         analysis_result.reload()
         self.assertIn('sample_similarity', analysis_result)
+        self.assertIn('status', analysis_result['sample_similarity'])
+        self.assertEqual('S', analysis_result['sample_similarity']['status'])

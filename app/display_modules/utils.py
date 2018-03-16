@@ -29,7 +29,7 @@ def categories_from_metadata(samples, min_size=2):
     # Gather categories and values
     all_metadata = [sample.metadata for sample in samples]
     for metadata in all_metadata:
-        properties = [prop for prop in vars(metadata)]
+        properties = [prop for prop in metadata.keys()]
         for prop in properties:
             if prop not in categories:
                 categories[prop] = set([])
