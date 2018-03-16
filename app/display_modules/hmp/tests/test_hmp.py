@@ -4,16 +4,9 @@ import copy
 
 from mongoengine import ValidationError
 
-from app.analysis_results.analysis_result_models import AnalysisResultMeta
-from app.display_modules.hmp import (
-    HMPResult,
-    HMPModule,
-)
+from app.analysis_results.analysis_result_models import AnalysisResultMeta, AnalysisResultWrapper
+from app.display_modules.hmp import HMPResult
 from tests.base import BaseTestCase
-
-
-# Define aliases
-HMPResultWrapper = HMPModule.get_analysis_result_wrapper()
 
 
 # Test data
@@ -73,7 +66,7 @@ class TestHMPResult(BaseTestCase):
     def test_add_hmp(self):
         """Ensure HMP model is created correctly."""
         hmp = HMPResult(categories=categories, sites=sites, data=data)
-        wrapper = HMPResultWrapper(data=hmp)
+        wrapper = AnalysisResultWrapper(data=hmp)
         result = AnalysisResultMeta(hmp=wrapper).save()
         self.assertTrue(result.id)
         self.assertTrue(result.hmp)
@@ -81,7 +74,7 @@ class TestHMPResult(BaseTestCase):
     def test_add_missing_category(self):
         """Ensure saving model fails if category is missing from `data`."""
         hmp = HMPResult(categories=categories, sites=sites, data={})
-        wrapper = HMPResultWrapper(data=hmp)
+        wrapper = AnalysisResultWrapper(data=hmp)
         result = AnalysisResultMeta(hmp=wrapper)
         self.assertRaises(ValidationError, result.save)
 
@@ -90,7 +83,7 @@ class TestHMPResult(BaseTestCase):
         incomplete_data = copy.deepcopy(data)
         incomplete_data['front-phone'] = incomplete_data['front-phone'][:1]
         hmp = HMPResult(categories=categories, sites=sites, data=incomplete_data)
-        wrapper = HMPResultWrapper(data=hmp)
+        wrapper = AnalysisResultWrapper(data=hmp)
         result = AnalysisResultMeta(hmp=wrapper)
         self.assertRaises(ValidationError, result.save)
 
@@ -99,6 +92,6 @@ class TestHMPResult(BaseTestCase):
         incomplete_data = copy.deepcopy(data)
         incomplete_data['front-phone'][0]['data'] = incomplete_data['front-phone'][0]['data'][:1]
         hmp = HMPResult(categories=categories, sites=sites, data=incomplete_data)
-        wrapper = HMPResultWrapper(data=hmp)
+        wrapper = AnalysisResultWrapper(data=hmp)
         result = AnalysisResultMeta(hmp=wrapper)
         self.assertRaises(ValidationError, result.save)

@@ -2,11 +2,9 @@
 
 from celery import group
 
+from app.analysis_results.analysis_result_models import AnalysisResultWrapper
 from app.display_modules.display_wrangler import DisplayModuleWrangler
 from app.display_modules.sample_similarity.constants import MODULE_NAME
-from app.display_modules.sample_similarity.sample_similarity_models import (
-    SampleSimilarityResultWrapper,
-)
 from app.display_modules.sample_similarity.sample_similarity_tasks import (
     taxa_tool_tsne,
     sample_similarity_reducer,
@@ -31,7 +29,7 @@ class SampleSimilarityWrangler(DisplayModuleWrangler):
 
         # Set state on Analysis Group
         analysis_group = sample_group.analysis_result
-        wrapper = SampleSimilarityResultWrapper(status='W')
+        wrapper = AnalysisResultWrapper(status='W')
         setattr(analysis_group, MODULE_NAME, wrapper)
 
         persist_task = persist_result.s(analysis_group.uuid, MODULE_NAME)

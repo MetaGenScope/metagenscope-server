@@ -3,15 +3,9 @@
 from mongoengine import ValidationError
 
 
-from app.display_modules.reads_classified import (
-    ReadsClassifiedResult,
-    ReadsClassifiedModule,
-)
-from app.analysis_results.analysis_result_models import AnalysisResultMeta
+from app.analysis_results.analysis_result_models import AnalysisResultMeta, AnalysisResultWrapper
+from app.display_modules.reads_classified import ReadsClassifiedResult
 from tests.base import BaseTestCase
-
-
-ReadsClassifiedResultWrapper = ReadsClassifiedModule.get_analysis_result_wrapper()
 
 
 class TestReadsClassifiedResult(BaseTestCase):
@@ -35,7 +29,7 @@ class TestReadsClassifiedResult(BaseTestCase):
         reads_classified = ReadsClassifiedResult(categories=categories,
                                                  sample_names=sample_names,
                                                  data=data)
-        wrapper = ReadsClassifiedResultWrapper(data=reads_classified)
+        wrapper = AnalysisResultWrapper(data=reads_classified)
         result = AnalysisResultMeta(reads_classified=wrapper).save()
         self.assertTrue(result.id)
         self.assertTrue(result.reads_classified)
@@ -58,7 +52,7 @@ class TestReadsClassifiedResult(BaseTestCase):
         reads_classified = ReadsClassifiedResult(categories=categories,
                                                  sample_names=sample_names,
                                                  data=data)
-        wrapper = ReadsClassifiedResultWrapper(data=reads_classified)
+        wrapper = AnalysisResultWrapper(data=reads_classified)
         result = AnalysisResultMeta(reads_classified=wrapper)
         self.assertRaises(ValidationError, result.save)
 
@@ -76,6 +70,6 @@ class TestReadsClassifiedResult(BaseTestCase):
         reads_classified = ReadsClassifiedResult(categories=categories,
                                                  sample_names=sample_names,
                                                  data=data)
-        wrapper = ReadsClassifiedResultWrapper(data=reads_classified)
+        wrapper = AnalysisResultWrapper(data=reads_classified)
         result = AnalysisResultMeta(reads_classified=wrapper)
         self.assertRaises(ValidationError, result.save)

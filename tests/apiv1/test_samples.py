@@ -54,7 +54,7 @@ class TestSampleModule(BaseTestCase):
             self.assertEqual('Sample Group does not exist!', data['message'])
 
     def test_get_single_sample(self):
-        """Ensure get single group behaves correctly."""
+        """Ensure get single sample behaves correctly."""
         sample = add_sample(name='SMPL_01')
         sample_uuid = str(sample.uuid)
         with self.client:

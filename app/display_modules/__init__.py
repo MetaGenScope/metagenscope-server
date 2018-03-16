@@ -1,9 +1,6 @@
 """Modules for converting analysis tool output to front-end display data."""
 
-import importlib
-import inspect
-import pkgutil
-import sys
+from app.extensions import mongoDB
 
 from app.display_modules.hmp import HMPModule
 from app.display_modules.reads_classified import ReadsClassifiedModule

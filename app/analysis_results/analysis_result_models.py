@@ -22,8 +22,7 @@ class AnalysisResultWrapper(mongoDB.EmbeddedDocument):   # pylint: disable=too-f
                                  max_length=1,
                                  choices=ANALYSIS_RESULT_STATUS,
                                  default='P')
-
-    meta = {'allow_inheritance': True}
+    data = mongoDB.GenericEmbeddedDocumentField()
 
 
 class AnalysisResultMeta(mongoDB.DynamicDocument):

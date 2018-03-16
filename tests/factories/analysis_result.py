@@ -6,15 +6,12 @@ import random
 
 import factory
 
+from app.analysis_results.analysis_result_models import AnalysisResultWrapper
 from app.display_modules.sample_similarity import (
     ToolDocument,
     SampleSimilarityResult,
-    SampleSimilarityDisplayModule,
 )
 from app.analysis_results.analysis_result_models import AnalysisResultMeta
-
-# Define aliases
-SampleSimilarityResultWrapper = SampleSimilarityDisplayModule.get_analysis_result_wrapper()
 
 
 class ToolFactory(factory.mongoengine.MongoEngineFactory):
@@ -68,7 +65,7 @@ class SampleSimilarityWrapperFactory(factory.mongoengine.MongoEngineFactory):
     """Factory for Analysis Result's Sample Similarity status wrapper."""
 
     class Meta:
-        model = SampleSimilarityResultWrapper
+        model = AnalysisResultWrapper
 
     status = 'P'
     data = None

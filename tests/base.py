@@ -4,7 +4,7 @@ import logging
 
 from flask_testing import TestCase
 
-from app import create_app, db
+from app import create_app, db, celery, update_celery_settings
 from app.config import app_config
 from app.analysis_results.analysis_result_models import AnalysisResultMeta
 from app.samples.sample_models import Sample
@@ -18,7 +18,9 @@ class BaseTestCase(TestCase):
 
     def create_app(self):
         """Create app configured for testing."""
-        app.config.from_object(app_config['testing'])
+        config_cls = app_config['testing']
+        app.config.from_object(config_cls)
+        update_celery_settings(celery, config_cls)
         return app
 
     def setUp(self):
