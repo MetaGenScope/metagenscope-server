@@ -17,8 +17,8 @@ PHYLA = ['acanthocephala', 'annelida', 'arthropoda', 'brachiopoda', 'bryozoa',
          'tardigrada', 'xenacoelomorpha']
 
 
-def create_kraken(taxa_count=10):
-    """Create KrakenResult with specified number of taxa."""
+def create_taxa(taxa_count):
+    """Create taxa dictionary."""
     taxa = {}
     while len(taxa) < taxa_count:
         depth = random.randint(1, 3)
@@ -28,5 +28,10 @@ def create_kraken(taxa_count=10):
         if depth >= 3:
             entry = f'{entry}|p_{random.choices(PHYLA)[0]}'
         taxa[entry] = random.randint(0, 8e07)
+    return taxa
 
+
+def create_kraken(taxa_count=10):
+    """Create KrakenResult with specified number of taxa."""
+    taxa = create_taxa(taxa_count)
     return KrakenResult(taxa=taxa)

@@ -1,20 +1,8 @@
 """Display module utilities."""
 
-from app.analysis_results.analysis_result_models import (
-    AnalysisResultWrapper,
-    AnalysisResultMeta,
-)
-from app.extensions import celery, mongoDB
+from app.analysis_results.analysis_result_models import AnalysisResultMeta
+from app.extensions import celery
 from app.sample_groups.sample_group_models import SampleGroup
-
-
-def create_result_wrapper(wrapper_name, model_cls):
-    """Create wrapper for analysis result data field."""
-    mongo_field = mongoDB.EmbeddedDocumentField(model_cls)
-    # Create wrapper class
-    return type(wrapper_name,
-                (AnalysisResultWrapper,),
-                {'data': mongo_field})
 
 
 @celery.task()
@@ -41,7 +29,7 @@ def categories_from_metadata(samples, min_size=2):
     # Gather categories and values
     all_metadata = [sample.metadata for sample in samples]
     for metadata in all_metadata:
-        properties = [prop for prop in vars(metadata)]
+        properties = [prop for prop in metadata.keys()]
         for prop in properties:
             if prop not in categories:
                 categories[prop] = set([])
@@ -64,9 +52,10 @@ def fetch_samples(sample_group_id):
 
 
 @celery.task()
-def persist_result(analysis_result_id, result_name, result):
+def persist_result(result, analysis_result_id, result_name):
     """Persist results to an Analysis Result model."""
     analysis_result = AnalysisResultMeta.objects.get(uuid=analysis_result_id)
     wrapper = getattr(analysis_result, result_name)
     wrapper.data = result
+    wrapper.status = 'S'
     analysis_result.save()

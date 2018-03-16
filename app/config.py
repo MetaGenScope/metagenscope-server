@@ -1,6 +1,6 @@
 """Environment configurations."""
 
-# pylint: disable=too-few-public-methods
+# pylint: disable=too-few-public-methods,invalid-name
 
 import os
 
@@ -24,10 +24,12 @@ class Config(object):
         'flask_api.renderers.BrowsableAPIRenderer',
     ]
 
-    CELERY_BROKER_URL = os.environ.get('CELERY_BROKER_URL')
-    RESULT_BACKEND = os.environ.get('CELERY_RESULT_BACKEND')
-    RESULT_EXPIRES = 3600     # Expire results after one hour
-    RESULT_CACHE_MAX = None   # Do not limit cache
+    broker_url = os.environ.get('CELERY_BROKER_URL')
+    result_backend = os.environ.get('CELERY_RESULT_BACKEND')
+    result_expires = 3600     # Expire results after one hour
+    result_cache_max = None   # Do not limit cache
+    task_always_eager = False
+    task_eager_propagates = False
 
 
 class DevelopmentConfig(Config):
@@ -48,8 +50,10 @@ class TestingConfig(Config):
     TOKEN_EXPIRATION_DAYS = 0
     TOKEN_EXPIRATION_SECONDS = 3
 
-    CELERY_BROKER_URL = os.environ.get('CELERY_BROKER_TEST_URL')
-    RESULT_BACKEND = os.environ.get('CELERY_RESULT_TEST_BACKEND')
+    broker_url = os.environ.get('CELERY_BROKER_TEST_URL')
+    result_backend = os.environ.get('CELERY_RESULT_TEST_BACKEND')
+    task_always_eager = True
+    task_eager_propagates = True
 
 
 class StagingConfig(Config):

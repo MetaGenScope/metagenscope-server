@@ -24,7 +24,7 @@ from app.tool_results import ToolResultModule, all_tool_result_modules
 from app.tool_results.register import register_modules
 
 
-def create_app():
+def create_app(environment=None):
     """Create and bootstrap app."""
     # Instantiate the app
     app = FlaskAPI(__name__)
@@ -33,8 +33,10 @@ def create_app():
     CORS(app)
 
     # Set config
-    config_name = os.getenv('APP_SETTINGS', 'development')
-    app.config.from_object(app_config[config_name])
+    if not environment:
+        environment = os.getenv('APP_SETTINGS', 'development')
+    config_object = app_config[environment]
+    app.config.from_object(config_object)
 
     # Set up extensions
     mongoDB.init_app(app)
@@ -49,9 +51,25 @@ def create_app():
     register_error_handlers(app)
 
     # Update Celery config
-    celery.conf.update(app.config)
+    update_celery_settings(celery, config_object)
 
     return app
+
+
+def update_celery_settings(celery_app, config_class):
+    """
+    Update Celery configuration.
+
+    celery.config_from_object(object) isn't working so we set each option explicitly.
+    """
+    celery_app.conf.update(
+        broker_url=config_class.broker_url,
+        result_backend=config_class.result_backend,
+        result_cache_max=config_class.result_cache_max,
+        result_expires=config_class.result_expires,
+        task_always_eager=config_class.task_always_eager,
+        task_eager_propagates=config_class.task_eager_propagates,
+    )
 
 
 def register_tool_result_modules(app):

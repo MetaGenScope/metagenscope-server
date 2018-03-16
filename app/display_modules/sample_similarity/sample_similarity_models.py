@@ -3,7 +3,6 @@
 from mongoengine import ValidationError
 
 from app.extensions import mongoDB as mdb
-from app.display_modules.utils import create_result_wrapper
 
 
 # Define aliases
@@ -43,7 +42,3 @@ class SampleSimilarityResult(mdb.EmbeddedDocument):     # pylint: disable=too-fe
                 if (xname not in record) or (yname not in record):
                     msg = 'Record must x and y for all tools.'
                     raise ValidationError(msg)
-
-
-SampleSimilarityResultWrapper = create_result_wrapper('SampleSimilarityResultWrapper',  # pylint: disable=invalid-name
-                                                      SampleSimilarityResult)

@@ -2,16 +2,9 @@
 
 from mongoengine import ValidationError
 
-from app.analysis_results.analysis_result_models import AnalysisResultMeta
-from app.display_modules.taxon_abundance import (
-    TaxonAbundanceResult,
-    TaxonAbundanceDisplayModule,
-)
+from app.analysis_results.analysis_result_models import AnalysisResultMeta, AnalysisResultWrapper
+from app.display_modules.taxon_abundance import TaxonAbundanceResult
 from tests.base import BaseTestCase
-
-
-# Define aliases
-TaxonAbundanceResultWrapper = TaxonAbundanceDisplayModule.get_analysis_result_wrapper()
 
 
 class TestTaxonAbundanceResult(BaseTestCase):
@@ -42,7 +35,7 @@ class TestTaxonAbundanceResult(BaseTestCase):
         ]
 
         taxon_abundance = TaxonAbundanceResult(nodes=nodes, edges=edges)
-        wrapper = TaxonAbundanceResultWrapper(data=taxon_abundance)
+        wrapper = AnalysisResultWrapper(data=taxon_abundance)
         result = AnalysisResultMeta(taxon_abundance=wrapper).save()
         self.assertTrue(result.id)
         self.assertTrue(result.taxon_abundance)
@@ -67,6 +60,6 @@ class TestTaxonAbundanceResult(BaseTestCase):
         ]
 
         taxon_abundance = TaxonAbundanceResult(nodes=nodes, edges=edges)
-        wrapper = TaxonAbundanceResultWrapper(data=taxon_abundance)
+        wrapper = AnalysisResultWrapper(data=taxon_abundance)
         result = AnalysisResultMeta(taxon_abundance=wrapper)
         self.assertRaises(ValidationError, result.save)
