@@ -17,14 +17,14 @@ from app.api.v1.ping import ping_blueprint
 from app.api.v1.samples import samples_blueprint
 from app.api.v1.sample_groups import sample_groups_blueprint
 from app.api.v1.users import users_blueprint
-from app.config import Config, app_config
+from app.config import app_config
 from app.display_modules import all_display_modules
 from app.extensions import mongoDB, db, migrate, bcrypt, celery
 from app.tool_results import ToolResultModule, all_tool_result_modules
 from app.tool_results.register import register_modules
 
 
-def create_app(environment=os.getenv('APP_SETTINGS', 'development')):
+def create_app(environment=None):
     """Create and bootstrap app."""
     # Instantiate the app
     app = FlaskAPI(__name__)
@@ -33,6 +33,8 @@ def create_app(environment=os.getenv('APP_SETTINGS', 'development')):
     CORS(app)
 
     # Set config
+    if not environment:
+        environment = os.getenv('APP_SETTINGS', 'development')
     config_object = app_config[environment]
     app.config.from_object(config_object)
 
