@@ -18,10 +18,6 @@ from app.tool_results.metaphlan2 import Metaphlan2ResultModule
 class SampleSimilarityWrangler(DisplayModuleWrangler):
     """Task for generating Reads Classified results."""
 
-    categories_task = categories_from_metadata.s()
-    kraken_task = taxa_tool_tsne.s(tool_name=KrakenResultModule.name())
-    metaphlan2_task = taxa_tool_tsne.s(tool_name=Metaphlan2ResultModule.name())
-
     @classmethod
     def run_sample_group(cls, sample_group_id):
         """Gather samples and process."""
