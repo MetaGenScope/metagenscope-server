@@ -3,7 +3,7 @@
 import json
 
 from app.samples.sample_models import Sample
-from app.tool_results.mic_census.tests.constants import TEST_CENSUS
+from app.tool_results.microbe_census.tests.constants import TEST_CENSUS
 from tests.base import BaseTestCase
 from tests.utils import with_user
 
@@ -18,7 +18,7 @@ class TestMicCensusUploads(BaseTestCase):
         sample_uuid = str(sample.uuid)
         with self.client:
             response = self.client.post(
-                f'/api/v1/samples/{sample_uuid}/mic_census',
+                f'/api/v1/samples/{sample_uuid}/microbe_census',
                 headers=auth_headers,
                 data=json.dumps(TEST_CENSUS),
                 content_type='application/json',
@@ -32,4 +32,4 @@ class TestMicCensusUploads(BaseTestCase):
 
         # Reload object to ensure HMP Sites result was stored properly
         sample = Sample.objects.get(uuid=sample_uuid)
-        self.assertTrue(sample.mic_census)
+        self.assertTrue(sample.microbe_census)
