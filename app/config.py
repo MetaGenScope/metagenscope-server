@@ -17,6 +17,7 @@ class Config(object):
     BCRYPT_LOG_ROUNDS = 13
     TOKEN_EXPIRATION_DAYS = 30
     TOKEN_EXPIRATION_SECONDS = 0
+    MAX_CONTENT_LENGTH = 100 * 1000 * 1000
 
     # Flask-API renderer
     DEFAULT_RENDERERS = [
@@ -24,12 +25,14 @@ class Config(object):
         'flask_api.renderers.BrowsableAPIRenderer',
     ]
 
+    # Celery settings
     broker_url = os.environ.get('CELERY_BROKER_URL')
     result_backend = os.environ.get('CELERY_RESULT_BACKEND')
     result_expires = 3600     # Expire results after one hour
     result_cache_max = None   # Do not limit cache
     task_always_eager = False
     task_eager_propagates = False
+    task_serializer = 'pickle'
 
 
 class DevelopmentConfig(Config):
