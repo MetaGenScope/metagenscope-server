@@ -5,8 +5,14 @@ from app.analysis_results.analysis_result_models import AnalysisResultMeta, Anal
 from app.display_modules.sample_similarity.tests.sample_similarity_factory import (
     create_mvp_sample_similarity,
 )
-from app.display_modules.utils import categories_from_metadata, fetch_samples, persist_result
+from app.display_modules.utils import (
+    categories_from_metadata,
+    fetch_samples,
+    persist_result,
+    collate_samples,
+)
 from app.samples.sample_models import Sample
+from app.tool_results.kraken.tests.kraken_factory import create_kraken
 
 from tests.base import BaseTestCase
 from tests.utils import add_sample_group
@@ -58,3 +64,17 @@ class TestDisplayModuleUtilityTasks(BaseTestCase):
         self.assertIn('sample_similarity', analysis_result)
         self.assertIn('status', analysis_result['sample_similarity'])
         self.assertEqual('S', analysis_result['sample_similarity']['status'])
+
+    def test_collate_samples(self):
+        """Ensure collate_samples task works."""
+        sample1 = Sample(name='Sample01', kraken=create_kraken()).save()
+        sample2 = Sample(name='Sample02', kraken=create_kraken()).save()
+        sample_group = add_sample_group(name='SampleGroup01')
+        sample_group.samples = [sample1, sample2]
+        db.session.commit()
+
+        result = collate_samples.delay('kraken', ['taxa'], sample_group.id).get()
+        self.assertIn('Sample01', result)
+        self.assertIn('Sample02', result)
+        self.assertIn('taxa', result['Sample01'])
+        self.assertIn('taxa', result['Sample02'])

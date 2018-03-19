@@ -59,3 +59,19 @@ def persist_result(result, analysis_result_id, result_name):
     wrapper.data = result
     wrapper.status = 'S'
     analysis_result.save()
+
+
+@celery.task()
+def collate_samples(tool_name, fields, sample_group_id):
+    """Group a set of Tool Result fields from a set of samples by sample name."""
+    sample_group = SampleGroup.query.filter_by(id=sample_group_id).first()
+    samples = sample_group.samples
+
+    sample_dict = {}
+    for sample in samples:
+        sample_dict[sample.name] = {}
+        tool_result = getattr(sample, tool_name)
+        for field in fields:
+            sample_dict[sample.name][field] = getattr(tool_result, field)
+
+    return sample_dict
