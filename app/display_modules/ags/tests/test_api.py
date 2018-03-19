@@ -4,7 +4,7 @@ import json
 from uuid import uuid4
 
 from app.analysis_results.analysis_result_models import AnalysisResultMeta, AnalysisResultWrapper
-from app.display_modules.ags.tests.ags_factory import AGSFactory
+from app.display_modules.ags.tests.factory import AGSFactory
 from tests.base import BaseTestCase
 
 
