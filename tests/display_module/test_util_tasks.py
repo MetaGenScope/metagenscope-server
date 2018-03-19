@@ -74,8 +74,7 @@ class TestDisplayModuleUtilityTasks(BaseTestCase):
         db.session.commit()
 
         result = collate_samples.delay('kraken', ['taxa'], sample_group.id).get()
-        self.assertIn('samples', result)
-        self.assertIn('Sample01', result['samples'])
-        self.assertIn('Sample02', result['samples'])
-        self.assertIn('taxa', result['samples']['Sample01'])
-        self.assertIn('taxa', result['samples']['Sample02'])
+        self.assertIn('Sample01', result)
+        self.assertIn('Sample02', result)
+        self.assertIn('taxa', result['Sample01'])
+        self.assertIn('taxa', result['Sample02'])

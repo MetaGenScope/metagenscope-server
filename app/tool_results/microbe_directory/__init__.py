@@ -4,7 +4,7 @@ from app.extensions import mongoDB
 from app.tool_results.tool_module import ToolResult, ToolResultModule
 
 
-class MicrobeDirectoryResult(ToolResult):     # pylint: disable=too-few-public-methods
+class MicrobeDirectoryToolResult(ToolResult):     # pylint: disable=too-few-public-methods
     """Microbe Directory result type."""
 
     # Accept any JSON
@@ -32,4 +32,4 @@ class MicrobeDirectoryResultModule(ToolResultModule):
     @classmethod
     def result_model(cls):
         """Return Microbe Directory module's model class."""
-        return MicrobeDirectoryResult
+        return MicrobeDirectoryToolResult

@@ -74,4 +74,4 @@ def collate_samples(tool_name, fields, sample_group_id):
         for field in fields:
             sample_dict[sample.name][field] = getattr(tool_result, field)
 
-    return {'samples': sample_dict}
+    return sample_dict
