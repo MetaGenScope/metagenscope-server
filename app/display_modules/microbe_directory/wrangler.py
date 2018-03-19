@@ -6,7 +6,10 @@ from app.analysis_results.analysis_result_models import AnalysisResultWrapper
 from app.display_modules.display_wrangler import DisplayModuleWrangler
 from app.display_modules.utils import persist_result, collate_samples
 from app.sample_groups.sample_group_models import SampleGroup
-from app.tool_results.microbe_directory import MicrobeDirectoryResultModule
+from app.tool_results.microbe_directory import (
+    MicrobeDirectoryToolResult,
+    MicrobeDirectoryResultModule,
+)
 
 from .constants import MODULE_NAME
 from .tasks import microbe_directory_reducer
@@ -14,18 +17,6 @@ from .tasks import microbe_directory_reducer
 
 class MicrobeDirectoryWrangler(DisplayModuleWrangler):
     """Tasks for generating virulence results."""
-
-    fields = ['antimicrobial_susceptibility',
-              'plant_pathogen',
-              'optimal_temperature',
-              'optimal_ph',
-              'animal_pathogen',
-              'microbiome_location',
-              'biofilm_forming',
-              'spore_forming',
-              'pathogenicity',
-              'extreme_environment',
-              'gram_stain']
 
     @classmethod
     def run_sample_group(cls, sample_group_id):
@@ -39,7 +30,8 @@ class MicrobeDirectoryWrangler(DisplayModuleWrangler):
         analysis_group.save()
 
         tool_result_name = MicrobeDirectoryResultModule.name()
-        collate_task = collate_samples.s(tool_result_name, cls.fields, sample_group_id)
+        collate_fields = MicrobeDirectoryToolResult._fields
+        collate_task = collate_samples.s(tool_result_name, collate_fields, sample_group_id)
         reducer_task = microbe_directory_reducer.s()
         persist_task = persist_result.s(analysis_group.uuid, MODULE_NAME)
 
