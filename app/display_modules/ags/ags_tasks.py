@@ -1,7 +1,5 @@
 """Tasks for generating Average Genome Size results."""
 
-from pprint import pprint
-
 from numpy import percentile
 
 from app.extensions import celery
@@ -49,8 +47,4 @@ def reducer_task(args):
     """Combine AGS component calculations."""
     categories = args[0]
     ags_dists = args[1]
-    print('\n\n\n')
-    print('++++++++++++++++++++++++++++++')
-    print('\n')
-    pprint(ags_dists)
     return AGSResult(categories=categories, distributions=ags_dists)
