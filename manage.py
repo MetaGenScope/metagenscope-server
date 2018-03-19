@@ -98,8 +98,11 @@ def seed_db():
                   email="chm2042@med.cornell.edu",
                   password='Foobar22')
 
-    sample_group = SampleGroup(name='ABRF 2017')
-
+    analysis_result = AnalysisResultMeta(sample_similarity=sample_similarity,
+                                         taxon_abundance=taxon_abundance,
+                                         reads_classified=reads_classified,
+                                         hmp=hmp).save()
+    sample_group = SampleGroup(name='ABRF 2017', analysis_result=analysis_result)
 
     mason_lab = Organization(name='Mason Lab', admin_email='benjamin.blair.chrobot@gmail.com')
     mason_lab.users = [bchrobot, dcdanko, cmason]
@@ -111,12 +114,6 @@ def seed_db():
     mason_lab.add_admin(bchrobot)
     mason_lab.add_admin(dcdanko)
     db.session.commit()
-
-    AnalysisResultMeta(sample_group_id=sample_group.id,
-                       sample_similarity=sample_similarity,
-                       taxon_abundance=taxon_abundance,
-                       reads_classified=reads_classified,
-                       hmp=hmp).save()
 
 
 if __name__ == '__main__':
