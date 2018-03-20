@@ -23,11 +23,11 @@ class DistributionResult(mdb.EmbeddedDocument):
 
     def clean(self):
         """Ensure distribution is ordered."""
-        vals = [self.min_val, self.q1_val, self.mean_val,
-                self.q3_val, self.max_val]
-        svals = sorted(vals)
-        for val, sval in zip(vals, svals):
-            if val != sval:
+        values = [self.min_val, self.q1_val, self.mean_val,
+                  self.q3_val, self.max_val]
+        sorted_values = sorted(values)
+        for value, sorted_value in zip(values, sorted_values):
+            if value != sorted_value:
                 raise ValidationError('Distribution is not in order.')
 
 
