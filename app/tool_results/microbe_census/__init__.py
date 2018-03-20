@@ -5,12 +5,12 @@ from app.extensions import mongoDB
 from app.tool_results.tool_module import ToolResult, ToolResultModule
 
 
-class MicCensusResult(ToolResult):  # pylint: disable=too-few-public-methods
+class MicrobeCensusResult(ToolResult):  # pylint: disable=too-few-public-methods
     """Mic Census tool's result type."""
 
-    average_genome_size = mongoDB.IntField(required=True)
+    average_genome_size = mongoDB.FloatField(required=True)
     total_bases = mongoDB.IntField(required=True)
-    genome_equivalents = mongoDB.IntField(required=True)
+    genome_equivalents = mongoDB.FloatField(required=True)
 
     def clean(self):
         """Check all values are non-negative, if not raise an error."""
@@ -24,19 +24,19 @@ class MicCensusResult(ToolResult):  # pylint: disable=too-few-public-methods
         if not validate(self.average_genome_size,
                         self.total_bases,
                         self.genome_equivalents):
-            msg = 'MicCensusResult values must be non-negative'
+            msg = 'MicrobeCensusResult values must be non-negative'
             raise ValidationError(msg)
 
 
-class MicCensusResultModule(ToolResultModule):
+class MicrobeCensusResultModule(ToolResultModule):
     """Microbe Census tool module."""
 
     @classmethod
     def name(cls):
         """Return Microbe Census module's unique identifier string."""
-        return 'mic_census'
+        return 'microbe_census'
 
     @classmethod
     def result_model(cls):
         """Return Microbe Census module's model class."""
-        return MicCensusResult
+        return MicrobeCensusResult
