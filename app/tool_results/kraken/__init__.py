@@ -1,14 +1,8 @@
 """Kraken tool module."""
 
-from app.extensions import mongoDB
-from app.tool_results.tool_module import ToolResult, ToolResultModule
+from app.tool_results.tool_module import ToolResultModule
 
-
-class KrakenResult(ToolResult):     # pylint: disable=too-few-public-methods
-    """Kraken tool's result type."""
-
-    # Taxa is of the form: {<taxon_name>: <abundance_value>}
-    taxa = mongoDB.MapField(mongoDB.IntField(), required=True)
+from .models import KrakenResult
 
 
 class KrakenResultModule(ToolResultModule):
@@ -17,7 +11,7 @@ class KrakenResultModule(ToolResultModule):
     @classmethod
     def name(cls):
         """Return Kraken module's unique identifier string."""
-        return 'kraken'
+        return 'kraken_taxonomy_profiling'
 
     @classmethod
     def result_model(cls):
