@@ -8,6 +8,7 @@ samples and human body sites from the Human Microbiome Project.
 from app.display_modules.display_module import DisplayModule
 from app.display_modules.hmp.hmp_models import HMPResult
 from app.display_modules.hmp.hmp_wrangler import HMPWrangler
+from app.tool_results.hmp_sites import HmpSitesResultModule
 
 
 class HMPModule(DisplayModule):
@@ -16,7 +17,7 @@ class HMPModule(DisplayModule):
     @staticmethod
     def required_tool_results():
         """Enumerate which ToolResult modules a sample must have."""
-        return []
+        return [HmpSitesResultModule]
 
     @classmethod
     def name(cls):
