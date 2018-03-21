@@ -3,7 +3,9 @@
 from app.tool_results.read_stats import ReadStatsResultModule
 from app.display_modules.display_module import DisplayModule
 
-from .wrangler import ReadStatsResult, ReadStatsWrangler, MODULE_NAME
+from .constants import MODULE_NAME
+from .models import ReadStatsResult
+from .wrangler import ReadStatsWrangler
 
 
 class ReadStatsDisplayModule(DisplayModule):
