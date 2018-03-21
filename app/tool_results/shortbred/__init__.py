@@ -17,7 +17,7 @@ class ShortbredResultModule(ToolResultModule):
     @classmethod
     def name(cls):
         """Return Shortbred module's unique identifier string."""
-        return 'shortbred'
+        return 'shortbred_amr_profiling'
 
     @classmethod
     def result_model(cls):

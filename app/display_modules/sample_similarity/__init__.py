@@ -12,17 +12,12 @@ points can be adjust to reflect the analyses of different tools.
 
 from app.display_modules.display_module import DisplayModule
 from app.display_modules.sample_similarity.constants import MODULE_NAME
-
-# Re-export modules
-from app.display_modules.sample_similarity.sample_similarity_models import (
-    SampleSimilarityResult,
-    ToolDocument,
-)
-from app.display_modules.sample_similarity.sample_similarity_wrangler import (
-    SampleSimilarityWrangler,
-)
 from app.tool_results.kraken import KrakenResultModule
 from app.tool_results.metaphlan2 import Metaphlan2ResultModule
+
+# Re-export modules
+from .models import SampleSimilarityResult, ToolDocument
+from .wrangler import SampleSimilarityWrangler
 
 
 class SampleSimilarityDisplayModule(DisplayModule):

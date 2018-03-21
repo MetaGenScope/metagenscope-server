@@ -1,10 +1,13 @@
 """Test suite for Shortbred tool result model."""
 
 from app.samples.sample_models import Sample
-from app.tool_results.shortbred import ShortbredResult
+from app.tool_results.shortbred import ShortbredResultModule, ShortbredResult
 from app.tool_results.shortbred.tests.constants import TEST_ABUNDANCES
 
 from tests.base import BaseTestCase
+
+
+SHORTBRED_NAME = ShortbredResultModule.name()
 
 
 class TestShortbredResultModel(BaseTestCase):
@@ -12,10 +15,11 @@ class TestShortbredResultModel(BaseTestCase):
 
     def test_add_shortbred_result(self):
         """Ensure Shortbred result model is created correctly."""
-        shortbred = ShortbredResult(abundances=TEST_ABUNDANCES)
-        sample = Sample(name='SMPL_01', shortbred=shortbred).save()
-        self.assertTrue(sample.shortbred)
-        tool_result = sample.shortbred
+        sample_data = {'name': 'SMPL_01',
+                       SHORTBRED_NAME: ShortbredResult(abundances=TEST_ABUNDANCES)}
+        sample = Sample(**sample_data).save()
+        self.assertTrue(hasattr(sample, SHORTBRED_NAME))
+        tool_result = getattr(sample, SHORTBRED_NAME)
         abundances = tool_result.abundances
         self.assertEqual(len(abundances), 6)
         self.assertEqual(abundances['AAA98484'], 3.996805816740154)
