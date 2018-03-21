@@ -1,4 +1,4 @@
-# pylint: disable=missing-docstring,too-few-public-methods
+# pylint: disable=too-few-public-methods
 
 """Factory for generating Analysis Result models for testing."""
 
@@ -18,6 +18,8 @@ class ToolFactory(factory.mongoengine.MongoEngineFactory):
     """Factory for Analysis Result's Sample Similarity's tool."""
 
     class Meta:
+        """Factory metadata."""
+
         model = ToolDocument
 
     x_label = factory.Faker('word').generate({})
@@ -28,25 +30,29 @@ class SampleSimilarityFactory(factory.mongoengine.MongoEngineFactory):
     """Factory for Analysis Result's Sample Similarity."""
 
     class Meta:
+        """Factory metadata."""
+
         model = SampleSimilarityResult
 
     @factory.lazy_attribute
-    # pylint: disable=no-self-use
-    def categories(self):
+    def categories(self):  # pylint: disable=no-self-use
+        """Generate categories."""
         category_name = factory.Faker('word').generate({})
         return {category_name: factory.Faker('words', nb=4).generate({})}
 
     @factory.lazy_attribute
-    # pylint: disable=no-self-use
-    def tools(self):
+    def tools(self):  # pylint: disable=no-self-use
+        """Generate tools."""
         tool_name = factory.Faker('word').generate({})
         return {tool_name: ToolFactory()}
 
     @factory.lazy_attribute
     def data_records(self):
+        """Generate data records."""
         name = factory.Faker('company').generate({}).replace(' ', '_')
 
         def record(i):
+            """Generate individual record."""
             result = {'SampleID': f'{name}__seq{i}'}
             for category, category_values in self.categories.items():
                 result[category] = random.choice(category_values)
@@ -65,12 +71,16 @@ class SampleSimilarityWrapperFactory(factory.mongoengine.MongoEngineFactory):
     """Factory for Analysis Result's Sample Similarity status wrapper."""
 
     class Meta:
+        """Factory metadata."""
+
         model = AnalysisResultWrapper
 
     status = 'P'
     data = None
 
     class Params:
+        """Factory creation parameters."""
+
         processed = factory.Trait(
             status='S',
             data=factory.SubFactory(SampleSimilarityFactory)
@@ -81,12 +91,16 @@ class AnalysisResultMetaFactory(factory.mongoengine.MongoEngineFactory):
     """Factory for Analysis Result meta."""
 
     class Meta:
+        """Factory metadata."""
+
         model = AnalysisResultMeta
 
     sample_group_id = None
     sample_similarity = factory.SubFactory(SampleSimilarityWrapperFactory)
 
     class Params:
+        """Factory creation parameters."""
+
         processed = factory.Trait(
             sample_similarity=factory.SubFactory(SampleSimilarityWrapperFactory, processed=True)
         )
