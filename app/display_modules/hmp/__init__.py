@@ -11,7 +11,7 @@ from app.display_modules.hmp.hmp_wrangler import HMPWrangler
 from app.tool_results.hmp_sites import HmpSitesResultModule
 
 
-class HMPModule(DisplayModule):
+class HMPDisplayModule(DisplayModule):
     """HMP display module."""
 
     @staticmethod
