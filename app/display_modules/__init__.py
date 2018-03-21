@@ -6,6 +6,7 @@ from app.display_modules.microbe_directory import MicrobeDirectoryDisplayModule
 from app.display_modules.reads_classified import ReadsClassifiedModule
 from app.display_modules.sample_similarity import SampleSimilarityDisplayModule
 from app.display_modules.taxon_abundance import TaxonAbundanceDisplayModule
+from app.display_modules.virulence_factors import VirulenceFactorsDisplayModule
 
 
 all_display_modules = [  # pylint: disable=invalid-name
@@ -15,4 +16,5 @@ all_display_modules = [  # pylint: disable=invalid-name
     ReadsClassifiedModule,
     SampleSimilarityDisplayModule,
     TaxonAbundanceDisplayModule,
+    VirulenceFactorsDisplayModule,
 ]
