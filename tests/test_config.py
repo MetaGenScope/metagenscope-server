@@ -8,6 +8,7 @@ from flask_testing import TestCase
 
 from app import create_app
 from app.config import app_config
+from app.extensions import celery
 
 
 app = create_app()
@@ -36,6 +37,16 @@ class TestDevelopmentConfig(TestCase):
             os.environ.get('DATABASE_URL')
         )
 
+        # Celery settings
+        self.assertTrue(
+            celery.conf.broker_url ==
+            os.environ.get('CELERY_BROKER_URL')
+        )
+        self.assertTrue(
+            celery.conf.result_backend ==
+            os.environ.get('CELERY_RESULT_BACKEND')
+        )
+
 
 class TestTestingConfig(TestCase):
     """Test suite for testing configuration."""
@@ -61,6 +72,16 @@ class TestTestingConfig(TestCase):
             os.environ.get('DATABASE_TEST_URL')
         )
 
+        # Celery settings
+        self.assertTrue(
+            celery.conf.broker_url ==
+            os.environ.get('CELERY_BROKER_TEST_URL')
+        )
+        self.assertTrue(
+            celery.conf.result_backend ==
+            os.environ.get('CELERY_RESULT_TEST_BACKEND')
+        )
+
 
 class TestProductionConfig(TestCase):
     """Test suite for production configuration."""
@@ -79,6 +100,16 @@ class TestProductionConfig(TestCase):
         self.assertTrue(
             app.config['SECRET_KEY'] ==
             os.environ.get('SECRET_KEY')
+        )
+
+        # Celery settings
+        self.assertTrue(
+            celery.conf.broker_url ==
+            os.environ.get('CELERY_BROKER_URL')
+        )
+        self.assertTrue(
+            celery.conf.result_backend ==
+            os.environ.get('CELERY_RESULT_BACKEND')
         )
 
 
