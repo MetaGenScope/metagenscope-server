@@ -3,8 +3,6 @@
 import json
 import os
 
-from pprint import pprint
-
 from app.display_modules.hmp import HMPResult
 from app.display_modules.reads_classified import ReadsClassifiedResult
 from app.display_modules.sample_similarity import SampleSimilarityResult
@@ -98,10 +96,6 @@ def load_ags():
                     'max_val': raw_data[4],
                 }
                 distributions[category_name][category_value] = distribution
-
-        print('\n\n\n\n')
-        pprint(distributions)
-        print('\n\n\n\n')
         result = AGSResult(categories=categories,
                            distributions=distributions)
         return result
