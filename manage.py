@@ -102,7 +102,7 @@ def seed_db():
                                          taxon_abundance=taxon_abundance,
                                          reads_classified=reads_classified,
                                          hmp=hmp,
-                                         ags=ags).save()
+                                         average_genome_size=ags).save()
     sample_group = SampleGroup(name='ABRF 2017', analysis_result=analysis_result)
 
     mason_lab = Organization(name='Mason Lab', admin_email='benjamin.blair.chrobot@gmail.com')
