@@ -1,15 +1,19 @@
 """Test suite for Sample Similarity tasks."""
 
-from app.display_modules.sample_similarity.sample_similarity_tasks import (
+from app.display_modules.sample_similarity.tasks import (
     get_clean_samples,
     run_tsne,
     label_tsne,
     taxa_tool_tsne,
 )
 from app.samples.sample_models import Sample
-from app.tool_results.kraken.tests.kraken_factory import create_kraken
+from app.tool_results.kraken import KrakenResultModule
+from app.tool_results.kraken.tests.factory import create_kraken
 
 from tests.base import BaseTestCase
+
+
+KRAKEN_NAME = KrakenResultModule.name()
 
 
 class TestSampleSimilarityTasks(BaseTestCase):
@@ -59,17 +63,22 @@ class TestSampleSimilarityTasks(BaseTestCase):
                         [2, 3],
                         [4, 5]]
         sample_names = ['SMPL_0', 'SMPL_1', 'SMPL_2']
-        tool_label = 'kraken'
-        labeled_samples = label_tsne(tsne_results, sample_names, tool_label)
-        self.assertIn('kraken_x', labeled_samples['SMPL_0'])
-        self.assertEqual(1, labeled_samples['SMPL_0']['kraken_y'])
+        labeled_samples = label_tsne(tsne_results, sample_names, KRAKEN_NAME)
+        self.assertIn(f'{KRAKEN_NAME}_x', labeled_samples['SMPL_0'])
+        self.assertEqual(1, labeled_samples['SMPL_0'][f'{KRAKEN_NAME}_y'])
 
     def test_taxa_tool_tsne_task(self):
         """Ensure taxa_tool_tsne task returns correct results."""
-        samples = [Sample(name=f'SMPL_{i}', kraken=create_kraken()) for i in range(3)]
-        tool, tsne_labeled = taxa_tool_tsne(samples, 'kraken')
-        self.assertEqual('kraken tsne x', tool['x_label'])
-        self.assertEqual('kraken tsne y', tool['y_label'])
+
+        def create_sample(i):
+            """Create unique sample for index."""
+            sample_data = {'name': f'SMPL_{i}', KRAKEN_NAME: create_kraken()}
+            return Sample(**sample_data)
+
+        samples = [create_sample(i) for i in range(3)]
+        tool, tsne_labeled = taxa_tool_tsne(samples, KRAKEN_NAME)
+        self.assertEqual(f'{KRAKEN_NAME} tsne x', tool['x_label'])
+        self.assertEqual(f'{KRAKEN_NAME} tsne y', tool['y_label'])
         self.assertEqual(len(tsne_labeled), 3)
-        self.assertIn('kraken_x', tsne_labeled['SMPL_0'])
-        self.assertIn('kraken_y', tsne_labeled['SMPL_0'])
+        self.assertIn(f'{KRAKEN_NAME}_x', tsne_labeled['SMPL_0'])
+        self.assertIn(f'{KRAKEN_NAME}_y', tsne_labeled['SMPL_0'])

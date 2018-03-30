@@ -4,11 +4,10 @@ import numpy as np
 from sklearn.manifold import TSNE
 
 from app.extensions import celery
-from app.display_modules.sample_similarity.sample_similarity_models import (
-    SampleSimilarityResult,
-)
 from app.tool_results.kraken import KrakenResultModule
 from app.tool_results.metaphlan2 import Metaphlan2ResultModule
+
+from .models import SampleSimilarityResult
 
 
 def get_clean_samples(sample_dict, no_zero_features=True, zero_threshold=0.00001):

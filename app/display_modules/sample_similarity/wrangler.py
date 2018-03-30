@@ -4,15 +4,13 @@ from celery import chord
 
 from app.analysis_results.analysis_result_models import AnalysisResultWrapper
 from app.display_modules.display_wrangler import DisplayModuleWrangler
-from app.display_modules.sample_similarity.constants import MODULE_NAME
-from app.display_modules.sample_similarity.sample_similarity_tasks import (
-    taxa_tool_tsne,
-    sample_similarity_reducer,
-)
 from app.display_modules.utils import categories_from_metadata, persist_result
 from app.sample_groups.sample_group_models import SampleGroup
 from app.tool_results.kraken import KrakenResultModule
 from app.tool_results.metaphlan2 import Metaphlan2ResultModule
+
+from .constants import MODULE_NAME
+from .tasks import taxa_tool_tsne, sample_similarity_reducer
 
 
 class SampleSimilarityWrangler(DisplayModuleWrangler):

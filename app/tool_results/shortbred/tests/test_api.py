@@ -3,9 +3,13 @@
 import json
 
 from app.samples.sample_models import Sample
+from app.tool_results.shortbred import ShortbredResultModule
 from app.tool_results.shortbred.tests.constants import TEST_ABUNDANCES
 from tests.base import BaseTestCase
 from tests.utils import with_user
+
+
+SHORTBRED_NAME = ShortbredResultModule.name()
 
 
 class TestShortbredUploads(BaseTestCase):
@@ -18,7 +22,7 @@ class TestShortbredUploads(BaseTestCase):
         sample_uuid = str(sample.uuid)
         with self.client:
             response = self.client.post(
-                f'/api/v1/samples/{sample_uuid}/shortbred',
+                f'/api/v1/samples/{sample_uuid}/{SHORTBRED_NAME}',
                 headers=auth_headers,
                 data=json.dumps(dict(
                     abundances=TEST_ABUNDANCES,
@@ -39,4 +43,4 @@ class TestShortbredUploads(BaseTestCase):
 
         # Reload object to ensure HMP Sites result was stored properly
         sample = Sample.objects.get(uuid=sample_uuid)
-        self.assertTrue(sample.shortbred)
+        self.assertTrue(hasattr(sample, SHORTBRED_NAME))
