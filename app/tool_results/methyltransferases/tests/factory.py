@@ -15,8 +15,8 @@ def simulate_gene():
 
 
 def create_values():
-    """Create microbe directory values."""
-    genes = [simulate_gene() for _ in randint(3, 10)]
+    """Create methyl values."""
+    genes = [simulate_gene() for _ in range(randint(3, 10))]
     result = {
         'genes': {gene_name: row for gene_name, row in genes}
 
@@ -25,6 +25,6 @@ def create_values():
 
 
 def create_methyls():
-    """Create MicrobeDirectoryToolResult with randomized field data."""
+    """Create MethylToolResult with randomized field data."""
     packed_data = create_values()
     return MethylToolResult(**packed_data)
