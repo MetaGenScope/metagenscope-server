@@ -6,6 +6,7 @@ import pandas as pd
 from app.extensions import celery
 from app.tool_results.methyltransferases import MethylResultModule
 
+from .models import MethylResult
 from .constants import TOP_N
 
 
@@ -44,4 +45,4 @@ def filter_methyl_results(samples):
     filtered_sample_tbl = {sname: transform_sample(methyl_tool_result, gene_names)
                            for sname, methyl_tool_result in sample_dict.items()}
 
-    return {'samples': filtered_sample_tbl}
+    return MethylResult(samples=filtered_sample_tbl)
