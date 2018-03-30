@@ -6,6 +6,7 @@ from app.tool_results.methyltransferases import MethylToolResult
 
 
 def simulate_gene():
+    """Return one row."""
     gene_name = 'sample_gene_{}'.format(randint(1, 100))
     rpk = randint(1, 100) / 0.33333
     rpkm = randint(1, 100) / 0.33333

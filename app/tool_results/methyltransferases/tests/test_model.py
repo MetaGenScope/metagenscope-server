@@ -5,7 +5,7 @@ from app.tool_results.methyltransferases import MethylToolResult
 
 from tests.base import BaseTestCase
 
-from .constants import TEST_DIRECTORY
+from .factory import create_values
 
 
 class TestMethylsModel(BaseTestCase):
@@ -14,7 +14,7 @@ class TestMethylsModel(BaseTestCase):
     def test_add_methyls(self):
         """Ensure Microbe Directory result model is created correctly."""
 
-        methyls = MethylToolResult(**TEST_DIRECTORY)
+        methyls = MethylToolResult(**create_values())
         sample = Sample(name='SMPL_01',
                         align_to_methyltransferases=methyls).save()
         self.assertTrue(sample.align_to_methyltransferases)

@@ -4,8 +4,8 @@
 
 import factory
 
-from app.display_modules.microbe_directory import MicrobeDirectoryResult
-from app.tool_results.microbe_directory.tests.factory import create_values
+from app.display_modules.methyls import MethylResult
+from app.tool_results.methyltransferases.tests.factory import create_values
 
 
 class MethylsFactory(factory.mongoengine.MongoEngineFactory):
@@ -14,7 +14,7 @@ class MethylsFactory(factory.mongoengine.MongoEngineFactory):
     class Meta:
         """Factory metadata."""
 
-        model = MicrobeDirectoryResult
+        model = MethylResult
 
     @factory.lazy_attribute
     def samples(self):  # pylint: disable=no-self-use

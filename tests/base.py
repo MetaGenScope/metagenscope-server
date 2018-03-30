@@ -46,6 +46,7 @@ class BaseTestCase(TestCase):
         logging.disable(logging.NOTSET)
 
     def verify_analysis_result(self, analysis_result, name):
+        """Verify an analysis result was created succesfully."""
         with self.client:
             response = self.client.get(
                 f'/api/v1/analysis_results/{analysis_result.uuid}/{name}',

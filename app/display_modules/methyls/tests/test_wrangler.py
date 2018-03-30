@@ -3,7 +3,7 @@
 from app import db
 from app.display_modules.methyls.wrangler import MethylWrangler
 from app.samples.sample_models import Sample
-from app.tool_results.methyls.tests.factory import create_methyls
+from app.tool_results.methyltransferases.tests.factory import create_methyls
 
 from tests.base import BaseTestCase
 from tests.utils import add_sample_group
