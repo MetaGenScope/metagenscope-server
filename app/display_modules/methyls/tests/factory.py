@@ -5,7 +5,14 @@
 import factory
 
 from app.display_modules.methyls import MethylResult
-from app.tool_results.methyltransferases.tests.factory import create_values
+
+
+def create_one_sample():
+    """Return an example sa,ple for MethylResult."""
+    return {
+        'rpkm': {'sample_gene_1': 2.5, 'sample_gene_2': 3.5},
+        'rpkmg': {'sample_gene_1': 5.5, 'sample_gene_2': 4.5},
+    }
 
 
 class MethylsFactory(factory.mongoengine.MongoEngineFactory):
@@ -21,5 +28,5 @@ class MethylsFactory(factory.mongoengine.MongoEngineFactory):
         """Generate random samples."""
         samples = {}
         for i in range(10):
-            samples[f'Sample{i}'] = create_values()
+            samples[f'Sample{i}'] = create_one_sample()
         return samples

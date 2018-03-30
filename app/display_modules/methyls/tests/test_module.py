@@ -1,5 +1,5 @@
 """Test suite for Methyls diplay module."""
-
+import json
 
 from app import db
 from app.display_modules.methyls.wrangler import MethylWrangler
@@ -9,11 +9,11 @@ from app.analysis_results.analysis_result_models import (
     AnalysisResultWrapper
 )
 from app.display_modules.methyls import MethylResult
-from app.display_modules.methyls.tests.factory import MethylsFactory
-from app.tool_results.methyltransferases.tests.factory import (
-    create_values,
-    create_methyls
+from app.display_modules.methyls.tests.factory import (
+    MethylsFactory,
+    create_one_sample
 )
+from app.tool_results.methyltransferases.tests.factory import create_methyls
 from tests.base import BaseTestCase
 from tests.utils import add_sample_group
 
@@ -26,11 +26,23 @@ class TestMethylsModule(BaseTestCase):
         methyls = MethylsFactory()
         wrapper = AnalysisResultWrapper(data=methyls, status='S')
         analysis_result = AnalysisResultMeta(methyltransferases=wrapper).save()
-        self.verify_analysis_result(analysis_result, 'methyltransferases')
+        with self.client:
+            response = self.client.get(
+                f'/api/v1/analysis_results/{analysis_result.uuid}/methyltransferases',
+                content_type='application/json',
+            )
+            data = json.loads(response.data.decode())
+            self.assertEqual(response.status_code, 200)
+            self.assertIn('success', data['status'])
+            self.assertEqual(data['data']['status'], 'S')
+            self.assertIn('samples', data['data']['data'])
 
     def test_add_methyls(self):
         """Ensure Methyl model is created correctly."""
-        samples = create_values()
+        samples = {
+            'test_sample_1': create_one_sample(),
+            'test_sample_2': create_one_sample()
+        }
         methyls_result = MethylResult(samples=samples)
         wrapper = AnalysisResultWrapper(data=methyls_result)
         result = AnalysisResultMeta(methyltransferases=wrapper).save()
