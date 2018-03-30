@@ -11,7 +11,6 @@ from .constants import TOP_N
 
 def transform_sample(methyl_tool_result, gene_names):
     """Transform sample values to rpkm output."""
-
     out = {'rpkm': {}, 'rpkmg': {}}
     for gene_name in gene_names:
         try:
