@@ -45,7 +45,7 @@ def filter_methyl_results(samples):
     rpkm_mean = np.array(rpkm_tbl.mean(axis=0))
 
     idx = (-1 * rpkm_mean).argsort()[:TOP_N]
-    gene_names = set(rpkm_tbl.index.iloc[idx])
+    gene_names = set(rpkm_tbl.index[idx])
 
     filtered_sample_tbl = {sname: transform_sample(vfdb, gene_names)
                            for sname, vfdb in sample_dict.items()}
