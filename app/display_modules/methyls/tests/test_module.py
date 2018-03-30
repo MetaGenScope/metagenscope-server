@@ -34,7 +34,7 @@ class TestMethylsModule(BaseDisplayModuleTest):
             """Create unique sample for index i."""
             return Sample(name=f'Sample{i}',
                           metadata={'foobar': f'baz{i}'},
-                          methyltransferases=create_methyls()).save()
+                          align_to_methyltransferases=create_methyls()).save()
 
         self.generic_run_group_test(create_sample,
                                     MethylWrangler,
