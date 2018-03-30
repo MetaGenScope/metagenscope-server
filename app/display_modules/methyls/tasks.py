@@ -20,12 +20,18 @@ def fill_gene_array(gene_array, gene_names):
     return out
 
 
-def transform_sample(sample_vals, gene_names):
+def transform_sample(methyl_tool_result, gene_names):
     """Transform sample values to rpkm output."""
-    out = {
-        'rpkm': fill_gene_array(sample_vals.rpkm, gene_names),
-        'rpkmg': fill_gene_array(sample_vals.rpkmg, gene_names),
-    }
+
+    out = {'rpkm': {}, 'rpkmg': {}}
+    for gene_name in gene_names:
+        try:
+            vals = methyl_tool_result.genes[gene_name]
+            rpkm, rpkmg = vals['rpkm'], vals['rpkmg']
+        except KeyError:
+            rpkm, rpkmg = 0, 0
+        out['rpkm'][gene_name] = rpkm
+        out['rpkmg'][gene_name] = rpkmg
     return out
 
 
@@ -47,7 +53,7 @@ def filter_methyl_results(samples):
     idx = (-1 * rpkm_mean).argsort()[:TOP_N]
     gene_names = set(rpkm_tbl.index[idx])
 
-    filtered_sample_tbl = {sname: transform_sample(vfdb, gene_names)
-                           for sname, vfdb in sample_dict.items()}
+    filtered_sample_tbl = {sname: transform_sample(methyl_tool_result, gene_names)
+                           for sname, methyl_tool_result in sample_dict.items()}
 
     return {'samples': filtered_sample_tbl}
