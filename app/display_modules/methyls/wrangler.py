@@ -26,7 +26,7 @@ class MethylWrangler(DisplayModuleWrangler):
         analysis_result.save()
 
         filter_task = filter_methyl_results.s(sample_group.samples)
-        persist_task = persist_result.s(sample_group.analysis_result_uuid, MODULE_NAME)
+        persist_task = persist_result.s(analysis_result.uuid, MODULE_NAME)
 
         task_chain = chain(filter_task, persist_task)
         result = task_chain.delay()
