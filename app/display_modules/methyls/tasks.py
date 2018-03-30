@@ -35,9 +35,9 @@ def filter_methyl_results(samples):
     sample_dict = {sample.name: getattr(sample, MethylResultModule.name())
                    for sample in samples}
     rpkm_dict = {}
-    for sname, gene_dict in sample_dict.items():
+    for sname, methyl_tool_result in sample_dict.items():
         rpkm_dict[sname] = {}
-        for gene, vals in gene_dict.items():
+        for gene, vals in methyl_tool_result.genes.items():
             rpkm_dict[sname][gene] = vals['rpkm']
 
     # Columns are samples, rows are genes, vals are rpkms
