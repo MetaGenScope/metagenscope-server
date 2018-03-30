@@ -38,7 +38,7 @@ def filter_methyl_results(samples):
     for sname, gene_dict in sample_dict.items():
         rpkm_dict[sname] = {}
         for gene, vals in gene_dict.items():
-            rpkm_dict[sname][gene][vals['rpkm']]
+            rpkm_dict[sname][gene] = vals['rpkm']
 
     # Columns are samples, rows are genes, vals are rpkms
     rpkm_tbl = pd.DataFrame(rpkm_dict).fillna(0)
