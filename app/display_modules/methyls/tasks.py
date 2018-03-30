@@ -9,17 +9,6 @@ from app.tool_results.methyltransferases import MethylResultModule
 from .constants import TOP_N
 
 
-def fill_gene_array(gene_array, gene_names):
-    """Fill in missing gene names in gene_array with 0."""
-    out = {}
-    for gene_name in gene_names:
-        try:
-            out[gene_name] = gene_array[gene_names]
-        except KeyError:
-            out[gene_name] = 0
-    return out
-
-
 def transform_sample(methyl_tool_result, gene_names):
     """Transform sample values to rpkm output."""
 
