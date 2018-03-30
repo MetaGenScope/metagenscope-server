@@ -15,5 +15,5 @@ class MethylRow(mongoDB.EmbeddedDocument):  # pylint: disable=too-few-public-met
 class MethylToolResult(ToolResult):  # pylint: disable=too-few-public-methods
     """Methyltransferase result type."""
 
-    row_field = mongoDB.EmbeddedDocumentField(MethylRow)
-    genes = mongoDB.MapField(field=row_field, required=True)
+    genes = mongoDB.MapField(field=mongoDB.EmbeddedDocumentField(MethylRow),
+                             required=True)

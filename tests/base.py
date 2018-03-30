@@ -1,6 +1,7 @@
 """Defines base test suite to use for MetaGenScope tests."""
 
 import logging
+import json
 
 from flask_testing import TestCase
 
@@ -43,3 +44,15 @@ class BaseTestCase(TestCase):
 
         # Enable logging
         logging.disable(logging.NOTSET)
+
+    def verify_analysis_result(self, analysis_result, name):
+        with self.client:
+            response = self.client.get(
+                f'/api/v1/analysis_results/{analysis_result.uuid}/{name}',
+                content_type='application/json',
+            )
+            data = json.loads(response.data.decode())
+            self.assertEqual(response.status_code, 200)
+            self.assertIn('success', data['status'])
+            self.assertEqual(data['data']['status'], 'S')
+            self.assertIn('samples', data['data']['data'])
