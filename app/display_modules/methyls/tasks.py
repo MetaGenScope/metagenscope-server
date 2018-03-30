@@ -34,7 +34,11 @@ def filter_methyl_results(samples):
     """Reduce Methyl results to the <TOP_N> mean abundance genes (rpkm)."""
     sample_dict = {sample.name: getattr(sample, MethylResultModule.name())
                    for sample in samples}
-    rpkm_dict = {sname: vfdb.rpkm for sname, vfdb in sample_dict.items()}
+    rpkm_dict = {}
+    for sname, gene_dict in sample_dict.items():
+        rpkm_dict[sname] = {}
+        for gene, vals in gene_dict.items():
+            rpkm_dict[sname][gene][vals['rpkm']]
 
     # Columns are samples, rows are genes, vals are rpkms
     rpkm_tbl = pd.DataFrame(rpkm_dict).fillna(0)
