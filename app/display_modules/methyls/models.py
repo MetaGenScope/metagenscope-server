@@ -18,4 +18,4 @@ class MethylSampleDocument(mdb.EmbeddedDocument):   # pylint: disable=too-few-pu
 class MethylResult(mdb.EmbeddedDocument):  # pylint: disable=too-few-public-methods
     """Methyls document type."""
 
-    samples = mdb.MapField(field=EmbeddedDoc(MethylSampleDocument), required=True)
+    samples = mdb.DictField(field=EmbeddedDoc(MethylSampleDocument), required=True)
