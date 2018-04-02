@@ -41,4 +41,4 @@ class BaseToolResultTest(BaseTestCase):
             sample = Sample.objects.get(uuid=sample_uuid)
             self.assertTrue(getattr(sample, tool_result_name))
 
-        the_test() # pylint: disable=E1120
+        the_test()  # pylint: disable=E1120
