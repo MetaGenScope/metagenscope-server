@@ -9,6 +9,7 @@ from seed.abrf_2017 import (
     load_taxon_abundance,
     load_reads_classified,
     load_hmp,
+    load_ags,
 )
 
 
@@ -16,3 +17,4 @@ sample_similarity = AnalysisResultWrapper(status='S', data=load_sample_similarit
 taxon_abundance = AnalysisResultWrapper(status='S', data=load_taxon_abundance())
 reads_classified = AnalysisResultWrapper(status='S', data=load_reads_classified())
 hmp = AnalysisResultWrapper(status='S', data=load_hmp())
+ags = AnalysisResultWrapper(status='S', data=load_ags())

@@ -1,6 +1,6 @@
 """Factory for generating Metaphlan2 result models for testing."""
 
-from app.tool_results.kraken.tests.kraken_factory import create_taxa
+from app.tool_results.kraken.tests.factory import create_taxa
 from app.tool_results.metaphlan2 import Metaphlan2Result
 
 

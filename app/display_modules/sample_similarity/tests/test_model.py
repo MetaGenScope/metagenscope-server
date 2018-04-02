@@ -4,7 +4,7 @@ from mongoengine import ValidationError
 
 from app.analysis_results.analysis_result_models import AnalysisResultMeta, AnalysisResultWrapper
 from app.display_modules.sample_similarity import SampleSimilarityResult
-from app.display_modules.sample_similarity.tests.sample_similarity_factory import (
+from app.display_modules.sample_similarity.tests.factory import (
     CATEGORIES, TOOLS, DATA_RECORDS
 
 )
