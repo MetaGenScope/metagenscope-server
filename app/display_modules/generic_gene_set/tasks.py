@@ -54,5 +54,4 @@ def filter_gene_results(samples, tool_result_name, result_type, top_n):
                            for sname, vfdb_tool_result in sample_dict.items()}
 
     result = result_type(samples=filtered_sample_tbl)
-    assert result is not None
     return result

@@ -27,14 +27,13 @@ class GenericGeneWrangler(DisplayModuleWrangler):
         setattr(analysis_result, cls.result_name, wrapper)
         analysis_result.save()
 
-        filter_gene_task = filter_gene_results.s(sample_group.samples,
-                                                 cls.tool_result_name,
-                                                 result_type,
-                                                 top_n)
-        persist_task = persist_result.s(sample_group.analysis_result_uuid,
-                                        cls.result_name)
+        filter_task = filter_gene_results.s(sample_group.samples,
+                                            cls.tool_result_name,
+                                            result_type,
+                                            top_n)
+        persist_task = persist_result.s(analysis_result.uuid, cls.result_name)
 
-        task_chain = chain(filter_gene_task, persist_task)
-        result = task_chain().get()
-
+        task_chain = chain(filter_task, persist_task)
+        result = task_chain.delay()
+        assert result is not None
         return result
