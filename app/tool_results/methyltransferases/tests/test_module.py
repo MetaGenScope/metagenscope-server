@@ -1,6 +1,6 @@
 """Test suite for Methyls tool result model."""
 from app.tool_results.methyltransferases import MethylToolResult
-from app.tool_results.tool_result_base_test import BaseToolResultTest
+from app.tool_results.tool_result_base_utils.tool_result_base_test import BaseToolResultTest
 
 from .factory import create_values
 

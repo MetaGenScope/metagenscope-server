@@ -1,6 +1,6 @@
 """Test suite for VFDB tool result model."""
 from app.tool_results.vfdb import VFDBToolResult
-from app.tool_results.tool_result_base_test import BaseToolResultTest
+from app.tool_results.tool_result_test_utils.tool_result_base_test import BaseToolResultTest
 
 from .factory import create_values
 
