@@ -3,10 +3,8 @@ from app.display_modules.display_module_base_test import BaseDisplayModuleTest
 from app.display_modules.methyls.wrangler import MethylWrangler
 from app.samples.sample_models import Sample
 from app.display_modules.methyls import MethylResult
-from app.display_modules.methyls.tests.factory import (
-    MethylsFactory,
-    create_one_sample
-)
+from app.display_modules.methyls.tests.factory import MethylsFactory
+from app.display_modules.generic_gene_set.tests.factory import create_one_sample
 from app.tool_results.methyltransferases.tests.factory import create_methyls
 
 
