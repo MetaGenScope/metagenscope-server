@@ -10,10 +10,10 @@ from tests.utils import with_user
 from .factory import create_values
 
 
-class TestMethylsModel(BaseTestCase):
+class TestVFDBModel(BaseTestCase):
     """Test suite for VFDB tool result model."""
 
-    def test_add_methyls(self):
+    def test_add_vfdb(self):
         """Ensure VFDB tool result model is created correctly."""
 
         methyls = VFDBToolResult(**create_values())
@@ -22,7 +22,7 @@ class TestMethylsModel(BaseTestCase):
         self.assertTrue(sample.vfdb_quantify)
 
     @with_user
-    def test_upload_methyls(self, auth_headers, *_):
+    def test_upload_vfdb(self, auth_headers, *_):
         """Ensure a raw Methyl tool result can be uploaded."""
         sample = Sample(name='SMPL_Microbe_Directory_01').save()
         sample_uuid = str(sample.uuid)

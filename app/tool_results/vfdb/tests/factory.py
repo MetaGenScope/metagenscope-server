@@ -24,7 +24,7 @@ def create_values():
     return result
 
 
-def create_methyls():
+def create_vfdb():
     """Create VFDBlToolResult with randomized field data."""
     packed_data = create_values()
     return VFDBToolResult(**packed_data)
