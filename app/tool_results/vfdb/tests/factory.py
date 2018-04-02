@@ -18,8 +18,7 @@ def create_values():
     """Create methyl values."""
     genes = [simulate_gene() for _ in range(randint(3, 11))]
     out = {
-        'genes': {gene_name: row_val for gene_name, row_val in genes}
-
+        'genes': {gene_name: row_val for gene_name, row_val in genes},
     }
     return out
 

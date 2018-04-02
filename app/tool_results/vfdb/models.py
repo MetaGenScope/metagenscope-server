@@ -5,7 +5,7 @@ from app.tool_results.tool_module import ToolResult
 
 
 class VFDBRow(mongoDB.EmbeddedDocument):  # pylint: disable=too-few-public-methods
-    """Row for a gene in Methyltransferase."""
+    """Row for a gene in VFDB."""
 
     rpk = mongoDB.FloatField()
     rpkm = mongoDB.FloatField()

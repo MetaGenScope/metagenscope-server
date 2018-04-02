@@ -18,7 +18,7 @@ class TestVFDBModule(BaseDisplayModuleTest):
         self.generic_getter_test(vfdbs, MODULE_NAME)
 
     def test_add_vfdb(self):
-        """Ensure Methyl model is created correctly."""
+        """Ensure VFDB model is created correctly."""
         samples = {
             'test_sample_1': create_one_sample(),
             'test_sample_2': create_one_sample()
@@ -27,7 +27,7 @@ class TestVFDBModule(BaseDisplayModuleTest):
         self.generic_adder_test(vfdb_result, MODULE_NAME)
 
     def test_run_vfdb_sample_group(self):  # pylint: disable=invalid-name
-        """Ensure methyls run_sample_group produces correct results."""
+        """Ensure VFDB run_sample_group produces correct results."""
 
         def create_sample(i):
             """Create unique sample for index i."""

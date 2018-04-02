@@ -1,4 +1,5 @@
-"""Test suite for VFDB tool result model."""
+"""Base test suite and utilities for tool result modules."""
+
 import json
 
 from app.samples.sample_models import Sample
@@ -11,13 +12,13 @@ class BaseToolResultTest(BaseTestCase):
     """Test suite for VFDB tool result model."""
 
     def generic_add_test(self, result, tool_result_name):
-        """Ensure VFDB tool result model is created correctly."""
+        """Ensure tool result model is created correctly."""
         sample = Sample(name='SMPL_01',
                         **{tool_result_name: result}).save()
         self.assertTrue(getattr(sample, tool_result_name))
 
     def generic_test_upload(self, vals, tool_result_name):
-        """Ensure a raw Methyl tool result can be uploaded."""
+        """Ensure a raw tool result can be uploaded."""
         auth_headers, _ = get_test_user(self.client)
 
         sample = Sample(name='SMPL_Microbe_Directory_01').save()
