@@ -10,7 +10,7 @@ from .models import MethylResult
 from .constants import TOP_N
 
 
-def transform_sample(methyl_tool_result, gene_names):
+def transform_sample(methyl_tool_result, gene_names):  # pylint: disable=duplicate-code
     """Transform sample values to rpkm output."""
     out = {'rpkm': {}, 'rpkmg': {}}
     for gene_name in gene_names:
@@ -25,7 +25,7 @@ def transform_sample(methyl_tool_result, gene_names):
 
 
 @celery.task()
-def filter_methyl_results(samples):
+def filter_methyl_results(samples):  # pylint: disable=duplicate-code
     """Reduce Methyl results to the <TOP_N> mean abundance genes (rpkm)."""
     sample_dict = {sample.name: getattr(sample, MethylResultModule.name())
                    for sample in samples}

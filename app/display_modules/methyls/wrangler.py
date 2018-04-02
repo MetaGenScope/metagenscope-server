@@ -15,7 +15,7 @@ class MethylWrangler(DisplayModuleWrangler):
     """Tasks for generating virulence results."""
 
     @classmethod
-    def run_sample_group(cls, sample_group_id):
+    def run_sample_group(cls, sample_group_id):  # pylint: disable=duplicate-code
         """Gather and process samples."""
         sample_group = SampleGroup.query.filter_by(id=sample_group_id).first()
 
