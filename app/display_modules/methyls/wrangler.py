@@ -16,4 +16,5 @@ class MethylWrangler(GenericGeneWrangler):
     def run_sample_group(cls, sample_group_id):
         """Gather and process samples."""
         result = cls.help_run_sample_group(MethylResult, TOP_N, sample_group_id)
+        assert result is not None
         return result

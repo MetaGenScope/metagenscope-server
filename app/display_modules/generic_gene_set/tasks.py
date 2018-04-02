@@ -41,4 +41,6 @@ def filter_gene_results(samples, tool_result_name, result_type, top_n):
     filtered_sample_tbl = {sname: transform_sample(vfdb_tool_result, gene_names)
                            for sname, vfdb_tool_result in sample_dict.items()}
 
-    return result_type(samples=filtered_sample_tbl)
+    result = result_type(samples=filtered_sample_tbl)
+    assert result is not None
+    return result
