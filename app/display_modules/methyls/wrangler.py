@@ -11,10 +11,9 @@ class MethylWrangler(GenericGeneWrangler):
 
     tool_result_name = 'align_to_methyltransferases'
     result_name = MODULE_NAME
-    result_type = MethylResult
 
     @classmethod
     def run_sample_group(cls, sample_group_id):
         """Gather and process samples."""
-        result = cls.help_run_sample_group(TOP_N, sample_group_id)
+        result = cls.help_run_sample_group(MethylResult, TOP_N, sample_group_id)
         return result

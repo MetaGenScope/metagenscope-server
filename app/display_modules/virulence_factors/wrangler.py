@@ -9,12 +9,11 @@ from .constants import MODULE_NAME, TOP_N
 class VFDBWrangler(GenericGeneWrangler):
     """Tasks for generating virulence results."""
 
-    tool_result_name = 'vfdb_quanitfy'
+    tool_result_name = 'vfdb_quantify'
     result_name = MODULE_NAME
-    result_type = VFDBResult
 
     @classmethod
     def run_sample_group(cls, sample_group_id):
         """Gather and process samples."""
-        result = cls.help_run_sample_group(TOP_N, sample_group_id)
+        result = cls.help_run_sample_group(VFDBResult, TOP_N, sample_group_id)
         return result
