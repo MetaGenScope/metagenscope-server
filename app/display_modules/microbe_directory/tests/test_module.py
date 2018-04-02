@@ -3,11 +3,13 @@ from app.display_modules.display_module_base_test import BaseDisplayModuleTest
 from app.display_modules.microbe_directory.wrangler import MicrobeDirectoryWrangler
 from app.samples.sample_models import Sample
 from app.display_modules.microbe_directory.models import MicrobeDirectoryResult
+from app.display_modules.microbe_directory.constants import MODULE_NAME
 from app.display_modules.microbe_directory.tests.factory import MicrobeDirectoryFactory
 from app.tool_results.microbe_directory.tests.factory import (
     create_values,
     create_microbe_directory
 )
+
 
 
 class TestMethylsModule(BaseDisplayModuleTest):
@@ -24,7 +26,7 @@ class TestMethylsModule(BaseDisplayModuleTest):
         microbe_directory_result = MicrobeDirectoryResult(samples=samples)
         self.generic_adder_test(microbe_directory_result, 'microbe_directory')
 
-    def test_run_methyls_sample_group(self):  # pylint: disable=invalid-name
+    def test_run_mixcrobe_directory_sample_group(self):  # pylint: disable=invalid-name
         """Ensure microbe directory run_sample_group produces correct results."""
 
         def create_sample(i):
@@ -36,4 +38,4 @@ class TestMethylsModule(BaseDisplayModuleTest):
 
         self.generic_run_group_test(create_sample,
                                     MicrobeDirectoryWrangler,
-                                    'micro')
+                                    MODULE_NAME)

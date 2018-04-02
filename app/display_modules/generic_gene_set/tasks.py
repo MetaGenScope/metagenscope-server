@@ -21,9 +21,9 @@ def transform_sample(vfdb_tool_result, gene_names):
 
 
 @celery.task()
-def filter_gene_results(samples, result_name, result_type, top_n):
+def filter_gene_results(samples, tool_result_name, result_type, top_n):
     """Reduce Methyl results to the <top_n> mean abundance genes (rpkm)."""
-    sample_dict = {sample.name: getattr(sample, result_name)
+    sample_dict = {sample.name: getattr(sample, tool_result_name)
                    for sample in samples}
     rpkm_dict = {}
     for sname, methyl_tool_result in sample_dict.items():
