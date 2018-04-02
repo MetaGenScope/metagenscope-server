@@ -21,7 +21,7 @@ def transform_sample(vfdb_tool_result, gene_names):
 
 
 @celery.task()
-def filter_gene_results(samples, tool_result_name, result_type, top_n):
+def filter_gene_results(samples, tool_result_name, result_type, top_n):  # pylint disable=too-many-locals
     """Reduce Methyl results to the <top_n> mean abundance genes (rpkm)."""
     sample_dict = {sample.name: getattr(sample, tool_result_name)
                    for sample in samples}
