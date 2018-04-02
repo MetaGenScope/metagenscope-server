@@ -12,6 +12,9 @@ from .tasks import filter_gene_results
 
 class GenericGeneWrangler(DisplayModuleWrangler):
     """Tasks for generating virulence results."""
+    tool_result_name = None
+    result_name = None
+    result_type = None
 
     @classmethod
     def help_run_sample_group(cls, top_n, sample_group_id):
