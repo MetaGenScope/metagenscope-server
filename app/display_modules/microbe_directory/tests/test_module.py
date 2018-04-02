@@ -11,7 +11,6 @@ from app.tool_results.microbe_directory.tests.factory import (
 )
 
 
-
 class TestMethylsModule(BaseDisplayModuleTest):
     """Test suite for Microbe Directory diplay module."""
 
@@ -26,7 +25,7 @@ class TestMethylsModule(BaseDisplayModuleTest):
         microbe_directory_result = MicrobeDirectoryResult(samples=samples)
         self.generic_adder_test(microbe_directory_result, 'microbe_directory')
 
-    def test_run_mixcrobe_directory_sample_group(self):  # pylint: disable=invalid-name
+    def test_run_microbe_directory_sample_group(self):  # pylint: disable=invalid-name
         """Ensure microbe directory run_sample_group produces correct results."""
 
         def create_sample(i):
