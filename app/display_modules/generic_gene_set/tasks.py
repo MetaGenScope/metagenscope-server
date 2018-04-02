@@ -21,6 +21,7 @@ def transform_sample(vfdb_tool_result, gene_names):
 
 
 def get_rpkm_tbl(sample_dict):
+    """Return a tbl of rpkm vals and a vector of means."""
     rpkm_dict = {}
     for sname, methyl_tool_result in sample_dict.items():
         rpkm_dict[sname] = {}
@@ -34,6 +35,7 @@ def get_rpkm_tbl(sample_dict):
 
 
 def get_top_genes(rpkm_tbl, rpkm_mean, top_n):
+    """Return the names of the top_n mosty baundant genes."""
     idx = (-1 * rpkm_mean).argsort()[:top_n]
     gene_names = set(rpkm_tbl.index[idx])
     return gene_names
