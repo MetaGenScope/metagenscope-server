@@ -4,10 +4,8 @@ from app.display_modules.virulence_factors.wrangler import VFDBWrangler
 from app.samples.sample_models import Sample
 from app.display_modules.virulence_factors import VFDBResult
 from app.display_modules.virulence_factors.constants import MODULE_NAME
-from app.display_modules.virulence_factors.tests.factory import (
-    VFDBFactory,
-    create_one_sample
-)
+from app.display_modules.virulence_factors.tests.factory import VFDBFactory
+from app.display_modules.generic_gene_set.tests.factory import create_one_sample
 from app.tool_results.vfdb.tests.factory import create_vfdb
 
 

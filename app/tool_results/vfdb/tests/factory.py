@@ -11,17 +11,17 @@ def simulate_gene():
     rpk = randint(1, 1000) / 0.33333
     rpkm = randint(1, 1000) / 0.33333
     rpkmg = randint(1, 1000) / 0.33333
-    return gene_name, {'rpk': rpk, 'rpkm': rpkm, 'rpkmg': rpkmg}
+    return gene_name, {'rpkm': rpkm, 'rpk': rpk, 'rpkmg': rpkmg}
 
 
 def create_values():
     """Create methyl values."""
-    genes = [simulate_gene() for _ in range(randint(3, 10))]
-    result = {
-        'genes': {gene_name: row for gene_name, row in genes}
+    genes = [simulate_gene() for _ in range(randint(3, 11))]
+    out = {
+        'genes': {gene_name: row_val for gene_name, row_val in genes}
 
     }
-    return result
+    return out
 
 
 def create_vfdb():
