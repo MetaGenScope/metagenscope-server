@@ -18,10 +18,9 @@ class BaseToolResultTest(BaseTestCase):
 
     def generic_test_upload(self, vals, tool_result_name):
         """Ensure a raw Methyl tool result can be uploaded."""
-
         @with_user
         def the_test(auth_headers, *_):
-            """Wrapped function to run the test with user."""
+            """Wrap function to run the test with user."""
             sample = Sample(name='SMPL_Microbe_Directory_01').save()
             sample_uuid = str(sample.uuid)
             with self.client:
