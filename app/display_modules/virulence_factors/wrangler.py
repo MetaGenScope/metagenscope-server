@@ -8,6 +8,7 @@ from .constants import MODULE_NAME, TOP_N
 
 class VFDBWrangler(GenericGeneWrangler):
     """Tasks for generating virulence results."""
+
     tool_result_name = 'vfdb_quanitfy'
     result_name = MODULE_NAME
     result_type = VFDBResult

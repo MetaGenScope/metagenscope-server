@@ -8,6 +8,7 @@ from .constants import MODULE_NAME, TOP_N
 
 class MethylWrangler(GenericGeneWrangler):
     """Tasks for generating methyls results."""
+
     tool_result_name = 'align_to_methyltransferases'
     result_name = MODULE_NAME
     result_type = MethylResult
