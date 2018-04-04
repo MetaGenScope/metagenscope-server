@@ -17,7 +17,13 @@ def pathways_from_sample(sample):
 
 def get_top_paths(sample_dict):
     """Return the names of the TOP_N most abundant paths."""
-    abund_tbl = {sname: {path: abund for path, abund in path_tbl.items()}
+
+    def unwrap(path_tbl):
+        """Return abundances from a path_tbl."""
+        return {path_name: val.abundance
+                for path_name, val in path_tbl.items()}
+
+    abund_tbl = {sname: unwrap(path_tbl)
                  for sname, path_tbl in sample_dict.items()}
     abund_tbl = pd.DataFrame(abund_tbl).fillna(0)
     abund_mean = np.array(abund_tbl.mean(axis=0))
@@ -33,7 +39,7 @@ def filter_humann2_pathways(samples):
     sample_dict = {sample.name: pathways_from_sample(sample)
                    for sample in samples}
     path_names = get_top_paths(sample_dict)
-
+    assert len(path_names) > 0
     out = {}
     for sname, path_tbl in sample_dict.items():
         path_abunds = {}
@@ -47,6 +53,7 @@ def filter_humann2_pathways(samples):
                 cov = 0
             path_abunds[path_name] = abund
             path_covs[path_name] = cov
+
         out[sname] = {'pathway_abundances': path_abunds,
                       'pathway_coverages': path_covs}
 
