@@ -39,7 +39,7 @@ def filter_humann2_pathways(samples):
     sample_dict = {sample.name: pathways_from_sample(sample)
                    for sample in samples}
     path_names = get_top_paths(sample_dict)
-    assert len(path_names) > 0
+    assert path_names
     out = {}
     for sname, path_tbl in sample_dict.items():
         path_abunds = {}
