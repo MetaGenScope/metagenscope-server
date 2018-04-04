@@ -2,9 +2,9 @@
 
 """Factory for generating Pathway models for testing."""
 
-import factory
-
 from random import random, randint
+
+import factory
 from app.display_modules.pathways import PathwayResult
 
 

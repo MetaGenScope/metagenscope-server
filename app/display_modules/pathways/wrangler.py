@@ -2,7 +2,6 @@
 
 from celery import chain
 
-from app.analysis_results.analysis_result_models import AnalysisResultWrapper
 from app.display_modules.display_wrangler import DisplayModuleWrangler
 from app.display_modules.utils import persist_result
 from app.sample_groups.sample_group_models import SampleGroup
@@ -20,12 +19,8 @@ class PathwayWrangler(DisplayModuleWrangler):
     def run_sample_group(cls, sample_group_id):
         """Gather samples and process."""
         sample_group = SampleGroup.query.filter_by(id=sample_group_id).first()
-
-        # Set state on Analysis Group
-        analysis_group = sample_group.analysis_result
-        wrapper = AnalysisResultWrapper(status='W')
-        setattr(analysis_group, MODULE_NAME, wrapper)
-        analysis_group.save()
+        analysis_group = cls.set_analysis_group_state(MODULE_NAME,
+                                                      sample_group)
 
         persist_task = persist_result.s(analysis_group.uuid, MODULE_NAME)
 
