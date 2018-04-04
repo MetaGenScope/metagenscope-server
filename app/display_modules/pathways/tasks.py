@@ -15,19 +15,23 @@ def pathways_from_sample(sample):
     return getattr(sample, Humann2ResultModule.name()).pathways
 
 
-def get_top_paths(sample_dict):
-    """Return the names of the TOP_N most abundant paths."""
-    def unwrap(path_tbl):
-        """Return abundances from a path_tbl."""
-        return {path_name: val.abundance
-                for path_name, val in path_tbl.items()}
+def get_abund_tbl(sample_dict):
+    """Return a tbl of abundances and a vector of means."""
+    abund_dict = {}
+    for sname, path_tbl in sample_dict.items():
+        abund_dict[sname] = {}
+        for path_name, vals in path_tbl.items():
+            abund_dict[sname][path_name] = vals['abundance']
 
-    abund_tbl = {sname: unwrap(path_tbl)
-                 for sname, path_tbl in sample_dict.items()}
-    abund_tbl = pd.DataFrame(abund_tbl).fillna(0)
+    # Columns are samples, rows are genes, vals are rpkms
+    abund_tbl = pd.DataFrame(abund_dict).fillna(0)
     abund_mean = np.array(abund_tbl.mean(axis=0))
+    return abund_tbl, abund_mean
 
-    idx = (-1 * abund_mean).argsort()[:TOP_N]
+
+def get_top_paths(abund_tbl, abund_mean, top_n):
+    """Return the names of the top_n most abundant paths."""
+    idx = (-1 * abund_mean).argsort()[:top_n]
     path_names = set(abund_tbl.index[idx])
     return path_names
 
@@ -37,8 +41,11 @@ def filter_humann2_pathways(samples):
     """Get the top N mean abundance pathways."""
     sample_dict = {sample.name: pathways_from_sample(sample)
                    for sample in samples}
-    path_names = get_top_paths(sample_dict)
+
+    abund_tbl, abund_mean = get_abund_tbl(sample_dict)
+    path_names = get_top_paths(abund_tbl, abund_mean, TOP_N)
     assert path_names
+
     out = {}
     for sname, path_tbl in sample_dict.items():
         path_abunds = {}
