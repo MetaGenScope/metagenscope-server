@@ -30,7 +30,7 @@ def get_rpkm_tbl(sample_dict):
 
     # Columns are samples, rows are genes, vals are rpkms
     rpkm_tbl = pd.DataFrame(rpkm_dict).fillna(0)
-    rpkm_mean = np.array(rpkm_tbl.mean(axis=0))
+    rpkm_mean = np.array(rpkm_tbl.mean(axis=1))
     return rpkm_tbl, rpkm_mean
 
 
