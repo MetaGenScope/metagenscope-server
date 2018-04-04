@@ -5,7 +5,6 @@ from app.extensions import mongoDB as mdb
 
 # Define aliases
 EmbeddedDoc = mdb.EmbeddedDocumentField         # pylint: disable=invalid-name
-StringList = mdb.ListField(mdb.StringField())   # pylint: disable=invalid-name
 
 
 class PathwaySampleDocument(mdb.EmbeddedDocument):  # pylint: disable=too-few-public-methods

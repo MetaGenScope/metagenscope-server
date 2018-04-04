@@ -7,6 +7,7 @@ from app.extensions import celery
 from app.tool_results.humann2 import Humann2ResultModule
 
 from .constants import TOP_N
+from .models import PathwayResult
 
 
 def pathways_from_sample(sample):
@@ -49,4 +50,4 @@ def filter_humann2_pathways(samples):
         out[sname] = {'pathway_abundances': path_abunds,
                       'pathway_coverages': path_covs}
 
-    return {'samples': out}
+    return PathwayResult(samples=out)

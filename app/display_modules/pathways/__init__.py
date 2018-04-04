@@ -4,7 +4,7 @@ from app.display_modules.display_module import DisplayModule
 from app.tool_results.humann2 import Humann2ResultModule
 
 from .constants import MODULE_NAME
-from .models import PathwayResult
+from .models import PathwaySampleDocument, PathwayResult
 from .wrangler import PathwayWrangler
 
 
