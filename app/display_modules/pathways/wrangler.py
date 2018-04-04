@@ -26,4 +26,7 @@ class PathwayWrangler(DisplayModuleWrangler):
                            persist_task)
         result = task_chain.delay()
 
+        result.clean()
+        result.validate()
+
         return result
