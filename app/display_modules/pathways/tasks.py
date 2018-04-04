@@ -23,9 +23,9 @@ def get_abund_tbl(sample_dict):
         for path_name, vals in path_tbl.items():
             abund_dict[sname][path_name] = vals['abundance']
 
-    # Columns are samples, rows are genes, vals are rpkms
+    # Columns are samples, rows are pathways, vals are abundances
     abund_tbl = pd.DataFrame(abund_dict).fillna(0)
-    abund_mean = np.array(abund_tbl.mean(axis=0))
+    abund_mean = np.array(abund_tbl.mean(axis=1))
     return abund_tbl, abund_mean
 
 
