@@ -17,9 +17,9 @@ def create_values():
     """Create a plausible humann2 values object."""
     result = {
         'genes': {'sample_gene_{}'.format(i): 100 * random()
-                  for i in randint(3, 100)},
+                  for i in range(randint(3, 100))},
         'pathways': {'sample_pathway_{}': random_pathway()
-                     for i in randint(3, 100)},
+                     for i in range(randint(3, 100))},
     }
     return result
 

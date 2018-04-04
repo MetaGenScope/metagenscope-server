@@ -10,7 +10,7 @@ from app.display_modules.pathways import PathwayResult
 
 def create_one_sample():
     """Create one random, plausible sample."""
-    paths = ['sample_path_{}'.format(i) for i in randint(3, 10)]
+    paths = ['sample_path_{}'.format(i) for i in range(randint(3, 10))]
     sample = {'pathway_abundances': {}, 'pathway_coverages': {}}
     for path in paths:
         sample['pathway_abundances'][path] = 100 * random()
