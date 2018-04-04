@@ -20,7 +20,7 @@ def filter_humann2_pathways(samples):
     sample_dict = {sample.name: pathways_from_sample(sample)
                    for sample in samples}
     abund_tbl = {sname: [path.abundance for path in path_tbl]
-                 for sname, path_tbl in samples.items()}
+                 for sname, path_tbl in sample_dict.items()}
     abund_tbl = pd.DataFrame(abund_tbl).fillna(0)
     abund_mean = np.array(abund_tbl.mean(axis=0))
 
