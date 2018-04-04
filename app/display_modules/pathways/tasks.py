@@ -22,7 +22,7 @@ def get_top_paths(sample_dict):
     abund_mean = np.array(abund_tbl.mean(axis=0))
 
     idx = (-1 * abund_mean).argsort()[:TOP_N]
-    path_names = set(abund_tbl.index.iloc[idx])
+    path_names = set(abund_tbl.index[idx])
     return path_names
 
 
