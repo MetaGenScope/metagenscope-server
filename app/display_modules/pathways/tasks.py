@@ -14,18 +14,24 @@ def pathways_from_sample(sample):
     return getattr(sample, Humann2ResultModule.name()).pathways
 
 
-@celery.task()
-def filter_humann2_pathways(samples):
-    """Get the top N mean abundance pathways."""
-    sample_dict = {sample.name: pathways_from_sample(sample)
-                   for sample in samples}
-    abund_tbl = {sname: [path.abundance for path in path_tbl]
+def get_top_paths(sample_dict):
+    """Return the names of the TOP_N most abundant paths."""
+    abund_tbl = {sname: {path: abund for path, abund in path_tbl.items()}
                  for sname, path_tbl in sample_dict.items()}
     abund_tbl = pd.DataFrame(abund_tbl).fillna(0)
     abund_mean = np.array(abund_tbl.mean(axis=0))
 
     idx = (-1 * abund_mean).argsort()[:TOP_N]
     path_names = set(abund_tbl.index.iloc[idx])
+    return path_names
+
+
+@celery.task()
+def filter_humann2_pathways(samples):
+    """Get the top N mean abundance pathways."""
+    sample_dict = {sample.name: pathways_from_sample(sample)
+                   for sample in samples}
+    path_names = get_top_paths(sample_dict)
 
     out = {}
     for sname, path_tbl in sample_dict.items():
