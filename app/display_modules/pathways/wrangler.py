@@ -13,8 +13,6 @@ from .tasks import filter_humann2_pathways
 class PathwayWrangler(DisplayModuleWrangler):
     """Task for generating Reads Classified results."""
 
-    humann2_task = filter_humann2_pathways.s()
-
     @classmethod
     def run_sample_group(cls, sample_group_id):
         """Gather samples and process."""
@@ -24,7 +22,8 @@ class PathwayWrangler(DisplayModuleWrangler):
 
         persist_task = persist_result.s(analysis_group.uuid, MODULE_NAME)
 
-        task_chain = chain(cls.humann2_task.s(sample_group.samples), persist_task)
+        task_chain = chain(filter_humann2_pathways.s(sample_group.samples),
+                           persist_task)
         result = task_chain.delay()
 
         return result
