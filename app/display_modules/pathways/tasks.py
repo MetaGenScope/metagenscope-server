@@ -17,7 +17,6 @@ def pathways_from_sample(sample):
 
 def get_top_paths(sample_dict):
     """Return the names of the TOP_N most abundant paths."""
-
     def unwrap(path_tbl):
         """Return abundances from a path_tbl."""
         return {path_name: val.abundance
