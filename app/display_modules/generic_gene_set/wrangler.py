@@ -2,7 +2,6 @@
 
 from celery import chain
 
-from app.analysis_results.analysis_result_models import AnalysisResultWrapper
 from app.display_modules.display_wrangler import DisplayModuleWrangler
 from app.display_modules.utils import persist_result
 from app.sample_groups.sample_group_models import SampleGroup
