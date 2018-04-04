@@ -20,7 +20,7 @@ class TestMethylsModule(BaseDisplayModuleTest):
         """Ensure Methyl model is created correctly."""
         samples = {
             'test_sample_1': create_one_sample(),
-            'test_sample_2': create_one_sample()
+            'test_sample_2': create_one_sample(),
         }
         methyls_result = MethylResult(samples=samples)
         self.generic_adder_test(methyls_result, 'methyltransferases')

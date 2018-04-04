@@ -3,8 +3,8 @@
 from app.display_modules.display_module import DisplayModule
 from app.tool_results.humann2 import Humann2ResultModule
 
-from .constants import PATHWAYS_MODULE_NAME
-from .models import PathwaySampleDocument, PathwayResult
+from .constants import MODULE_NAME
+from .models import PathwayResult
 from .wrangler import PathwayWrangler
 
 
@@ -19,7 +19,7 @@ class PathwaysDisplayModule(DisplayModule):
     @classmethod
     def name(cls):
         """Return the name of the module."""
-        return PATHWAYS_MODULE_NAME
+        return MODULE_NAME
 
     @classmethod
     def get_result_model(cls):

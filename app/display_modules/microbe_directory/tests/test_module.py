@@ -15,15 +15,15 @@ class TestMethylsModule(BaseDisplayModuleTest):
     """Test suite for Microbe Directory diplay module."""
 
     def test_get_microbe_directory(self):
-        """Ensure getting a single Methyl behaves correctly."""
-        methyls = MicrobeDirectoryFactory()
-        self.generic_getter_test(methyls, 'microbe_directory')
+        """Ensure getting a single Microbe Directory behaves correctly."""
+        factory = MicrobeDirectoryFactory()
+        self.generic_getter_test(factory, MODULE_NAME)
 
     def test_add_microbe_directory(self):
-        """Ensure Methyl model is created correctly."""
+        """Ensure Microbe Directory model is created correctly."""
         samples = create_values()
         microbe_directory_result = MicrobeDirectoryResult(samples=samples)
-        self.generic_adder_test(microbe_directory_result, 'microbe_directory')
+        self.generic_adder_test(microbe_directory_result, MODULE_NAME)
 
     def test_run_microbe_directory_sample_group(self):  # pylint: disable=invalid-name
         """Ensure microbe directory run_sample_group produces correct results."""
