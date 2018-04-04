@@ -19,8 +19,8 @@ class GenericGeneWrangler(DisplayModuleWrangler):
     def help_run_sample_group(cls, result_type, top_n, sample_group_id):
         """Gather and process samples."""
         sample_group = SampleGroup.query.filter_by(id=sample_group_id).first()
-        analysis_result = cls.set_analysis_group_state(cls.result_name,
-                                                       sample_group)
+        analysis_result = cls.set_analysis_group_status(cls.result_name,
+                                                        sample_group)
 
         filter_task = filter_gene_results.s(sample_group.samples,
                                             cls.tool_result_name,

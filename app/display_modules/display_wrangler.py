@@ -17,10 +17,10 @@ class DisplayModuleWrangler:
         pass
 
     @classmethod
-    def set_analysis_group_state(cls, module_name, sample_group):
+    def set_analysis_group_state(cls, module_name, sample_group, status='W'):
         """Set state on Analysis Group the return that group."""
         analysis_group = sample_group.analysis_result
-        wrapper = AnalysisResultWrapper(status='W')
+        wrapper = AnalysisResultWrapper(status=status)
         setattr(analysis_group, module_name, wrapper)
         analysis_group.save()
         return analysis_group

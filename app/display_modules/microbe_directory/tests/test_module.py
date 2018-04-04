@@ -16,8 +16,8 @@ class TestMethylsModule(BaseDisplayModuleTest):
 
     def test_get_microbe_directory(self):
         """Ensure getting a single Microbe Directory behaves correctly."""
-        factory = MicrobeDirectoryFactory()
-        self.generic_getter_test(factory, MODULE_NAME)
+        microbe_directory = MicrobeDirectoryFactory()
+        self.generic_getter_test(microbe_directory, MODULE_NAME)
 
     def test_add_microbe_directory(self):
         """Ensure Microbe Directory model is created correctly."""

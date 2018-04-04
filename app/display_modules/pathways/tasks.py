@@ -31,7 +31,6 @@ def get_abund_tbl(sample_dict):
 
 def get_top_paths(abund_tbl, abund_mean, top_n):
     """Return the names of the top_n most abundant paths."""
-    assert len(abund_mean) == len(abund_tbl.index)
     idx = (-1 * abund_mean).argsort()[:top_n]
     path_names = set(abund_tbl.index[idx])
     return path_names
@@ -45,7 +44,6 @@ def filter_humann2_pathways(samples):
 
     abund_tbl, abund_mean = get_abund_tbl(sample_dict)
     path_names = get_top_paths(abund_tbl, abund_mean, TOP_N)
-    assert path_names
 
     out = {}
     for sname, path_tbl in sample_dict.items():
