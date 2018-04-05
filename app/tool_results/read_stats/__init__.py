@@ -6,6 +6,7 @@ from app.tool_results.tool_module import ToolResult, ToolResultModule
 
 class ReadStatsSection(mongoDB.EmbeddedDocument):  # pylint: disable=too-few-public-methods
     """A set of consistent fields for read stats."""
+
     num_reads = mongoDB.IntField()
     gc_content = mongoDB.FloatField()
     codons = mongoDB.MapField(field=mongoDB.IntField(), required=True)
