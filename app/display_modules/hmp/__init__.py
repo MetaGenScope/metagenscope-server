@@ -6,9 +6,11 @@ samples and human body sites from the Human Microbiome Project.
 """
 
 from app.display_modules.display_module import DisplayModule
-from app.display_modules.hmp.hmp_models import HMPResult
-from app.display_modules.hmp.hmp_wrangler import HMPWrangler
 from app.tool_results.hmp_sites import HmpSitesResultModule
+
+from .constants import MODULE_NAME
+from .models import HMPResult
+from .wrangler import HMPWrangler
 
 
 class HMPDisplayModule(DisplayModule):
@@ -22,7 +24,7 @@ class HMPDisplayModule(DisplayModule):
     @classmethod
     def name(cls):
         """Return module's unique identifier string."""
-        return 'hmp'
+        return MODULE_NAME
 
     @classmethod
     def get_result_model(cls):
