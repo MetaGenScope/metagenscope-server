@@ -17,13 +17,13 @@ class ReadStatsWrangler(DisplayModuleWrangler):
     def run_sample_group(cls, sample_group_id):
         """Gather and process samples."""
         sample_group = SampleGroup.query.filter_by(id=sample_group_id).first()
-        sample_group.set_module_status(sample_group, MODULE_NAME, 'W')
-
+        analysis_group = cls.set_analysis_group_state(MODULE_NAME,
+                                                      sample_group)
         tool_result_name = ReadStatsResult.name()
         collate_task = collate_samples.s(tool_result_name, ['raw', 'microbial'], sample_group_id)
-        persist_task = persist_result.s(sample_group.analysis_group_uuid, MODULE_NAME)
+        persist_task = persist_result.s(analysis_group.uuid, MODULE_NAME)
 
         task_chain = chain(collate_task, persist_task)
-        result = task_chain().delay()
+        result = task_chain.delay()
 
         return result
