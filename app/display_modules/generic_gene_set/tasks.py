@@ -35,7 +35,10 @@ def get_rpkm_tbl(sample_dict):
 
 
 def get_top_genes(rpkm_tbl, rpkm_mean, top_n):
-    """Return the names of the top_n most abundant genes."""
+    """Return the names of the top_n most abundant genes.
+
+    N.B. abund_mean is a numpy array
+    """
     idx = (-1 * rpkm_mean).argsort()[:top_n]
     gene_names = set(rpkm_tbl.index[idx])
     return gene_names

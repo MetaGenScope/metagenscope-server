@@ -30,7 +30,10 @@ def get_abund_tbl(sample_dict):
 
 
 def get_top_paths(abund_tbl, abund_mean, top_n):
-    """Return the names of the top_n most abundant paths."""
+    """Return the names of the top_n most abundant paths.
+
+    N.B. abund_mean is a numpy array
+    """
     idx = (-1 * abund_mean).argsort()[:top_n]
     path_names = set(abund_tbl.index[idx])
     return path_names
