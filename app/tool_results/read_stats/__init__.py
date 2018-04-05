@@ -4,7 +4,7 @@ from app.extensions import mongoDB
 from app.tool_results.tool_module import ToolResult, ToolResultModule
 
 
-class ReadStatsResult(ToolResult):     # pylint: disable=too-few-public-methods
+class ReadStatsToolResult(ToolResult):     # pylint: disable=too-few-public-methods
     """Read Stats result type."""
 
     # Accept any JSON
@@ -12,7 +12,7 @@ class ReadStatsResult(ToolResult):     # pylint: disable=too-few-public-methods
     raw = mongoDB.DynamicField(required=True)
 
 
-class ReadStatsResultModule(ToolResultModule):
+class ReadStatsToolResultModule(ToolResultModule):
     """Read Stats tool module."""
 
     @classmethod
@@ -23,4 +23,4 @@ class ReadStatsResultModule(ToolResultModule):
     @classmethod
     def result_model(cls):
         """Return Read Stats module's model class."""
-        return ReadStatsResult
+        return ReadStatsToolResult

@@ -2,7 +2,7 @@
 
 from random import randint, random
 
-from app.tool_results.read_stats import ReadStatsResult
+from app.tool_results.read_stats import ReadStatsToolResult
 
 
 def create_tetramers():
@@ -45,4 +45,4 @@ def create_values():
 def create_read_stats():
     """Create ReadStatsResult with randomized field data."""
     packed_data = create_values()
-    return ReadStatsResult(**packed_data)
+    return ReadStatsToolResult(**packed_data)
