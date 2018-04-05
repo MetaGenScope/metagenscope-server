@@ -13,7 +13,7 @@ from app.analysis_results.analysis_result_models import AnalysisResultMeta
 from app.samples.sample_models import Sample
 from app.sample_groups.sample_group_models import SampleGroup
 
-from seed import sample_similarity, taxon_abundance, reads_classified, hmp
+from seed import sample_similarity, taxon_abundance, reads_classified, hmp, ags
 
 
 COV = coverage.coverage(
@@ -89,19 +89,20 @@ def recreate_db():
 def seed_db():
     """Seed the database."""
     bchrobot = User(username='bchrobot',
-                    email="benjamin.blair.chrobot@gmail.com",
+                    email='benjamin.blair.chrobot@gmail.com',
                     password='Foobar22')
     dcdanko = User(username='dcdanko',
-                   email="dcd3001@med.cornell.edu",
+                   email='dcd3001@med.cornell.edu',
                    password='Foobar22')
     cmason = User(username='cmason',
-                  email="chm2042@med.cornell.edu",
+                  email='chm2042@med.cornell.edu',
                   password='Foobar22')
 
     analysis_result = AnalysisResultMeta(sample_similarity=sample_similarity,
                                          taxon_abundance=taxon_abundance,
                                          reads_classified=reads_classified,
-                                         hmp=hmp).save()
+                                         hmp=hmp,
+                                         average_genome_size=ags).save()
     sample_group = SampleGroup(name='ABRF 2017', analysis_result=analysis_result)
 
     mason_lab = Organization(name='Mason Lab', admin_email='benjamin.blair.chrobot@gmail.com')

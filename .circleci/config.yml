@@ -46,7 +46,7 @@ jobs:
           name: Lint app
           command: |
             . venv/bin/activate
-            make lint-app
+            make lint
 
       - run:
           name: Wait for DB
@@ -116,7 +116,7 @@ jobs:
             docker tag $MAIN_SERVICE:$COMMIT $DOCKER_ORG/$MAIN_SERVICE:$TAG
             docker push $DOCKER_ORG/$MAIN_SERVICE
 
-  deploy_app_staging:
+  deploy_staging:
     docker:
       - image: circleci/node:9.2.0
 
@@ -129,40 +129,6 @@ jobs:
             set -x
             echo "$DROPLET_IP $DROPLET_HOST_KEY" > ~/tmp_auth_hosts
             ssh -A -o "UserKnownHostsFile ~/tmp_auth_hosts" $DROPLET_USER@$DROPLET_IP "cd /home/metagenscope/metagenscope-app && sh deploy.sh"
-
-  test_worker:
-    docker:
-      - image: circleci/python:3.6.3-jessie
-
-    working_directory: ~/repo
-
-    steps:
-      - checkout
-
-      # Download and cache dependencies
-      - restore_cache:
-          keys:
-          - v1-dependencies-{{ checksum "requirements.txt" }}
-          # fallback to using the latest cache if no exact match is found
-          - v1-dependencies-
-
-      - run:
-          name: Install Python Dependencies
-          command: |
-            python3 -m venv venv
-            . venv/bin/activate
-            pip install -r requirements.txt
-
-      - save_cache:
-          paths:
-            - ./venv
-          key: v1-dependencies-{{ checksum "requirements.txt" }}
-
-      - run:
-          name: Lint worker
-          command: |
-            . venv/bin/activate
-            make lint-worker
 
   build_worker_staging:
     docker:
@@ -226,22 +192,18 @@ workflows:
               only: develop
           requires:
             - test_app
-      - deploy_app_staging:
-          context: org-global
-          filters:
-            branches:
-              only: develop
-          requires:
-            - build_app_staging
-
-  worker_staging_cd:
-    jobs:
-      - test_worker:
-          context: org-global
       - build_worker_staging:
           context: org-global
           filters:
             branches:
               only: develop
           requires:
-            - test_worker
+            - test_app
+      - deploy_staging:
+          context: org-global
+          filters:
+            branches:
+              only: develop
+          requires:
+            - build_app_staging
+            - build_worker_staging

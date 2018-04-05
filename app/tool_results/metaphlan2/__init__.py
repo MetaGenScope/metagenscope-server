@@ -1,14 +1,8 @@
 """Metaphlan 2 tool module."""
 
-from app.extensions import mongoDB
-from app.tool_results.tool_module import ToolResult, ToolResultModule
+from app.tool_results.tool_module import ToolResultModule
 
-
-class Metaphlan2Result(ToolResult):     # pylint: disable=too-few-public-methods
-    """Metaphlan 2 tool's result type."""
-
-    # Taxa is of the form: {<taxon_name>: <abundance_value>}
-    taxa = mongoDB.MapField(mongoDB.IntField(), required=True)
+from .models import Metaphlan2Result
 
 
 class Metaphlan2ResultModule(ToolResultModule):
@@ -17,7 +11,7 @@ class Metaphlan2ResultModule(ToolResultModule):
     @classmethod
     def name(cls):
         """Return Metaphlan 2 module's unique identifier string."""
-        return 'metaphlan2'
+        return 'metaphlan2_taxonomy_profiling'
 
     @classmethod
     def result_model(cls):

@@ -50,26 +50,33 @@ def add_sample_group(name, analysis_result=None,
     return group
 
 
+def get_test_user(client):
+    """Return auth headers and a test user."""
+    login_user = add_user('test', 'test@test.com', 'test')
+    with client:
+        resp_login = client.post(
+            '/api/v1/auth/login',
+            data=json.dumps(dict(
+                email='test@test.com',
+                password='test'
+            )),
+            content_type='application/json'
+        )
+        auth_headers = dict(
+            Authorization='Bearer ' + json.loads(
+                resp_login.data.decode()
+            )['data']['auth_token']
+        )
+
+    return auth_headers, login_user
+
+
 def with_user(f):   # pylint: disable=invalid-name
     """Decorate API route calls requiring authentication."""
     @wraps(f)
     def decorated_function(self, *args, **kwargs):
         """Wrap function f."""
-        login_user = add_user('test', 'test@test.com', 'test')
-        with self.client:
-            resp_login = self.client.post(
-                '/api/v1/auth/login',
-                data=json.dumps(dict(
-                    email='test@test.com',
-                    password='test'
-                )),
-                content_type='application/json'
-            )
-            auth_headers = dict(
-                Authorization='Bearer ' + json.loads(
-                    resp_login.data.decode()
-                )['data']['auth_token']
-            )
-
+        auth_headers, login_user = get_test_user(self.client)
         return f(self, auth_headers, login_user, *args, **kwargs)
+
     return decorated_function
