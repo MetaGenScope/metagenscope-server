@@ -11,7 +11,7 @@ from app.samples.sample_models import Sample
 from app.tool_results.humann2.tests.factory import create_humann2
 
 
-class TestMethylsModule(BaseDisplayModuleTest):
+class TestPathwaysModule(BaseDisplayModuleTest):
     """Test suite for Pathway diplay module."""
 
     def test_get_pathway(self):
