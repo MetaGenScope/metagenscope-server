@@ -6,7 +6,7 @@ from marshmallow import fields
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.ext.associationproxy import association_proxy
 
-from app.analysis_results.analysis_result_models import AnalysisResultMeta
+from app.analysis_results.analysis_result_models import AnalysisResultMeta, AnalysisResultWrapper
 from app.base import BaseSchema
 from app.extensions import db
 from app.samples.sample_models import Sample
@@ -99,6 +99,18 @@ class SampleGroup(db.Model):
     def analysis_result(self, new_analysis_result):
         """Store new analysis result UUID (caller must still commit session!)."""
         self.analysis_result_uuid = new_analysis_result.uuid
+
+    def set_module_status(self, module_name, status):
+        """Set the status for a sample group's display module."""
+        analysis_group = self.analysis_result
+        try:
+            wrapper = getattr(analysis_group, module_name)
+            wrapper.status = status
+        except AttributeError:
+            wrapper = AnalysisResultWrapper(status=status)
+            setattr(analysis_group, module_name, wrapper)
+        finally:
+            analysis_group.save()
 
 
 class SampleGroupSchema(BaseSchema):  # pylint: disable=too-few-public-methods

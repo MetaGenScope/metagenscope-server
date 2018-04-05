@@ -1,0 +1,21 @@
+"""Test suite for Methyls tool result model."""
+from app.tool_results.methyltransferases import MethylToolResult
+from app.tool_results.tool_result_test_utils.tool_result_base_test import BaseToolResultTest
+
+from .factory import create_values
+
+
+class TestMethylsModel(BaseToolResultTest):
+    """Test suite for Methyls tool result model."""
+
+    def test_add_methyls(self):
+        """Ensure Methyls tool result model is created correctly."""
+
+        methyls = MethylToolResult(**create_values())
+        self.generic_add_test(methyls, 'align_to_methyltransferases')
+
+    def test_upload_methyls(self):
+        """Ensure a raw Methyl tool result can be uploaded."""
+
+        self.generic_test_upload(create_values(),
+                                 'align_to_methyltransferases')

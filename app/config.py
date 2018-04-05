@@ -53,6 +53,7 @@ class TestingConfig(Config):
     TOKEN_EXPIRATION_DAYS = 0
     TOKEN_EXPIRATION_SECONDS = 3
 
+    # Celery settings
     broker_url = os.environ.get('CELERY_BROKER_TEST_URL')
     result_backend = os.environ.get('CELERY_RESULT_TEST_BACKEND')
     task_always_eager = True
@@ -74,8 +75,9 @@ class ProductionConfig(Config):
     SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL')
     MONGODB_HOST = os.environ.get('MONGODB_HOST')
 
-    CELERY_BROKER_URL = os.environ.get('CELERY_BROKER_URL')
-    RESULT_BACKEND = os.environ.get('CELERY_RESULT_BACKEND')
+    # Celery settings
+    broker_url = os.environ.get('CELERY_BROKER_URL')
+    result_backend = os.environ.get('CELERY_RESULT_BACKEND')
 
 
 # pylint: disable=invalid-name

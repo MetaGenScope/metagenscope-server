@@ -1,4 +1,4 @@
-# pylint: disable=missing-docstring,too-few-public-methods
+# pylint: disable=too-few-public-methods
 
 """Factory for generating Sample Group models for testing."""
 
@@ -12,6 +12,8 @@ class SampleGroupFactory(factory.alchemy.SQLAlchemyModelFactory):
     """Factory for Sample Group."""
 
     class Meta:
+        """Factory metadata."""
+
         model = SampleGroup
         session = db.session
 

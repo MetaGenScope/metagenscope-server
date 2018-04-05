@@ -1,0 +1,19 @@
+"""Test suite for Read Stats tool result model."""
+
+from app.tool_results.read_stats import ReadStatsToolResult
+from app.tool_results.tool_result_test_utils.tool_result_base_test import BaseToolResultTest
+
+from .factory import create_values
+
+
+class TestReadStatsModel(BaseToolResultTest):
+    """Test suite for ReadStats tool result model."""
+
+    def test_add_read_stats(self):
+        """Ensure ReadStats tool result model is created correctly."""
+        stats = ReadStatsToolResult(**create_values())
+        self.generic_add_test(stats, 'read_stats')
+
+    def test_upload_read_stats(self):
+        """Ensure a raw Methyl tool result can be uploaded."""
+        self.generic_test_upload(create_values(), 'read_stats')
