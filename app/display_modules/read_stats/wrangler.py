@@ -25,7 +25,8 @@ class ReadStatsWrangler(DisplayModuleWrangler):
     def run_sample_group(cls, sample_group_id):
         """Gather and process samples."""
         sample_group = SampleGroup.query.filter_by(id=sample_group_id).first()
-        analysis_group = cls.set_analysis_group_state(MODULE_NAME, sample_group)
+        sample_group.set_module_status(MODULE_NAME, 'W')
+        analysis_group = sample_group.analysis_result()
 
         collate_task = collate_samples.s(ReadStatsToolResultModule.name(),
                                          ['raw', 'microbial'],
