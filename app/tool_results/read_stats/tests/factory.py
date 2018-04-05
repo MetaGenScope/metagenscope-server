@@ -8,7 +8,7 @@ from app.tool_results.read_stats import ReadStatsToolResult
 def create_tetramers():
     """Return a dict with plausible values for tetramers.
 
-    N.B. this is broken in the CAP, this test reflects the broken state.
+    Note: this is broken in the CAP, this test reflects the broken state.
     """
     return {'C': randint(100, 1000),
             'T': randint(100, 1000),
@@ -19,7 +19,7 @@ def create_tetramers():
 def create_codons():
     """Return a dict with plausible values for codons.
 
-    N.B. this is broken in the CAP, this test reflects the broken state.
+    Note: this is broken in the CAP, this test reflects the broken state.
     """
     return {'C': randint(100, 1000),
             'T': randint(100, 1000),
@@ -33,7 +33,7 @@ def create_one():
         'num_reads': randint(100 * 1000, 1000 * 1000),
         'gc_content': random(),
         'codons': create_codons(),
-        'tetramers': create_tetramers()
+        'tetramers': create_tetramers(),
     }
 
 

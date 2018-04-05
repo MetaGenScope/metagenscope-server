@@ -1,8 +1,8 @@
 """Read Stats wrangler and related."""
 
 from celery import chain
-from app.extensions import celery
 
+from app.extensions import celery
 from app.display_modules.display_wrangler import DisplayModuleWrangler
 from app.display_modules.utils import persist_result, collate_samples
 from app.sample_groups.sample_group_models import SampleGroup

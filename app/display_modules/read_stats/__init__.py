@@ -1,4 +1,4 @@
-"""Sample Similarity display module."""
+"""Read Stats display module."""
 
 from app.tool_results.read_stats import ReadStatsToolResultModule
 from app.display_modules.display_module import DisplayModule
