@@ -6,7 +6,7 @@ from marshmallow import fields
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.ext.associationproxy import association_proxy
 
-from app.analysis_results.analysis_result_models import AnalysisResultMeta, AnalysisResultWrapper
+from app.analysis_results.analysis_result_models import AnalysisResultMeta
 from app.base import BaseSchema
 from app.extensions import db
 from app.samples.sample_models import Sample
