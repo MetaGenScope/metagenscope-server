@@ -62,11 +62,8 @@ def persist_result(result, analysis_result_id, result_name):
 
 
 @celery.task()
-def collate_samples(tool_name, fields, sample_group_id, result_class):
-    """Group a set of Tool Result fields from a set of samples by sample name.
-
-    Assumes result_class only has one field named 'samples'.
-    """
+def collate_samples(tool_name, fields, sample_group_id):
+    """Group a set of Tool Result fields from a set of samples by sample name."""
     sample_group = SampleGroup.query.filter_by(id=sample_group_id).first()
     samples = sample_group.samples
 
@@ -77,4 +74,4 @@ def collate_samples(tool_name, fields, sample_group_id, result_class):
         for field in fields:
             sample_dict[sample.name][field] = getattr(tool_result, field)
 
-    return result_class(samples=sample_dict)
+    return sample_dict
