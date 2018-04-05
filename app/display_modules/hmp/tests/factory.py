@@ -40,14 +40,17 @@ class HMPFactory(factory.mongoengine.MongoEngineFactory):
 
     @factory.lazy_attribute
     def categories(self):
+        """Return categories."""
         return fake_categories()
 
     @factory.lazy_attribute
     def sites(self):
+        """Return body sites."""
         return fake_sites()
 
     @factory.lazy_attribute
     def data(self):
+        """Return plausible data."""
         out = {}
         for cat_vals in self.categories.values():
             for cat_val in cat_vals:
