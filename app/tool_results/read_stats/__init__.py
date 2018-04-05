@@ -17,8 +17,8 @@ class ReadStatsToolResult(ToolResult):  # pylint: disable=too-few-public-methods
     """Read Stats result type."""
 
     # Accept any JSON
-    microbial = mongoDB.EmbeddedDocumentField(ReadStatsSection())
-    raw = mongoDB.EmbeddedDocumentField(ReadStatsSection())
+    microbial = mongoDB.EmbeddedDocumentField(ReadStatsSection)
+    raw = mongoDB.EmbeddedDocumentField(ReadStatsSection)
 
 
 class ReadStatsToolResultModule(ToolResultModule):
