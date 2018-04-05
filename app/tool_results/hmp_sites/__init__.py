@@ -12,7 +12,7 @@ class HmpSitesResult(ToolResult):       # pylint: disable=too-few-public-methods
     # We do not provide a default=0 because 0 is a valid cosine similarity value
     skin = mongoDB.ListField(mongoDB.FloatField())
     oral = mongoDB.ListField(mongoDB.FloatField())
-    urogenital_tract = mongoDB.ListField(mongoDB.FloatField())
+    urogenital = mongoDB.ListField(mongoDB.FloatField())
     airways = mongoDB.ListField(mongoDB.FloatField())
 
     def clean(self):
