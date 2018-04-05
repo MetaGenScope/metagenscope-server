@@ -28,7 +28,7 @@ class TestHmpSitesModel(BaseToolResultTest):
     def test_add_malformed_hmp_sites_result(self):  # pylint: disable=invalid-name
         """Ensure validation fails for value outside of [0,1]."""
         bad_hmp = dict(create_values())
-        bad_hmp['skin'] = 1.5
+        bad_hmp['skin'] = [0.5, 1.5]
         hmp_sites = HmpSitesResult(**bad_hmp)
         sample = Sample(**{'name': 'SMPL_01', MODULE_NAME: hmp_sites})
         self.assertRaises(ValidationError, sample.save)
