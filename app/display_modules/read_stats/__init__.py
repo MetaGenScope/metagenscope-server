@@ -1,6 +1,6 @@
 """Sample Similarity display module."""
 
-from app.tool_results.read_stats import ReadStatsResultModule
+from app.tool_results.read_stats import ReadStatsToolResultModule
 from app.display_modules.display_module import DisplayModule
 
 from .constants import MODULE_NAME
@@ -14,7 +14,7 @@ class ReadStatsDisplayModule(DisplayModule):
     @staticmethod
     def required_tool_results():
         """Return a list of the necessary result modules."""
-        return [ReadStatsResultModule]
+        return [ReadStatsToolResultModule]
 
     @classmethod
     def name(cls):
