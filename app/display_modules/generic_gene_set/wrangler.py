@@ -2,7 +2,6 @@
 
 from celery import chain
 
-from app.analysis_results.analysis_result_models import AnalysisResultWrapper
 from app.display_modules.display_wrangler import DisplayModuleWrangler
 from app.display_modules.utils import persist_result
 from app.sample_groups.sample_group_models import SampleGroup
@@ -20,12 +19,8 @@ class GenericGeneWrangler(DisplayModuleWrangler):
     def help_run_sample_group(cls, result_type, top_n, sample_group_id):
         """Gather and process samples."""
         sample_group = SampleGroup.query.filter_by(id=sample_group_id).first()
-
-        # Set state on Analysis Group
-        analysis_result = sample_group.analysis_result
-        wrapper = AnalysisResultWrapper(status='W')
-        setattr(analysis_result, cls.result_name, wrapper)
-        analysis_result.save()
+        analysis_result = cls.set_analysis_group_state(cls.result_name,
+                                                       sample_group)
 
         filter_task = filter_gene_results.s(sample_group.samples,
                                             cls.tool_result_name,

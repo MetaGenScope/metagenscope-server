@@ -30,12 +30,15 @@ def get_rpkm_tbl(sample_dict):
 
     # Columns are samples, rows are genes, vals are rpkms
     rpkm_tbl = pd.DataFrame(rpkm_dict).fillna(0)
-    rpkm_mean = np.array(rpkm_tbl.mean(axis=0))
+    rpkm_mean = np.array(rpkm_tbl.mean(axis=1))
     return rpkm_tbl, rpkm_mean
 
 
 def get_top_genes(rpkm_tbl, rpkm_mean, top_n):
-    """Return the names of the top_n mosty baundant genes."""
+    """Return the names of the top_n most abundant genes.
+
+    N.B. abund_mean is a numpy array
+    """
     idx = (-1 * rpkm_mean).argsort()[:top_n]
     gene_names = set(rpkm_tbl.index[idx])
     return gene_names
