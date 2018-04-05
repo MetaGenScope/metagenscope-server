@@ -5,6 +5,7 @@ from mongoengine import ValidationError
 from app.extensions import mongoDB
 from app.tool_results.tool_module import ToolResult, ToolResultModule
 
+from .constants import MODULE_NAME
 
 class HmpSitesResult(ToolResult):       # pylint: disable=too-few-public-methods
     """HMP Sites tool's result type."""
@@ -27,7 +28,7 @@ class HmpSitesResult(ToolResult):       # pylint: disable=too-few-public-methods
 
         if not validate(self.skin,
                         self.oral,
-                        self.urogenital_tract,
+                        self.urogenital,
                         self.airways):
             msg = 'HMPSitesResult values in bad range'
             raise ValidationError(msg)
@@ -39,7 +40,7 @@ class HmpSitesResultModule(ToolResultModule):
     @classmethod
     def name(cls):
         """Return HMP Sites module's unique identifier string."""
-        return 'hmp_site_dists'
+        return MODULE_NAME
 
     @classmethod
     def result_model(cls):
