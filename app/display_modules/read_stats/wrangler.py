@@ -18,7 +18,6 @@ def read_stats_reducer(samples):
     return ReadStatsResult(samples=samples)
 
 
-
 class ReadStatsWrangler(DisplayModuleWrangler):
     """Tasks for generating virulence results."""
 
