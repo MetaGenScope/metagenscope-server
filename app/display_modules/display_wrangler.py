@@ -18,7 +18,10 @@ class DisplayModuleWrangler:
 
     @classmethod
     def set_analysis_group_state(cls, module_name, sample_group, status='W'):
-        """Set state on Analysis Group the return that group."""
+        """Set state on Analysis Group the return that group.
+
+        DEPRECATED. Use sample_group.set_module_status instead.
+        """
         analysis_group = sample_group.analysis_result
         wrapper = AnalysisResultWrapper(status=status)
         setattr(analysis_group, module_name, wrapper)

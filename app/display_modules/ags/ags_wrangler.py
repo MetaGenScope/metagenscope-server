@@ -2,7 +2,6 @@
 
 from celery import chord
 
-from app.analysis_results.analysis_result_models import AnalysisResultWrapper
 from app.display_modules.display_wrangler import DisplayModuleWrangler
 from app.display_modules.utils import categories_from_metadata, persist_result
 from app.sample_groups.sample_group_models import SampleGroup
@@ -17,17 +16,12 @@ class AGSWrangler(DisplayModuleWrangler):
     def run_sample_group(sample_group_id):
         """Gather samples then process them."""
         sample_group = SampleGroup.query.filter_by(id=sample_group_id).first()
+        sample_group.set_module_status('average_genome_size', 'W')
         samples = sample_group.samples
 
-        # Set state on Analysis Group
-        analysis_group = sample_group.analysis_result
-        wrapper = AnalysisResultWrapper(status='W')
-        setattr(analysis_group, 'average_genome_size', wrapper)
-        analysis_group.save()
-
         reducer = reducer_task.s()
-        persist_task = persist_result.s(analysis_group.uuid, 'average_genome_size')
-
+        persist_task = persist_result.s(sample_group.analysis_result_uuid,
+                                        'average_genome_size')
         categories_task = categories_from_metadata.s(samples)
         ags_distribution_task = ags_distributions.s(samples)
         middle_tasks = [categories_task, ags_distribution_task]
