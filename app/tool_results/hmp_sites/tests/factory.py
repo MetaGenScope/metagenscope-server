@@ -1,6 +1,6 @@
 """Factory for generating HMP tool result models for testing."""
 
-from random import random
+from random import random, randint
 
 from app.tool_results.hmp_sites import HmpSitesResult
 
@@ -8,10 +8,10 @@ from app.tool_results.hmp_sites import HmpSitesResult
 def create_values():
     """Create plausible data for hmp sites."""
     return {
-        'skin': random(),
-        'oral': random(),
-        'urogenital': random(),
-        'airways': random(),
+        'skin': [random() for _ in range(randint(3, 10))],
+        'oral': [random() for _ in range(randint(3, 10))],
+        'urogenital': [random() for _ in range(randint(3, 10))],
+        'airways': [random() for _ in range(randint(3, 10))],
     }
 
 
