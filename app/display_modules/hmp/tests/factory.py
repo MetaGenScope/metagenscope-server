@@ -52,8 +52,10 @@ class HMPFactory(factory.mongoengine.MongoEngineFactory):
     def data(self):
         """Return plausible data."""
         out = {}
-        for cat_vals in self.categories.values():
+        for cat_name, cat_vals in self.categories.items():
             for cat_val in cat_vals:
-                out[cat_val] = [{'name': site, 'data': fake_distribution()}
-                                for site in self.sites]
+                out[cat_name] = {
+                    'name': cat_val,
+                    'data': [fake_distribution() for _ in self.sites],
+                }
         return out
