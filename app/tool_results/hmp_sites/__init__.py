@@ -7,6 +7,7 @@ from app.tool_results.tool_module import ToolResult, ToolResultModule
 
 from .constants import MODULE_NAME
 
+
 class HmpSitesResult(ToolResult):       # pylint: disable=too-few-public-methods
     """HMP Sites tool's result type."""
 
