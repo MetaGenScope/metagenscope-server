@@ -34,6 +34,11 @@ class HmpSitesResult(ToolResult):       # pylint: disable=too-few-public-methods
             msg = 'HMPSitesResult values in bad range'
             raise ValidationError(msg)
 
+    @staticmethod
+    def site_names(self):
+        """Return the names of the body sites."""
+        return ['skin', 'oral', 'urogenital', 'airways']
+
 
 class HmpSitesResultModule(ToolResultModule):
     """HMP Sites tool module."""
