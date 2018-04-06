@@ -35,7 +35,7 @@ class HmpSitesResult(ToolResult):       # pylint: disable=too-few-public-methods
             raise ValidationError(msg)
 
     @staticmethod
-    def site_names(self):
+    def site_names():
         """Return the names of the body sites."""
         return ['skin', 'oral', 'urogenital', 'airways']
 
