@@ -21,22 +21,21 @@ def make_dist_table(hmp_results, site_names):
 
 
 @celery.task()
-def make_distributions(samples, categories):
+def make_distributions(categories, samples):
     """Determine HMP distributions by site and category."""
     tool_name = HmpSitesResultModule.name()
     site_names = HmpSitesResultModule.result_model().site_names()
 
     distributions = {}
-    for cat_name, cat_vals in categories.items():
-        tbl = {cat_val: [] for cat_val in cat_vals}
+    for category_name, category_values in categories.items():
+        table = {category_value: [] for category_value in category_values}
         for sample in samples:
             hmp_result = getattr(sample, tool_name)
-            tbl[sample.metadata[cat_name]].append(hmp_result)
-        distribution = {
-            {'name': cat_val, 'data': make_dist_table(hmp_results, site_names)}
-            for cat_val, hmp_results in tbl.items()
-        }
-        distributions[cat_name] = distribution
+            table[sample.metadata[category_name]].append(hmp_result)
+        distributions[category_name] = [
+            {'name': category_value,
+             'data': make_dist_table(hmp_results, site_names)}
+            for category_value, hmp_results in table.items()]
 
     return distributions, categories, site_names
 
@@ -50,4 +49,4 @@ def reducer_task(args):
 
     return HMPResult(categories=categories,
                      sites=site_names,
-                     distributions=distributions)
+                     data=distributions)

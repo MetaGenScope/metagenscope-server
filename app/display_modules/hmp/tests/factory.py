@@ -53,10 +53,11 @@ class HMPFactory(factory.mongoengine.MongoEngineFactory):
         """Return plausible data."""
         out = {}
         for category_name, category_values in self.categories.items():
+            out[category_name] = []
             for category_value in category_values:
                 datum = {
                     'name': category_value,
                     'data': [fake_distribution() for _ in self.sites],
                 }
-                out[category_name] = [datum]
+                out[category_name].append(datum)
         return out
