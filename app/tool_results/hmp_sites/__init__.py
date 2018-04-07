@@ -11,11 +11,11 @@ from .constants import MODULE_NAME
 class HmpSitesResult(ToolResult):       # pylint: disable=too-few-public-methods
     """HMP Sites tool's result type."""
 
-    # We do not provide a default=0 because 0 is a valid cosine similarity value
-    skin = mongoDB.ListField(mongoDB.FloatField())
-    oral = mongoDB.ListField(mongoDB.FloatField())
-    urogenital = mongoDB.ListField(mongoDB.FloatField())
-    airways = mongoDB.ListField(mongoDB.FloatField())
+    # Lists of values for each example microbiome comparison; may not be empty
+    skin = mongoDB.ListField(mongoDB.FloatField(), required=True)
+    oral = mongoDB.ListField(mongoDB.FloatField(), required=True)
+    urogenital = mongoDB.ListField(mongoDB.FloatField(), required=True)
+    airways = mongoDB.ListField(mongoDB.FloatField(), required=True)
 
     def clean(self):
         """Check that all vals are in range [0, 1] if not then error."""
