@@ -11,17 +11,17 @@ from app.display_modules.hmp import HMPResult
 
 def fake_distribution():
     """Return a random 'distribution'."""
-    distro = [random() for _ in range(5)]
-    return sorted(distro)
+    distribution = [random() for _ in range(5)]
+    return sorted(distribution)
 
 
 def fake_categories():
     """Return fake categories."""
     out = {}
-    for cat_name in ['cat_1', 'cat_2']:
-        out[cat_name] = []
+    for category_name in ['cat_1', 'cat_2']:
+        out[category_name] = []
         for i in range(randint(2, 4)):
-            out[cat_name].append(cat_name + str(i))
+            out[category_name].append(category_name + str(i))
     return out
 
 
@@ -52,10 +52,11 @@ class HMPFactory(factory.mongoengine.MongoEngineFactory):
     def data(self):
         """Return plausible data."""
         out = {}
-        for cat_name, cat_vals in self.categories.items():
-            for cat_val in cat_vals:
-                out[cat_name] = {
-                    'name': cat_val,
+        for category_name, category_values in self.categories.items():
+            for category_value in category_values:
+                datum = {
+                    'name': category_value,
                     'data': [fake_distribution() for _ in self.sites],
                 }
+                out[category_name] = [datum]
         return out
