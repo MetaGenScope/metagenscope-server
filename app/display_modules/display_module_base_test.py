@@ -13,7 +13,7 @@ from tests.utils import add_sample_group
 class BaseDisplayModuleTest(BaseTestCase):
     """Helper functions for display module tests."""
 
-    def generic_getter_test(self, data, endpt, verify_fields=['samples']):
+    def generic_getter_test(self, data, endpt, verify_fields=('samples',)):
         """Check that we can get an analysis result."""
         wrapper = AnalysisResultWrapper(data=data, status='S')
         analysis_result = AnalysisResultMeta(**{endpt: wrapper}).save()
