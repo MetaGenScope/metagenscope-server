@@ -18,13 +18,6 @@ class TestHmpSitesModel(BaseToolResultTest):
         hmp_sites = create_hmp_sites()
         self.generic_add_test(hmp_sites, MODULE_NAME)
 
-    def test_add_partial_sites_result(self):
-        """Ensure HMP Sites result model accepts missing optional fields."""
-        partial_hmp = dict(create_values())
-        partial_hmp.pop('skin', None)
-        hmp_sites = HmpSitesResult(**partial_hmp)
-        self.generic_add_test(hmp_sites, MODULE_NAME)
-
     def test_add_malformed_hmp_sites_result(self):  # pylint: disable=invalid-name
         """Ensure validation fails for value outside of [0,1]."""
         bad_hmp = dict(create_values())

@@ -20,7 +20,7 @@ class HMPWrangler(DisplayModuleWrangler):
         sample_group.set_module_status(MODULE_NAME, 'W')
         samples = sample_group.samples
 
-        categories_task = categories_from_metadata.s(samples)
+        categories_task = categories_from_metadata.s(samples, min_size=1)
         distribution_task = make_distributions.s(samples)
         persist_task = persist_result.s(sample_group.analysis_result_uuid,
                                         MODULE_NAME)
