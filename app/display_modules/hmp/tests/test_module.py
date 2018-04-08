@@ -24,7 +24,8 @@ class TestHMPResult(BaseDisplayModuleTest):
     def test_get_hmp(self):
         """Ensure getting a single HMP behaves correctly."""
         hmp = HMPFactory()
-        self.generic_getter_test(hmp, MODULE_NAME)
+        self.generic_getter_test(hmp, MODULE_NAME,
+                                 verify_fields=['categories', 'sites', 'data'])
 
     def test_add_hmp(self):
         """Ensure HMP model is created correctly."""

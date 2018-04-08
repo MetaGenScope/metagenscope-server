@@ -13,7 +13,7 @@ from tests.utils import add_sample_group
 class BaseDisplayModuleTest(BaseTestCase):
     """Helper functions for display module tests."""
 
-    def generic_getter_test(self, data, endpt):
+    def generic_getter_test(self, data, endpt, verify_fields=['samples']):
         """Check that we can get an analysis result."""
         wrapper = AnalysisResultWrapper(data=data, status='S')
         analysis_result = AnalysisResultMeta(**{endpt: wrapper}).save()
@@ -26,7 +26,8 @@ class BaseDisplayModuleTest(BaseTestCase):
             self.assertEqual(response.status_code, 200)
             self.assertIn('success', data['status'])
             self.assertEqual(data['data']['status'], 'S')
-            self.assertIn('samples', data['data']['data'])
+            for field in verify_fields:
+                self.assertIn(field, data['data']['data'])
 
     def generic_adder_test(self, data, endpt):
         """Check that we can add an analysis result."""
