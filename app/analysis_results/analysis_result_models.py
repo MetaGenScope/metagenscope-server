@@ -40,6 +40,17 @@ class AnalysisResultMeta(mongoDB.DynamicDocument):
                       if k not in blacklist and not k.startswith('_')]
         return [field for field in all_fields if hasattr(self, field)]
 
+    def set_module_status(self, module_name, status):
+        """Set the status for a sample group's display module."""
+        try:
+            wrapper = getattr(self, module_name)
+            wrapper.status = status
+        except AttributeError:
+            wrapper = AnalysisResultWrapper(status=status)
+            setattr(self, module_name, wrapper)
+        finally:
+            self.save()
+
 
 class AnalysisResultMetaSchema(BaseSchema):
     """Serializer for AnalysisResultMeta model."""
