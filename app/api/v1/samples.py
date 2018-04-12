@@ -8,6 +8,7 @@ from mongoengine.errors import ValidationError, DoesNotExist
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm.exc import NoResultFound
 
+from app.analysis_results.analysis_result_models import AnalysisResultMeta
 from app.api.exceptions import InvalidRequest, InternalError
 from app.extensions import db
 from app.samples.sample_models import Sample, sample_schema
@@ -41,7 +42,8 @@ def add_sample(resp):  # pylint: disable=unused-argument
         raise InvalidRequest('A Sample with that name already exists.')
 
     try:
-        sample = Sample(name=sample_name).save()
+        analysis_result = AnalysisResultMeta().save()
+        sample = Sample(name=sample_name, analysis_result=analysis_result).save()
         sample_group.sample_ids.append(sample.uuid)
         db.session.commit()
         result = sample_schema.dump(sample).data

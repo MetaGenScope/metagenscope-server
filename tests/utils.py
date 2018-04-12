@@ -33,9 +33,12 @@ def add_organization(name, admin_email, created_at=datetime.datetime.utcnow()):
     return organization
 
 
-def add_sample(name, metadata={}, created_at=datetime.datetime.utcnow()):   # pylint: disable=dangerous-default-value
+def add_sample(name, analysis_result=None, metadata={}, created_at=datetime.datetime.utcnow()):  # pylint: disable=dangerous-default-value
     """Wrap functionality for adding sample."""
-    return Sample(name=name, metadata=metadata, created_at=created_at).save()
+    if not analysis_result:
+        analysis_result = AnalysisResultMeta().save()
+    return Sample(name=name, metadata=metadata,
+                  analysis_result=analysis_result, created_at=created_at).save()
 
 
 def add_sample_group(name, analysis_result=None,
