@@ -10,6 +10,7 @@ COV = coverage.coverage(
     omit=[
         'tests/*',
         '*/test_*.py',
+        '*/tests/*',
     ]
 )
 COV.start()
