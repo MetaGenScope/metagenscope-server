@@ -13,7 +13,7 @@ from app.analysis_results.analysis_result_models import AnalysisResultMeta
 from app.samples.sample_models import Sample
 from app.sample_groups.sample_group_models import SampleGroup
 
-from seed import sample_similarity, taxon_abundance, reads_classified, hmp, ags
+from seed import abrf_analysis_result, uw_analysis_result
 
 
 COV = coverage.coverage(
@@ -64,16 +64,16 @@ def cov():
 def recreate_db():
     """Recreate a database using migrations."""
     # We cannot simply use db.drop_all() because it will not drop the alembic_versions table
-    sql = "SELECT \
-        'drop table if exists \"' || tablename || '\" cascade;' as pg_drop \
+    sql = 'SELECT \
+        \'drop table if exists "\' || tablename || \'" cascade;\' as pg_drop \
         FROM \
         pg_tables \
         WHERE \
-        schemaname='public';"
+        schemaname=\'public\';'
 
     drop_statements = db.engine.execute(sql)
     if drop_statements.rowcount > 0:
-        drop_statement = "\n".join([x['pg_drop'] for x in drop_statements])
+        drop_statement = '\n'.join([x['pg_drop'] for x in drop_statements])
         drop_statements.close()
         db.engine.execute(drop_statement)
 
@@ -98,16 +98,19 @@ def seed_db():
                   email='chm2042@med.cornell.edu',
                   password='Foobar22')
 
-    analysis_result = AnalysisResultMeta(sample_similarity=sample_similarity,
-                                         taxon_abundance=taxon_abundance,
-                                         reads_classified=reads_classified,
-                                         hmp=hmp,
-                                         average_genome_size=ags).save()
-    sample_group = SampleGroup(name='ABRF 2017', analysis_result=analysis_result)
+    abrf_analysis_result.save()
+    abrf_2017_group = SampleGroup(name='ABRF 2017', analysis_result=abrf_analysis_result)
+
+    uw_analysis_result.save()
+    uw_sample = Sample(name='UW_Madison_00', analysis_result=uw_analysis_result)
+    uw_group_result = AnalysisResultMeta().save()
+    uw_madison_group = SampleGroup(name='The UW Madison Project',
+                                   analysis_result=uw_group_result)
+    uw_madison_group.samples = [uw_sample]
 
     mason_lab = Organization(name='Mason Lab', admin_email='benjamin.blair.chrobot@gmail.com')
     mason_lab.users = [bchrobot, dcdanko, cmason]
-    mason_lab.sample_groups = [sample_group]
+    mason_lab.sample_groups = [abrf_2017_group, uw_madison_group]
 
     db.session.add(mason_lab)
     db.session.commit()
