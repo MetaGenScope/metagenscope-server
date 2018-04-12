@@ -31,10 +31,6 @@ class AnalysisResultMeta(mongoDB.DynamicDocument):
     uuid = mongoDB.UUIDField(required=True, primary_key=True, binary=False, default=uuid4)
     created_at = mongoDB.DateTimeField(default=datetime.datetime.utcnow)
 
-    meta = {
-        'indexes': ['sample_group_id']
-    }
-
     @property
     def result_types(self):
         """Return a list of all analysis result types available for this record."""
