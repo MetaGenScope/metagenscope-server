@@ -89,7 +89,7 @@ class TestSampleGroupModule(BaseTestCase):
             self.assertTrue('created_at' in data['data']['sample_group'])
             self.assertIn('success', data['status'])
 
-    def test_get_single_sample_group_samples(self):
+    def test_get_single_sample_group_samples(self):  # pylint: disable=invalid-name
         """Ensure get samples for sample group behaves correctly."""
         group = add_sample_group(name='Sample Group One')
         group.samples = [add_sample(name='SMPL_00'), add_sample(name='SMPL_01')]
