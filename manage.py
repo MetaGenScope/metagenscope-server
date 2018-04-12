@@ -102,7 +102,7 @@ def seed_db():
     abrf_2017_group = SampleGroup(name='ABRF 2017', analysis_result=abrf_analysis_result)
 
     uw_analysis_result.save()
-    uw_sample = Sample(name='UW_Madison_00', analysis_result=uw_analysis_result)
+    uw_sample = Sample(name='UW_Madison_00', analysis_result=uw_analysis_result).save()
     uw_group_result = AnalysisResultMeta().save()
     uw_madison_group = SampleGroup(name='The UW Madison Project',
                                    analysis_result=uw_group_result)
