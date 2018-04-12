@@ -3,6 +3,19 @@
 import unittest
 import coverage
 
+
+COV = coverage.coverage(
+    branch=True,
+    include='app/*',
+    omit=[
+        'tests/*',
+        '*/test_*.py',
+        '*/tests/*',
+    ]
+)
+COV.start()
+
+
 from flask_script import Manager
 from flask_migrate import MigrateCommand, upgrade
 
@@ -14,17 +27,6 @@ from app.samples.sample_models import Sample
 from app.sample_groups.sample_group_models import SampleGroup
 
 from seed import sample_similarity, taxon_abundance, reads_classified, hmp, ags
-
-
-COV = coverage.coverage(
-    branch=True,
-    include='app/*',
-    omit=[
-        'tests/*',
-        '*/test_*.py',
-    ]
-)
-COV.start()
 
 
 app = create_app()
