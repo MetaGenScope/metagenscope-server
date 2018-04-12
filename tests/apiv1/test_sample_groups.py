@@ -2,6 +2,7 @@
 
 import json
 
+from app import db
 from app.sample_groups.sample_group_models import SampleGroup
 from tests.base import BaseTestCase
 from tests.utils import add_sample, add_sample_group, with_user
@@ -87,3 +88,21 @@ class TestSampleGroupModule(BaseTestCase):
             self.assertIn('public', data['data']['sample_group']['access_scheme'])
             self.assertTrue('created_at' in data['data']['sample_group'])
             self.assertIn('success', data['status'])
+
+    def test_get_single_sample_group_samples(self):
+        """Ensure get samples for sample group behaves correctly."""
+        group = add_sample_group(name='Sample Group One')
+        group.samples = [add_sample(name='SMPL_00'), add_sample(name='SMPL_01')]
+        db.session.commit()
+
+        with self.client:
+            response = self.client.get(
+                f'/api/v1/sample_groups/{str(group.id)}/samples',
+                content_type='application/json',
+            )
+            data = json.loads(response.data.decode())
+            self.assertEqual(response.status_code, 200)
+            self.assertIn('success', data['status'])
+            self.assertIn('samples', data['data'])
+            self.assertEqual('SMPL_00', data['data']['samples'][0]['name'])
+            self.assertEqual('SMPL_01', data['data']['samples'][1]['name'])
