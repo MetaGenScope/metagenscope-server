@@ -92,7 +92,9 @@ class TestSampleGroupModule(BaseTestCase):
     def test_get_single_sample_group_samples(self):  # pylint: disable=invalid-name
         """Ensure get samples for sample group behaves correctly."""
         group = add_sample_group(name='Sample Group One')
-        group.samples = [add_sample(name='SMPL_00'), add_sample(name='SMPL_01')]
+        sample00 = add_sample(name='SMPL_00')
+        sample01 = add_sample(name='SMPL_01')
+        group.samples = [sample00, sample01]
         db.session.commit()
 
         with self.client:
