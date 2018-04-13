@@ -106,5 +106,5 @@ class TestSampleGroupModule(BaseTestCase):
             self.assertEqual(response.status_code, 200)
             self.assertIn('success', data['status'])
             self.assertIn('samples', data['data'])
-            self.assertEqual('SMPL_00', data['data']['samples'][0]['name'])
-            self.assertEqual('SMPL_01', data['data']['samples'][1]['name'])
+            self.assertTrue(any('SMPL_00' == s['name'] for s in data['data']['samples']))
+            self.assertTrue(any('SMPL_01' == s['name'] for s in data['data']['samples']))
