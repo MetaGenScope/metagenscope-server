@@ -32,7 +32,7 @@ def receive_upload(cls, resp, sample_uuid):
         raise PermissionDenied('Authorization failed.')
 
     try:
-        post_json = request.get_json()['data']
+        post_json = request.get_json()
         tool_result = cls.make_result_model(post_json)
         setattr(sample, cls.name(), tool_result)
         sample.save()
