@@ -14,8 +14,8 @@ class TestCARDGenesModule(BaseDisplayModuleTest):
 
     def test_get_card_genes(self):
         """Ensure getting a single CARD Genes behaves correctly."""
-        card_Amrs = CARDGenesFactory()
-        self.generic_getter_test(card_Amrs, MODULE_NAME)
+        card_amrs = CARDGenesFactory()
+        self.generic_getter_test(card_amrs, MODULE_NAME)
 
     def test_add_card_genes(self):
         """Ensure CARD Genes model is created correctly."""

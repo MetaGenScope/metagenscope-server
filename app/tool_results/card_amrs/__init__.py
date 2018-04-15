@@ -6,7 +6,7 @@ from .constants import MODULE_NAME
 from .models import CARDAMRToolResult
 
 
-class VFDBResultModule(ToolResultModule):
+class CARDAMRResultModule(ToolResultModule):
     """CARD AMR Alignment tool module."""
 
     @classmethod
