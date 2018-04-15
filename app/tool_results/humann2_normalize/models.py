@@ -1,19 +1,19 @@
-"""Models for Virulence Factor tool module."""
+"""Models for Humann2 Normalize tool module."""
 
 from app.extensions import mongoDB
 from app.tool_results.tool_module import ToolResult
 
 
-class VFDBRow(mongoDB.EmbeddedDocument):  # pylint: disable=too-few-public-methods
-    """Row for a gene in VFDB."""
+class Humann2NormalizeRow(mongoDB.EmbeddedDocument):  # pylint: disable=too-few-public-methods
+    """Row for a gene in Humann2 Normalize."""
 
     rpk = mongoDB.FloatField()
     rpkm = mongoDB.FloatField()
     rpkmg = mongoDB.FloatField()
 
 
-class VFDBToolResult(ToolResult):  # pylint: disable=too-few-public-methods
-    """Virulence Factor result type."""
+class Humann2NormalizeToolResult(ToolResult):  # pylint: disable=too-few-public-methods
+    """Humann2 Normalize result type."""
 
-    vfdb_row_field = mongoDB.EmbeddedDocumentField(VFDBRow)
-    genes = mongoDB.MapField(field=vfdb_row_field, required=True)
+    hum_row_field = mongoDB.EmbeddedDocumentField(Humann2NormalizeRow)
+    genes = mongoDB.MapField(field=hum_row_field, required=True)
