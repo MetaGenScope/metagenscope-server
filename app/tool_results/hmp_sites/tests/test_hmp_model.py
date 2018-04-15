@@ -37,7 +37,7 @@ class TestHmpSitesModel(BaseTestCase):
         sample = Sample(**args).save()
 
         tool_result = getattr(sample, MODULE_NAME)
-        self.assertTrue(sample.hmp_sites)
+        self.assertTrue(tool_result)
         self.assertEqual(len(tool_result), 5)
         self.assertEqual(tool_result['gut'], None)
         self.assertEqual(tool_result['skin'], 0.3)
@@ -51,5 +51,5 @@ class TestHmpSitesModel(BaseTestCase):
         bad_hmp['gut'] = 1.5
         hmp_sites = HmpSitesResult(**bad_hmp)
         args = {'name': 'SMPL_01', MODULE_NAME: hmp_sites}
-        sample = Sample(**args).save()
+        sample = Sample(**args)
         self.assertRaises(ValidationError, sample.save)
