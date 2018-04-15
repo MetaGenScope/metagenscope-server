@@ -3,6 +3,8 @@
 from app.extensions import mongoDB
 from app.tool_results.tool_module import ToolResult, ToolResultModule
 
+from .constants import MODULE_NAME
+
 
 EmbeddedDoc = mongoDB.EmbeddedDocumentField  # pylint: disable=invalid-name
 
@@ -18,7 +20,6 @@ class Humann2Result(ToolResult):  # pylint: disable=too-few-public-methods
     """HUMANn2 result type."""
 
     pathways = mongoDB.MapField(field=EmbeddedDoc(Humann2PathwaysRow), required=True)
-    genes = mongoDB.MapField(field=mongoDB.FloatField(), required=True)
 
 
 class Humann2ResultModule(ToolResultModule):
@@ -27,7 +28,7 @@ class Humann2ResultModule(ToolResultModule):
     @classmethod
     def name(cls):
         """Return HUMANn2 module's unique identifier string."""
-        return 'humann2_functional_profiling'
+        return MODULE_NAME
 
     @classmethod
     def result_model(cls):
