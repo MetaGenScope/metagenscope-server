@@ -4,6 +4,7 @@ import json
 
 from app.samples.sample_models import Sample
 from app.tool_results.hmp_sites.tests.constants import TEST_HMP
+from app.tool_results.hmp_sites.constants import MODULE_NAME
 from tests.base import BaseTestCase
 from tests.utils import with_user
 
@@ -35,4 +36,4 @@ class TestHmpSitesUploads(BaseTestCase):
 
         # Reload object to ensure HMP Sites result was stored properly
         sample = Sample.objects.get(uuid=sample_uuid)
-        self.assertTrue(sample.hmp_sites)
+        self.assertTrue(getattr(sample, MODULE_NAME))
