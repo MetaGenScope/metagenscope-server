@@ -7,6 +7,7 @@ from app.display_modules.card_amrs.constants import MODULE_NAME
 from app.display_modules.card_amrs.tests.factory import CARDGenesFactory
 from app.display_modules.generic_gene_set.tests.factory import create_one_sample
 from app.tool_results.card_amrs.tests.factory import create_card_amr
+from app.tool_results.card_amrs.constants import MODULE_NAME as TOOL_MODULE_NAME
 
 
 class TestCARDGenesModule(BaseDisplayModuleTest):
@@ -31,9 +32,12 @@ class TestCARDGenesModule(BaseDisplayModuleTest):
 
         def create_sample(i):
             """Create unique sample for index i."""
-            return Sample(name=f'Sample{i}',
-                          metadata={'foobar': f'baz{i}'},
-                          vfdb_quantify=create_card_amr()).save()
+            args = {
+                'name': f'Sample{i}',
+                'metadata': {'foobar': f'baz{i}'},
+                TOOL_MODULE_NAME: create_card_amr()
+            }
+            return Sample(**args).save()
 
         self.generic_run_group_test(create_sample,
                                     CARDGenesWrangler,

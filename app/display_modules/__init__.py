@@ -1,6 +1,7 @@
 """Modules for converting analysis tool output to front-end display data."""
 
 from app.display_modules.ags import AGSDisplayModule
+from app.display_modules.card_amrs import CARDGenesDisplayModule
 from app.display_modules.hmp import HMPModule
 from app.display_modules.methyls import MethylsDisplayModule
 from app.display_modules.microbe_directory import MicrobeDirectoryDisplayModule
@@ -14,6 +15,7 @@ from app.display_modules.virulence_factors import VirulenceFactorsDisplayModule
 
 all_display_modules = [  # pylint: disable=invalid-name
     AGSDisplayModule,
+    CARDGenesDisplayModule,
     HMPModule,
     MethylsDisplayModule,
     MicrobeDirectoryDisplayModule,
@@ -23,4 +25,5 @@ all_display_modules = [  # pylint: disable=invalid-name
     SampleSimilarityDisplayModule,
     TaxonAbundanceDisplayModule,
     VirulenceFactorsDisplayModule,
+
 ]
