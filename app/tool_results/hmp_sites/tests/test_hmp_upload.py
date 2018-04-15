@@ -18,7 +18,7 @@ class TestHmpSitesUploads(BaseTestCase):
         sample_uuid = str(sample.uuid)
         with self.client:
             response = self.client.post(
-                f'/api/v1/samples/{sample_uuid}/hmp_sites',
+                f'/api/v1/samples/{sample_uuid}/hmp_site_dists',
                 headers=auth_headers,
                 data=json.dumps(TEST_HMP),
                 content_type='application/json',

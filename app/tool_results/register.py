@@ -3,6 +3,7 @@
 from uuid import UUID
 
 from flask import request
+from flask import current_app
 from flask_api.exceptions import NotFound, ParseError, PermissionDenied
 from mongoengine.errors import ValidationError, DoesNotExist
 from sqlalchemy.orm.exc import NoResultFound
@@ -31,7 +32,7 @@ def receive_upload(cls, resp, sample_uuid):
         raise PermissionDenied('Authorization failed.')
 
     try:
-        post_json = request.get_json()
+        post_json = request.get_json()['data']
         tool_result = cls.make_result_model(post_json)
         setattr(sample, cls.name(), tool_result)
         sample.save()
@@ -39,7 +40,11 @@ def receive_upload(cls, resp, sample_uuid):
         raise ParseError(str(validation_error))
 
     # Kick off middleware tasks
-    DisplayModuleConductor(sample_uuid, cls).shake_that_baton()
+    try:
+        DisplayModuleConductor(sample_uuid, cls).shake_that_baton()
+    except Exception as e:
+        current_app.logger.exception('Exception while coordinating display modules.')
+        current_app.logger.exception(e)
 
     return post_json, 201
 

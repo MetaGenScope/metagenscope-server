@@ -4,6 +4,7 @@ from mongoengine import ValidationError
 
 from app.extensions import mongoDB
 from app.tool_results.tool_module import ToolResult, ToolResultModule
+from .constants import MODULE_NAME
 
 
 class HmpSitesResult(ToolResult):       # pylint: disable=too-few-public-methods
@@ -40,7 +41,7 @@ class HmpSitesResultModule(ToolResultModule):
     @classmethod
     def name(cls):
         """Return HMP Sites module's unique identifier string."""
-        return 'hmp_sites'
+        return MODULE_NAME
 
     @classmethod
     def result_model(cls):
