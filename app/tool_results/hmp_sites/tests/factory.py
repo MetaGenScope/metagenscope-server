@@ -10,7 +10,7 @@ def create_values():
     return {
         'skin': [random() for _ in range(randint(3, 10))],
         'oral': [random() for _ in range(randint(3, 10))],
-        'urogenital': [random() for _ in range(randint(3, 10))],
+        'urogenital_tract': [random() for _ in range(randint(3, 10))],
         'airways': [random() for _ in range(randint(3, 10))],
     }
 

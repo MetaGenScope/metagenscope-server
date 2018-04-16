@@ -14,7 +14,7 @@ class HmpSitesResult(ToolResult):       # pylint: disable=too-few-public-methods
     # Lists of values for each example microbiome comparison; may not be empty
     skin = mongoDB.ListField(mongoDB.FloatField(), required=True)
     oral = mongoDB.ListField(mongoDB.FloatField(), required=True)
-    urogenital = mongoDB.ListField(mongoDB.FloatField(), required=True)
+    urogenital_tract = mongoDB.ListField(mongoDB.FloatField(), required=True)
     airways = mongoDB.ListField(mongoDB.FloatField(), required=True)
 
     def clean(self):
@@ -29,7 +29,7 @@ class HmpSitesResult(ToolResult):       # pylint: disable=too-few-public-methods
 
         if not validate(self.skin,
                         self.oral,
-                        self.urogenital,
+                        self.urogenital_tract,
                         self.airways):
             msg = 'HMPSitesResult values in bad range'
             raise ValidationError(msg)
@@ -37,7 +37,7 @@ class HmpSitesResult(ToolResult):       # pylint: disable=too-few-public-methods
     @staticmethod
     def site_names():
         """Return the names of the body sites."""
-        return ['skin', 'oral', 'urogenital', 'airways']
+        return ['skin', 'oral', 'urogenital_tract', 'airways']
 
 
 class HmpSitesResultModule(ToolResultModule):
