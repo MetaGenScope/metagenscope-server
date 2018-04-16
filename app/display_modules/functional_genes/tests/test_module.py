@@ -1,11 +1,12 @@
 """Test suite for Functional Genes diplay module."""
+
 from app.display_modules.display_module_base_test import BaseDisplayModuleTest
 from app.display_modules.functional_genes.wrangler import FunctionalGenesWrangler
-from app.samples.sample_models import Sample
 from app.display_modules.functional_genes import FunctionalGenesResult
 from app.display_modules.functional_genes.constants import MODULE_NAME, TOOL_MODULE_NAME
 from app.display_modules.functional_genes.tests.factory import FunctionalGenesFactory
 from app.display_modules.generic_gene_set.tests.factory import create_one_sample
+from app.samples.sample_models import Sample
 from app.tool_results.humann2_normalize.tests.factory import create_humann2_normalize
 
 
