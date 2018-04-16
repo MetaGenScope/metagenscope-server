@@ -3,7 +3,7 @@
 from celery import chain
 
 from app.display_modules.display_wrangler import DisplayModuleWrangler
-from app.display_modules.utils import persist_result
+from app.display_modules.utils import jsonify, persist_result
 from app.sample_groups.sample_group_models import SampleGroup
 
 from .constants import MODULE_NAME
@@ -19,9 +19,10 @@ class PathwayWrangler(DisplayModuleWrangler):
         sample_group = SampleGroup.query.filter_by(id=sample_group_id).first()
         sample_group.analysis_result.set_module_status(MODULE_NAME, 'W')
 
+        samples = jsonify(sample_group.samples)
         persist_task = persist_result.s(sample_group.analysis_result_uuid, MODULE_NAME)
 
-        task_chain = chain(filter_humann2_pathways.s(sample_group.samples),
+        task_chain = chain(filter_humann2_pathways.s(samples),
                            persist_task)
         result = task_chain.delay()
 

@@ -12,7 +12,8 @@ from .models import PathwayResult
 
 def pathways_from_sample(sample):
     """Get pathways from a humann2 result."""
-    return getattr(sample, Humann2ResultModule.name()).pathways
+    module_name = Humann2ResultModule.name()
+    return sample[module_name]['pathways']
 
 
 def get_abund_tbl(sample_dict):
@@ -42,7 +43,7 @@ def get_top_paths(abund_tbl, abund_mean, top_n):
 @celery.task()
 def filter_humann2_pathways(samples):
     """Get the top N mean abundance pathways."""
-    sample_dict = {sample.name: pathways_from_sample(sample)
+    sample_dict = {sample['name']: pathways_from_sample(sample)
                    for sample in samples}
 
     abund_tbl, abund_mean = get_abund_tbl(sample_dict)
@@ -54,8 +55,8 @@ def filter_humann2_pathways(samples):
         path_covs = {}
         for path_name in path_names:
             try:
-                abund = path_tbl[path_name].abundance
-                cov = path_tbl[path_name].coverage
+                abund = path_tbl[path_name]['abundance']
+                cov = path_tbl[path_name]['coverage']
             except KeyError:
                 abund = 0
                 cov = 0
