@@ -116,7 +116,7 @@ def taxa_tool_tsne(samples, tool_name):
         'y_label': f'{tool_name} tsne y',
     }
 
-    sample_dict = {sample.name: getattr(sample, tool_name).taxa
+    sample_dict = {sample['name']: sample[tool_name]['taxa']
                    for sample in samples}
     samples = get_clean_samples(sample_dict)
     taxa_tsne = run_tsne(samples)
@@ -135,12 +135,12 @@ def sample_similarity_reducer(args, samples):
 
     data_records = []
     for sample in samples:
-        sample_id = sample.name
+        sample_id = sample['name']
         data_record = {'SampleID': sample_id}
         data_record.update(kraken_labeled[sample_id])
         data_record.update(metaphlan_labeled[sample_id])
         for category_name in categories.keys():
-            category_value = sample.metadata.get(category_name, 'None')
+            category_value = sample['metadata'].get(category_name, 'None')
             data_record[category_name] = category_value
         data_records.append(data_record)
 
