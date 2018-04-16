@@ -4,6 +4,7 @@ from app import db
 from app.analysis_results.analysis_result_models import AnalysisResultMeta, AnalysisResultWrapper
 from app.display_modules.sample_similarity.tests.factory import create_mvp_sample_similarity
 from app.display_modules.utils import (
+    jsonify,
     categories_from_metadata,
     persist_result,
     collate_samples,
@@ -64,7 +65,8 @@ class TestDisplayModuleUtilityTasks(BaseTestCase):
         sample_group.samples = [sample1, sample2]
         db.session.commit()
 
-        result = collate_samples.delay(KRAKEN_NAME, ['taxa'], sample_group.id).get()
+        samples = jsonify([sample1, sample2])
+        result = collate_samples.delay(KRAKEN_NAME, ['taxa'], samples).get()
         self.assertIn('Sample01', result)
         self.assertIn('Sample02', result)
         self.assertIn('taxa', result['Sample01'])

@@ -4,12 +4,11 @@ from mongoengine import QuerySet
 
 from app.analysis_results.analysis_result_models import AnalysisResultMeta
 from app.extensions import celery
-from app.sample_groups.sample_group_models import SampleGroup
 
 
 def jsonify(mongo_doc):
     """Convert Mongo document to JSON for serialization."""
-    if isinstance(mongo_doc, QuerySet):
+    if isinstance(mongo_doc, (QuerySet,)) or isinstance(mongo_doc, (list,)):
         return [jsonify(element) for element in mongo_doc]
     return mongo_doc.to_mongo().to_dict()
 
@@ -63,16 +62,14 @@ def persist_result(result, analysis_result_id, result_name):
 
 
 @celery.task()
-def collate_samples(tool_name, fields, sample_group_id):
+def collate_samples(tool_name, fields, samples):
     """Group a set of Tool Result fields from a set of samples by sample name."""
-    sample_group = SampleGroup.query.filter_by(id=sample_group_id).first()
-    samples = sample_group.samples
-
     sample_dict = {}
     for sample in samples:
-        sample_dict[sample.name] = {}
-        tool_result = getattr(sample, tool_name)
+        sample_name = sample['name']
+        sample_dict[sample_name] = {}
+        tool_result = sample[tool_name]
         for field in fields:
-            sample_dict[sample.name][field] = getattr(tool_result, field)
+            sample_dict[sample_name][field] = tool_result[field]
 
     return sample_dict

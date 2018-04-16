@@ -3,7 +3,7 @@
 from celery import chain
 
 from app.display_modules.display_wrangler import DisplayModuleWrangler
-from app.display_modules.utils import persist_result, collate_samples
+from app.display_modules.utils import jsonify, persist_result, collate_samples
 from app.sample_groups.sample_group_models import SampleGroup
 from app.tool_results.microbe_directory import (
     MicrobeDirectoryToolResult,
@@ -22,10 +22,11 @@ class MicrobeDirectoryWrangler(DisplayModuleWrangler):
         """Gather and process samples."""
         sample_group = SampleGroup.query.filter_by(id=sample_group_id).first()
         sample_group.analysis_result.set_module_status(MODULE_NAME, 'W')
+        samples = jsonify(sample_group.samples)
 
         tool_result_name = MicrobeDirectoryResultModule.name()
         collate_fields = MicrobeDirectoryToolResult._fields
-        collate_task = collate_samples.s(tool_result_name, collate_fields, sample_group_id)
+        collate_task = collate_samples.s(tool_result_name, collate_fields, samples)
         reducer_task = microbe_directory_reducer.s()
         persist_task = persist_result.s(sample_group.analysis_result_uuid, MODULE_NAME)
 
