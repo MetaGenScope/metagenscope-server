@@ -1,35 +1,36 @@
-"""Microbe Directory tool module."""
+"""Ancestry tool module."""
+
+from mongoengine import ValidationError
 
 from app.extensions import mongoDB
 from app.tool_results.tool_module import ToolResult, ToolResultModule
 
+from .constants import MODULE_NAME, KNOWN_LOCATIONS
 
-class MicrobeDirectoryToolResult(ToolResult):     # pylint: disable=too-few-public-methods
-    """Microbe Directory result type."""
 
-    # Accept any JSON
-    antimicrobial_susceptibility = mongoDB.DynamicField(required=True)
-    plant_pathogen = mongoDB.DynamicField(required=True)
-    optimal_temperature = mongoDB.DynamicField(required=True)
-    optimal_ph = mongoDB.DynamicField(required=True)
-    animal_pathogen = mongoDB.DynamicField(required=True)
-    microbiome_location = mongoDB.DynamicField(required=True)
-    biofilm_forming = mongoDB.DynamicField(required=True)
-    spore_forming = mongoDB.DynamicField(required=True)
-    pathogenicity = mongoDB.DynamicField(required=True)
-    extreme_environment = mongoDB.DynamicField(required=True)
-    gram_stain = mongoDB.DynamicField(required=True)
+class AncestryToolResult(ToolResult):  # pylint: disable=too-few-public-methods
+    """Ancestry result type."""
+
+    populations = mongoDB.MapField(field=mongoDB.FloatField(), required=True)
+
+    def clean(self):
+        """Check that all keys are known, all values are [0, 1]."""
+        for loc, val in self.populations.items():
+            if loc not in KNOWN_LOCATIONS:
+                raise ValidationError('No known location: {}'.format(loc))
+            if (val > 1) or (val < 0):
+                raise ValidationError('Value in bad range.')
 
 
 class MicrobeDirectoryResultModule(ToolResultModule):
-    """Microbe Directory tool module."""
+    """Ancestry tool module."""
 
     @classmethod
     def name(cls):
-        """Return Microbe Directory module's unique identifier string."""
-        return 'microbe_directory_annotate'
+        """Return Ancestry module's unique identifier string."""
+        return MODULE_NAME
 
     @classmethod
     def result_model(cls):
-        """Return Microbe Directory module's model class."""
-        return MicrobeDirectoryToolResult
+        """Return Ancestry module's model class."""
+        return AncestryToolResult
