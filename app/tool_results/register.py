@@ -42,9 +42,8 @@ def receive_upload(cls, resp, sample_uuid):
     # Kick off middleware tasks
     try:
         DisplayModuleConductor(sample_uuid, cls).shake_that_baton()
-    except Exception as exc:  # pylint: disable=broad-except
+    except Exception:  # pylint: disable=broad-except
         current_app.logger.exception('Exception while coordinating display modules.')
-        current_app.logger.exception(exc)
 
     return post_json, 201
 
