@@ -25,5 +25,5 @@ class AncestryFactory(factory.mongoengine.MongoEngineFactory):
         for i in range(10):
             samples[f'Sample{i}'] = create_values()
 
-        samples = DataFrame(samples).fillna(val=0).to_dict()
+        samples = DataFrame(samples).fillna(0).to_dict()
         return samples

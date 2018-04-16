@@ -16,7 +16,7 @@ from .models import AncestryResult
 @celery.task()
 def ancestry_reducer(samples):
     """Wrap collated samples as actual Result type."""
-    samples = DataFrame().fillna(val=0).to_dict()
+    samples = DataFrame().fillna(0).to_dict()
     return AncestryResult(samples=samples)
 
 
