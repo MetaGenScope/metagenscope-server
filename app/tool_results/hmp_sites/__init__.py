@@ -4,7 +4,6 @@ from mongoengine import ValidationError
 
 from app.extensions import mongoDB
 from app.tool_results.tool_module import ToolResult, ToolResultModule
-from .constants import MODULE_NAME
 
 from .constants import MODULE_NAME
 
