@@ -109,6 +109,8 @@ def page_not_found(not_found_error):
     """Handle 404 Not Found error."""
     return jsonify(error=404, text=str(not_found_error)), 404
 
+
 def internal_error(exception):
+    """Handle 500 Internal Error error."""
     current_app.logger.exception(exception)
     return jsonify(error=500, text=str(exception)), 500
