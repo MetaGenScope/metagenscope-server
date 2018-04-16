@@ -8,7 +8,7 @@ from app.extensions import celery
 
 def jsonify(mongo_doc):
     """Convert Mongo document to JSON for serialization."""
-    if isinstance(mongo_doc, (QuerySet,)) or isinstance(mongo_doc, (list,)):
+    if isinstance(mongo_doc, (QuerySet, list,)):
         return [jsonify(element) for element in mongo_doc]
     return mongo_doc.to_mongo().to_dict()
 
