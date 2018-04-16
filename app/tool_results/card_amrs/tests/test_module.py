@@ -1,4 +1,4 @@
-"""Test suite for VFDB tool result model."""
+"""Test suite for CARD AMR tool result model."""
 
 from app.tool_results.card_amrs import CARDAMRToolResult
 from app.tool_results.card_amrs.constants import MODULE_NAME
