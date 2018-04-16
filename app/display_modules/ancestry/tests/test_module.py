@@ -6,7 +6,7 @@ from app.samples.sample_models import Sample
 from app.display_modules.ancestry.models import AncestryResult
 from app.display_modules.ancestry.constants import MODULE_NAME, TOOL_MODULE_NAME
 from app.display_modules.ancestry.tests.factory import AncestryFactory
-from app.tool_results.microbe_directory.tests.factory import (
+from app.tool_results.ancestry.tests.factory import (
     create_values,
     create_ancestry
 )

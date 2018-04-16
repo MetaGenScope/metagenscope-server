@@ -1,4 +1,4 @@
-"""Module for Microbe Directory results."""
+"""Module for Ancestry results."""
 
 from app.tool_results.ancestry import AncestryResultModule
 from app.display_modules.display_module import DisplayModule
@@ -8,8 +8,8 @@ from .models import AncestryResult
 from .wrangler import AncestryWrangler
 
 
-class MicrobeDirectoryDisplayModule(DisplayModule):
-    """Microbe Directory display module."""
+class AncestryDisplayModule(DisplayModule):
+    """Ancestry display module."""
 
     @staticmethod
     def required_tool_results():

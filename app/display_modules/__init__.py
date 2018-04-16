@@ -2,6 +2,7 @@
 
 from app.display_modules.ags import AGSDisplayModule
 from app.display_modules.alpha_div import AlphaDivDisplayModule
+from app.display_modules.ancestry import AncestryDisplayModule
 from app.display_modules.beta_div import BetaDiversityDisplayModule
 from app.display_modules.card_amrs import CARDGenesDisplayModule
 from app.display_modules.functional_genes import FunctionalGenesDisplayModule
@@ -21,6 +22,7 @@ from app.display_modules.virulence_factors import VirulenceFactorsDisplayModule
 all_display_modules = [  # pylint: disable=invalid-name
     AGSDisplayModule,
     AlphaDivDisplayModule,
+    AncestryDisplayModule,
     BetaDiversityDisplayModule,
     CARDGenesDisplayModule,
     FunctionalGenesDisplayModule,
