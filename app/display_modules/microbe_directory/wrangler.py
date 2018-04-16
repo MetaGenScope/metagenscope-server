@@ -25,7 +25,7 @@ class MicrobeDirectoryWrangler(DisplayModuleWrangler):
         samples = jsonify(sample_group.samples)
 
         tool_result_name = MicrobeDirectoryResultModule.name()
-        collate_fields = MicrobeDirectoryToolResult._fields
+        collate_fields = list(MicrobeDirectoryToolResult._fields.keys())
         collate_task = collate_samples.s(tool_result_name, collate_fields, samples)
         reducer_task = microbe_directory_reducer.s()
         persist_task = persist_result.s(sample_group.analysis_result_uuid, MODULE_NAME)
