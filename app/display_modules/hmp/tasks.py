@@ -14,7 +14,7 @@ def make_dist_table(hmp_results, site_names):
     for site_name in site_names:
         sites.append([])
         for hmp_result in hmp_results:
-            sites[-1] += getattr(hmp_result, site_name)
+            sites[-1] += hmp_result[site_name]
     dists = [percentile(measurements, [0, 25, 50, 75, 100])
              for measurements in sites]
     return dists
@@ -30,8 +30,8 @@ def make_distributions(categories, samples):
     for category_name, category_values in categories.items():
         table = {category_value: [] for category_value in category_values}
         for sample in samples:
-            hmp_result = getattr(sample, tool_name)
-            table[sample.metadata[category_name]].append(hmp_result)
+            hmp_result = sample[tool_name]
+            table[sample['metadata'][category_name]].append(hmp_result)
         distributions[category_name] = [
             {'name': category_value,
              'data': make_dist_table(hmp_results, site_names)}

@@ -3,7 +3,7 @@
 from celery import chain
 
 from app.display_modules.display_wrangler import DisplayModuleWrangler
-from app.display_modules.utils import categories_from_metadata, persist_result
+from app.display_modules.utils import jsonify, categories_from_metadata, persist_result
 from app.samples.sample_models import Sample
 from app.sample_groups.sample_group_models import SampleGroup
 
@@ -20,7 +20,7 @@ class HMPWrangler(DisplayModuleWrangler):
         sample = Sample.objects.get(uuid=sample_id)
         sample.analysis_result.fetch().set_module_status(MODULE_NAME, 'W')
 
-        samples = [sample]
+        samples = [jsonify(sample)]
         categories_task = categories_from_metadata.s(samples, min_size=1)
         distribution_task = make_distributions.s(samples)
         persist_task = persist_result.s(sample.analysis_result.pk,
@@ -36,7 +36,7 @@ class HMPWrangler(DisplayModuleWrangler):
         """Gather and process samples."""
         sample_group = SampleGroup.query.filter_by(id=sample_group_id).first()
         sample_group.analysis_result.set_module_status(MODULE_NAME, 'W')
-        samples = sample_group.samples
+        samples = jsonify(sample_group.samples)
 
         categories_task = categories_from_metadata.s(samples, min_size=1)
         distribution_task = make_distributions.s(samples)
