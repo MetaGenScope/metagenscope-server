@@ -6,7 +6,7 @@ from .constants import MODULE_NAME
 from .models import Humann2NormalizeToolResult
 
 
-class VFDBResultModule(ToolResultModule):
+class Humann2NormalizeResultModule(ToolResultModule):
     """Humann2 Normalize tool module."""
 
     @classmethod
