@@ -23,5 +23,6 @@ class TestHmpSitesModel(BaseToolResultTest):
         bad_hmp = dict(create_values())
         bad_hmp['skin'] = [0.5, 1.5]
         hmp_sites = HmpSitesResult(**bad_hmp)
-        sample = Sample(**{'name': 'SMPL_01', MODULE_NAME: hmp_sites})
+        args = {'name': 'SMPL_01', MODULE_NAME: hmp_sites}
+        sample = Sample(**args)
         self.assertRaises(ValidationError, sample.save)
