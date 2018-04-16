@@ -25,8 +25,8 @@ def ags_distributions(samples):
     microbe_census_key = MicrobeCensusResultModule.name()
     ags_vals = {}
     for sample in samples:
-        sample_ags = getattr(sample, microbe_census_key).average_genome_size
-        for key, value in sample.metadata.items():
+        sample_ags = sample[microbe_census_key]['average_genome_size']
+        for key, value in sample['metadata'].items():
             try:
                 ags_vals[key][value].append(sample_ags)
             except KeyError:

@@ -3,7 +3,7 @@
 from celery import chord
 
 from app.display_modules.display_wrangler import DisplayModuleWrangler
-from app.display_modules.utils import categories_from_metadata, persist_result
+from app.display_modules.utils import jsonify, categories_from_metadata, persist_result
 from app.sample_groups.sample_group_models import SampleGroup
 
 from .ags_tasks import ags_distributions, reducer_task
@@ -17,7 +17,7 @@ class AGSWrangler(DisplayModuleWrangler):
         """Gather samples then process them."""
         sample_group = SampleGroup.query.filter_by(id=sample_group_id).first()
         sample_group.analysis_result.set_module_status('average_genome_size', 'W')
-        samples = sample_group.samples
+        samples = jsonify(sample_group.samples)
 
         reducer = reducer_task.s()
         persist_task = persist_result.s(sample_group.analysis_result_uuid,

@@ -5,7 +5,6 @@ from app.analysis_results.analysis_result_models import AnalysisResultMeta, Anal
 from app.display_modules.sample_similarity.tests.factory import create_mvp_sample_similarity
 from app.display_modules.utils import (
     categories_from_metadata,
-    fetch_samples,
     persist_result,
     collate_samples,
 )
@@ -40,18 +39,6 @@ class TestDisplayModuleUtilityTasks(BaseTestCase):
         self.assertIn('valid_category', result)
         self.assertIn('foo', result['valid_category'])
         self.assertIn('baz', result['valid_category'])
-
-    def test_fetch_samples(self):
-        """Ensure fetch_samples task works."""
-        sample1 = Sample(name='Sample01').save()
-        sample2 = Sample(name='Sample02').save()
-        sample_group = add_sample_group(name='SampleGroup01')
-        sample_group.samples = [sample1, sample2]
-        db.session.commit()
-
-        result = fetch_samples.delay(sample_group.id).get()
-        self.assertIn(sample1, result)
-        self.assertIn(sample2, result)
 
     def test_persist_result(self):
         """Ensure persist_result task works as intended."""

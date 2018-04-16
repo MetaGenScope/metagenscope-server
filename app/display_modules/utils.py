@@ -1,8 +1,17 @@
 """Display module utilities."""
 
+from mongoengine import QuerySet
+
 from app.analysis_results.analysis_result_models import AnalysisResultMeta
 from app.extensions import celery
 from app.sample_groups.sample_group_models import SampleGroup
+
+
+def jsonify(mongo_doc):
+    """Convert Mongo document to JSON for serialization."""
+    if isinstance(mongo_doc, QuerySet):
+        return [jsonify(element) for element in mongo_doc]
+    return mongo_doc.to_mongo().to_dict()
 
 
 @celery.task()
@@ -27,7 +36,7 @@ def categories_from_metadata(samples, min_size=2):
     categories = {}
 
     # Gather categories and values
-    all_metadata = [sample.metadata for sample in samples]
+    all_metadata = [sample['metadata'] for sample in samples]
     for metadata in all_metadata:
         properties = [prop for prop in metadata.keys()]
         for prop in properties:
@@ -41,14 +50,6 @@ def categories_from_metadata(samples, min_size=2):
                   if len(category_values) >= min_size}
 
     return categories
-
-
-@celery.task()
-def fetch_samples(sample_group_id):
-    """Return sample list for a SampleGroup based on ID."""
-    sample_group = SampleGroup.query.filter_by(id=sample_group_id).first()
-    samples = sample_group.samples
-    return samples
 
 
 @celery.task()
