@@ -15,7 +15,9 @@ def create_values(dropout=0.25):
             val = random()
             result[loc] = val
             tot += val
-    return {loc: val / tot for loc, val in result.items()}
+    return {
+        'populations': {loc: val / tot for loc, val in result.items()}
+    }
 
 
 def create_ancestry():
