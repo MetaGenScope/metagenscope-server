@@ -21,7 +21,7 @@ class MicrobeDirectoryWrangler(DisplayModuleWrangler):
     def run_sample_group(cls, sample_group_id):
         """Gather and process samples."""
         sample_group = SampleGroup.query.filter_by(id=sample_group_id).first()
-        sample_group.set_module_status(MODULE_NAME, 'W')
+        sample_group.analysis_result.set_module_status(MODULE_NAME, 'W')
 
         tool_result_name = MicrobeDirectoryResultModule.name()
         collate_fields = MicrobeDirectoryToolResult._fields
