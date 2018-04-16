@@ -3,7 +3,7 @@
 from celery import chain
 
 from app.display_modules.display_wrangler import DisplayModuleWrangler
-from app.display_modules.utils import persist_result
+from app.display_modules.utils import jsonify, persist_result
 from app.sample_groups.sample_group_models import SampleGroup
 
 from .tasks import filter_gene_results
@@ -21,7 +21,8 @@ class GenericGeneWrangler(DisplayModuleWrangler):
         sample_group = SampleGroup.query.filter_by(id=sample_group_id).first()
         sample_group.analysis_result.set_module_status(cls.result_name, 'W')
 
-        filter_task = filter_gene_results.s(sample_group.samples,
+        samples = jsonify(sample_group.samples)
+        filter_task = filter_gene_results.s(samples,
                                             cls.tool_result_name,
                                             result_type,
                                             top_n)
