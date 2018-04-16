@@ -11,7 +11,7 @@ from app.tool_results.microbe_directory.tests.factory import (
 )
 
 
-class TestMethylsModule(BaseDisplayModuleTest):
+class TestMicrobeDirectoryModule(BaseDisplayModuleTest):
     """Test suite for Microbe Directory diplay module."""
 
     def test_get_microbe_directory(self):
@@ -21,7 +21,10 @@ class TestMethylsModule(BaseDisplayModuleTest):
 
     def test_add_microbe_directory(self):
         """Ensure Microbe Directory model is created correctly."""
-        samples = create_values()
+        samples = {
+            'sample_1': create_values(),
+            'sample_2': create_values(),
+        }
         microbe_directory_result = MicrobeDirectoryResult(samples=samples)
         self.generic_adder_test(microbe_directory_result, MODULE_NAME)
 

@@ -28,13 +28,11 @@ class BaseSchema(Schema):
     @post_load
     def make_object(self, data):
         """Make object from unwrapped envelope."""
-        # pylint: disable=no-member
-        return self.__model__(**data)
+        return self.__model__(**data)  # pylint: disable=no-member
 
     @pre_dump(pass_many=False)
-    # pylint: disable=no-self-use
-    def standardize_uuid_property(self, data):
-        """Translate UUID into URL-safe slug."""
+    def standardize_uuid_property(self, data):  # pylint: disable=no-self-use
+        """Rename id properties into standardized uuid field."""
         if hasattr(data, 'id') and isinstance(data.id, UUID):
             data.uuid = data.id
         return data

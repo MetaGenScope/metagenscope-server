@@ -17,10 +17,9 @@ class PathwayWrangler(DisplayModuleWrangler):
     def run_sample_group(cls, sample_group_id):
         """Gather samples and process."""
         sample_group = SampleGroup.query.filter_by(id=sample_group_id).first()
-        analysis_group = cls.set_analysis_group_state(MODULE_NAME,
-                                                      sample_group)
+        sample_group.analysis_result.set_module_status(MODULE_NAME, 'W')
 
-        persist_task = persist_result.s(analysis_group.uuid, MODULE_NAME)
+        persist_task = persist_result.s(sample_group.analysis_result_uuid, MODULE_NAME)
 
         task_chain = chain(filter_humann2_pathways.s(sample_group.samples),
                            persist_task)
