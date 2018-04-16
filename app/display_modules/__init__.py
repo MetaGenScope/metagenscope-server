@@ -25,5 +25,4 @@ all_display_modules = [  # pylint: disable=invalid-name
     SampleSimilarityDisplayModule,
     TaxonAbundanceDisplayModule,
     VirulenceFactorsDisplayModule,
-
 ]
