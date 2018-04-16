@@ -11,7 +11,7 @@ from app.analysis_results.analysis_result_models import AnalysisResultMeta
 from app.api.exceptions import InvalidRequest, InternalError
 from app.extensions import db
 from app.sample_groups.sample_group_models import SampleGroup, sample_group_schema
-from app.samples.sample_models import Sample
+from app.samples.sample_models import Sample, sample_schema
 from app.users.user_helpers import authenticate
 
 
@@ -54,6 +54,21 @@ def get_single_result(group_uuid):
         sample_group_id = UUID(group_uuid)
         sample_group = SampleGroup.query.filter_by(id=sample_group_id).one()
         result = sample_group_schema.dump(sample_group).data
+        return result, 200
+    except ValueError:
+        raise ParseError('Invalid Sample Group UUID.')
+    except NoResultFound:
+        raise NotFound('Sample Group does not exist')
+
+
+@sample_groups_blueprint.route('/sample_groups/<group_uuid>/samples', methods=['GET'])
+def get_samples_for_group(group_uuid):
+    """Get single sample group's list of samples."""
+    try:
+        sample_group_id = UUID(group_uuid)
+        sample_group = SampleGroup.query.filter_by(id=sample_group_id).one()
+        samples = sample_group.samples
+        result = sample_schema.dump(samples, many=True).data
         return result, 200
     except ValueError:
         raise ParseError('Invalid Sample Group UUID.')

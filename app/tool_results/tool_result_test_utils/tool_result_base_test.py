@@ -5,7 +5,7 @@ import json
 from app.samples.sample_models import Sample
 
 from tests.base import BaseTestCase
-from tests.utils import get_test_user
+from tests.utils import add_sample, get_test_user
 
 
 class BaseToolResultTest(BaseTestCase):
@@ -21,7 +21,8 @@ class BaseToolResultTest(BaseTestCase):
         """Ensure a raw tool result can be uploaded."""
         auth_headers, _ = get_test_user(self.client)
 
-        sample = Sample(name='SMPL_Microbe_Directory_01').save()
+        metadata = {'category_01': 'value_01'}
+        sample = add_sample(name='SMPL_Microbe_Directory_01', metadata=metadata)
         sample_uuid = str(sample.uuid)
         with self.client:
             response = self.client.post(

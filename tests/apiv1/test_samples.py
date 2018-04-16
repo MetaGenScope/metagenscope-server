@@ -64,8 +64,9 @@ class TestSampleModule(BaseTestCase):
             )
             data = json.loads(response.data.decode())
             self.assertEqual(response.status_code, 200)
+            self.assertIn('success', data['status'])
             sample = data['data']['sample']
             self.assertIn('SMPL_01', sample['name'])
-            self.assertTrue('metadata' in sample)
-            self.assertTrue('created_at' in sample)
-            self.assertIn('success', data['status'])
+            self.assertIn('metadata', sample)
+            self.assertIn('analysis_result_uuid', sample)
+            self.assertIn('created_at', sample)
