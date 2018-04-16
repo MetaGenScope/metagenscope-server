@@ -32,7 +32,7 @@ class Config(object):
     result_cache_max = None   # Do not limit cache
     task_always_eager = False
     task_eager_propagates = False
-    task_serializer = 'pickle'
+    task_serializer = 'json'
 
 
 class DevelopmentConfig(Config):

@@ -2,7 +2,7 @@
 
 import os
 
-from flask import jsonify, Blueprint
+from flask import jsonify, current_app, Blueprint
 from flask_api import FlaskAPI
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
@@ -69,6 +69,7 @@ def update_celery_settings(celery_app, config_class):
         result_expires=config_class.result_expires,
         task_always_eager=config_class.task_always_eager,
         task_eager_propagates=config_class.task_eager_propagates,
+        task_serializer=config_class.task_serializer,
     )
 
 
@@ -101,8 +102,13 @@ def register_blueprints(app):
 def register_error_handlers(app):
     """Register JSON error handlers for app."""
     app.register_error_handler(404, page_not_found)
+    app.register_error_handler(500, internal_error)
 
 
 def page_not_found(not_found_error):
     """Handle 404 Not Found error."""
     return jsonify(error=404, text=str(not_found_error)), 404
+
+def internal_error(exception):
+    current_app.logger.exception(exception)
+    return jsonify(error=500, text=str(exception)), 500
