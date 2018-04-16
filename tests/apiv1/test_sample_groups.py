@@ -2,6 +2,7 @@
 
 import json
 
+from app import db
 from app.sample_groups.sample_group_models import SampleGroup
 from tests.base import BaseTestCase
 from tests.utils import add_sample, add_sample_group, with_user
@@ -87,3 +88,24 @@ class TestSampleGroupModule(BaseTestCase):
             self.assertIn('public', data['data']['sample_group']['access_scheme'])
             self.assertTrue('created_at' in data['data']['sample_group'])
             self.assertIn('success', data['status'])
+
+    def test_get_single_sample_group_samples(self):  # pylint: disable=invalid-name
+        """Ensure get samples for sample group behaves correctly."""
+        group = add_sample_group(name='Sample Group One')
+        sample00 = add_sample(name='SMPL_00')
+        sample01 = add_sample(name='SMPL_01')
+        group.samples = [sample00, sample01]
+        db.session.commit()
+
+        with self.client:
+            response = self.client.get(
+                f'/api/v1/sample_groups/{str(group.id)}/samples',
+                content_type='application/json',
+            )
+            data = json.loads(response.data.decode())
+            self.assertEqual(response.status_code, 200)
+            self.assertIn('success', data['status'])
+            self.assertIn('samples', data['data'])
+            self.assertEqual(len(data['data']['samples']), 2)
+            self.assertTrue(any(s['name'] == 'SMPL_00' for s in data['data']['samples']))
+            self.assertTrue(any(s['name'] == 'SMPL_01' for s in data['data']['samples']))

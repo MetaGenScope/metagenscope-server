@@ -19,7 +19,7 @@ class SampleSimilarityWrangler(DisplayModuleWrangler):
     def run_sample_group(cls, sample_group_id):
         """Gather samples and process."""
         sample_group = SampleGroup.query.filter_by(id=sample_group_id).first()
-        sample_group.set_module_status(MODULE_NAME, 'W')
+        sample_group.analysis_result.set_module_status(MODULE_NAME, 'W')
         samples = sample_group.samples
 
         reducer = sample_similarity_reducer.s(samples)

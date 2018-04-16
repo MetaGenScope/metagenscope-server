@@ -16,7 +16,7 @@ class AGSWrangler(DisplayModuleWrangler):
     def run_sample_group(sample_group_id):
         """Gather samples then process them."""
         sample_group = SampleGroup.query.filter_by(id=sample_group_id).first()
-        sample_group.set_module_status('average_genome_size', 'W')
+        sample_group.analysis_result.set_module_status('average_genome_size', 'W')
         samples = sample_group.samples
 
         reducer = reducer_task.s()

@@ -6,33 +6,39 @@ from app.extensions import mongoDB
 from app.tool_results.tool_module import ToolResult, ToolResultModule
 from .constants import MODULE_NAME
 
+from .constants import MODULE_NAME
+
 
 class HmpSitesResult(ToolResult):       # pylint: disable=too-few-public-methods
     """HMP Sites tool's result type."""
 
-    # We do not provide a default=0 because 0 is a valid cosine similarity value
-    gut = mongoDB.FloatField()
-    skin = mongoDB.FloatField()
-    throat = mongoDB.FloatField()
-    urogenital = mongoDB.FloatField()
-    airways = mongoDB.FloatField()
+    # Lists of values for each example microbiome comparison; may not be empty
+    skin = mongoDB.ListField(mongoDB.FloatField(), required=True)
+    oral = mongoDB.ListField(mongoDB.FloatField(), required=True)
+    urogenital = mongoDB.ListField(mongoDB.FloatField(), required=True)
+    airways = mongoDB.ListField(mongoDB.FloatField(), required=True)
 
     def clean(self):
         """Check that all vals are in range [0, 1] if not then error."""
         def validate(*vals):
             """Confirm values are in range [0,1], if they exist."""
-            for val in vals:
-                if val is not None and (val < 0 or val > 1):
-                    return False
+            for value_list in vals:
+                for value in value_list:
+                    if value is not None and (value < 0 or value > 1):
+                        return False
             return True
 
-        if not validate(self.gut,
-                        self.skin,
-                        self.throat,
+        if not validate(self.skin,
+                        self.oral,
                         self.urogenital,
                         self.airways):
             msg = 'HMPSitesResult values in bad range'
             raise ValidationError(msg)
+
+    @staticmethod
+    def site_names():
+        """Return the names of the body sites."""
+        return ['skin', 'oral', 'urogenital', 'airways']
 
 
 class HmpSitesResultModule(ToolResultModule):

@@ -28,12 +28,12 @@ class HMPResult(mdb.EmbeddedDocument):      # pylint: disable=too-few-public-met
         """Ensure integrity of result content."""
         for category, values in self.categories.items():
             if category not in self.data:
-                msg = f'Value \'{category}\' is not present in \'data\'!'
+                msg = f'Category \'{category}\' is not present in \'data\'!'
                 raise ValidationError(msg)
             values_present = [datum.name for datum in self.data[category]]
             for value in values:
                 if value not in values_present:
-                    msg = f'Value \'{category}\' is not present in \'data\'!'
+                    msg = f'Value \'{value}\' is not present in \'data\'!'
                     raise ValidationError(msg)
 
         for category_name, category_data in self.data.items():

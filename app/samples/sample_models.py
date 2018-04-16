@@ -4,7 +4,7 @@ import datetime
 
 from uuid import uuid4
 
-from marshmallow import fields
+from marshmallow import fields, pre_dump
 from mongoengine import Document, EmbeddedDocumentField
 
 from app.analysis_results.analysis_result_models import AnalysisResultMeta
@@ -20,7 +20,7 @@ class BaseSample(Document):
                              binary=False, default=uuid4)
     name = mongoDB.StringField(unique=True)
     metadata = mongoDB.DictField(default={})
-    analysis_result = mongoDB.ReferenceField(AnalysisResultMeta)
+    analysis_result = mongoDB.LazyReferenceField(AnalysisResultMeta)
     created_at = mongoDB.DateTimeField(default=datetime.datetime.utcnow)
 
     meta = {'allow_inheritance': True}
@@ -51,7 +51,14 @@ class SampleSchema(BaseSchema):
     uuid = fields.Str()
     name = fields.Str()
     metadata = fields.Dict()
+    analysis_result_uuid = fields.Str()
     created_at = fields.Date()
+
+    @pre_dump(pass_many=False)
+    def add_analysis_result_uuid(self, data):  # pylint: disable=no-self-use
+        """Dump analysis_result's UUID."""
+        data.analysis_result_uuid = data.analysis_result.pk
+        return data
 
 
 sample_schema = SampleSchema()   # pylint: disable=invalid-name
