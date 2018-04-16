@@ -15,5 +15,5 @@ class FunctionalGenesWrangler(GenericGeneWrangler):
     @classmethod
     def run_sample_group(cls, sample_group_id):
         """Gather and process samples."""
-        result = cls.help_run_sample_group(VFDBResult, TOP_N, sample_group_id)
+        result = cls.help_run_sample_group(FunctionalGenesResult, TOP_N, sample_group_id)
         return result
