@@ -2,19 +2,21 @@
 
 """Factory for generating Microbe Directory models for testing."""
 
+from pandas import DataFrame
+
 import factory
 
-from app.display_modules.microbe_directory import MicrobeDirectoryResult
-from app.tool_results.microbe_directory.tests.factory import create_values
+from app.display_modules.ancestry import AncestryResult
+from app.tool_results.ancestry.tests.factory import create_values
 
 
-class MicrobeDirectoryFactory(factory.mongoengine.MongoEngineFactory):
+class AncestryFactory(factory.mongoengine.MongoEngineFactory):
     """Factory for Analysis Result's Microbe Directory."""
 
     class Meta:
         """Factory metadata."""
 
-        model = MicrobeDirectoryResult
+        model = AncestryResult
 
     @factory.lazy_attribute
     def samples(self):  # pylint: disable=no-self-use
@@ -22,4 +24,6 @@ class MicrobeDirectoryFactory(factory.mongoengine.MongoEngineFactory):
         samples = {}
         for i in range(10):
             samples[f'Sample{i}'] = create_values()
+
+        samples = DataFrame(samples).fillna(val=0).to_dict()
         return samples

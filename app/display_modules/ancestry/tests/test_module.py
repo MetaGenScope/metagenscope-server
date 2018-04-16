@@ -1,43 +1,47 @@
-"""Test suite for Microbe Directory diplay module."""
+"""Test suite for Ancestry diplay module."""
+
 from app.display_modules.display_module_base_test import BaseDisplayModuleTest
-from app.display_modules.microbe_directory.wrangler import MicrobeDirectoryWrangler
+from app.display_modules.ancestry.wrangler import AncestryWrangler
 from app.samples.sample_models import Sample
-from app.display_modules.microbe_directory.models import MicrobeDirectoryResult
-from app.display_modules.microbe_directory.constants import MODULE_NAME
-from app.display_modules.microbe_directory.tests.factory import MicrobeDirectoryFactory
+from app.display_modules.ancestry.models import AncestryResult
+from app.display_modules.ancestry.constants import MODULE_NAME, TOOL_MODULE_NAME
+from app.display_modules.ancestry.tests.factory import AncestryFactory
 from app.tool_results.microbe_directory.tests.factory import (
     create_values,
-    create_microbe_directory
+    create_ancestry
 )
 
 
-class TestMicrobeDirectoryModule(BaseDisplayModuleTest):
-    """Test suite for Microbe Directory diplay module."""
+class TestAncestryModule(BaseDisplayModuleTest):
+    """Test suite for Ancestry diplay module."""
 
-    def test_get_microbe_directory(self):
-        """Ensure getting a single Microbe Directory behaves correctly."""
-        microbe_directory = MicrobeDirectoryFactory()
-        self.generic_getter_test(microbe_directory, MODULE_NAME)
+    def test_get_ancestry(self):
+        """Ensure getting a single Ancestry behaves correctly."""
+        ancestry = AncestryFactory()
+        self.generic_getter_test(ancestry, MODULE_NAME)
 
-    def test_add_microbe_directory(self):
-        """Ensure Microbe Directory model is created correctly."""
+    def test_add_ancestry(self):
+        """Ensure Ancestry model is created correctly."""
         samples = {
             'sample_1': create_values(),
             'sample_2': create_values(),
         }
-        microbe_directory_result = MicrobeDirectoryResult(samples=samples)
-        self.generic_adder_test(microbe_directory_result, MODULE_NAME)
+        ancestry_result = AncestryResult(samples=samples)
+        self.generic_adder_test(ancestry_result, MODULE_NAME)
 
-    def test_run_microbe_directory_sample_group(self):  # pylint: disable=invalid-name
-        """Ensure microbe directory run_sample_group produces correct results."""
+    def test_run_ancestry_sample_group(self):  # pylint: disable=invalid-name
+        """Ensure Ancestry run_sample_group produces correct results."""
 
         def create_sample(i):
             """Create unique sample for index i."""
-            data = create_microbe_directory()
-            return Sample(name=f'Sample{i}',
-                          metadata={'foobar': f'baz{i}'},
-                          microbe_directory_annotate=data).save()
+            data = create_ancestry()
+            args = {
+                'name': f'Sample{i}',
+                'metadata': {'foobar': f'baz{i}'},
+                TOOL_MODULE_NAME: data
+            }
+            return Sample(**args).save()
 
         self.generic_run_group_test(create_sample,
-                                    MicrobeDirectoryWrangler,
+                                    AncestryWrangler,
                                     MODULE_NAME)

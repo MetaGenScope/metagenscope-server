@@ -1,11 +1,11 @@
 """Module for Microbe Directory results."""
 
-from app.tool_results.microbe_directory import MicrobeDirectoryResultModule
+from app.tool_results.ancestry import AncestryResultModule
 from app.display_modules.display_module import DisplayModule
 
 from .constants import MODULE_NAME
-from .models import MicrobeDirectoryResult
-from .wrangler import MicrobeDirectoryWrangler
+from .models import AncestryResult
+from .wrangler import AncestryWrangler
 
 
 class MicrobeDirectoryDisplayModule(DisplayModule):
@@ -14,7 +14,7 @@ class MicrobeDirectoryDisplayModule(DisplayModule):
     @staticmethod
     def required_tool_results():
         """Return a list of the necessary result modules."""
-        return [MicrobeDirectoryResultModule]
+        return [AncestryResultModule]
 
     @classmethod
     def name(cls):
@@ -24,9 +24,9 @@ class MicrobeDirectoryDisplayModule(DisplayModule):
     @classmethod
     def get_result_model(cls):
         """Return the embedded result."""
-        return MicrobeDirectoryResult
+        return AncestryResult
 
     @classmethod
     def get_wrangler(cls):
         """Return the wrangler class."""
-        return MicrobeDirectoryWrangler
+        return AncestryWrangler

@@ -1,1 +1,1 @@
-"""Test suite for Microbe Directory display module models and API endpoints."""
+"""Test suite for Ancestry display module models and API endpoints."""

@@ -22,7 +22,7 @@ class AncestryToolResult(ToolResult):  # pylint: disable=too-few-public-methods
                 raise ValidationError('Value in bad range.')
 
 
-class MicrobeDirectoryResultModule(ToolResultModule):
+class AncestryResultModule(ToolResultModule):
     """Ancestry tool module."""
 
     @classmethod
