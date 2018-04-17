@@ -1,9 +1,12 @@
 """Display module utilities."""
 
+from pprint import pformat
+
 from mongoengine import QuerySet
+from mongoengine.errors import ValidationError
 
 from app.analysis_results.analysis_result_models import AnalysisResultMeta
-from app.extensions import celery
+from app.extensions import celery, celery_logger
 
 
 def jsonify(mongo_doc):
@@ -17,9 +20,17 @@ def persist_result_helper(result, analysis_result_id, result_name):
     """Persist results to an Analysis Result model."""
     analysis_result = AnalysisResultMeta.objects.get(uuid=analysis_result_id)
     wrapper = getattr(analysis_result, result_name)
-    wrapper.data = result
-    wrapper.status = 'S'
-    analysis_result.save()
+    try:
+        wrapper.data = result
+        wrapper.status = 'S'
+        analysis_result.save()
+    except ValidationError:
+        contents = pformat(jsonify(result))
+        celery_logger.exception(f'Could not save result with contents:\n{contents}')
+
+        wrapper.data = None
+        wrapper.status = 'E'
+        analysis_result.save()
 
 
 @celery.task()
@@ -53,7 +64,7 @@ def categories_from_metadata(samples, min_size=2):
             categories[prop].add(metadata[prop])
 
     # Filter for minimum number of values
-    categories = {category_name: category_values
+    categories = {category_name: list(category_values)
                   for category_name, category_values in categories.items()
                   if len(category_values) >= min_size}
 
