@@ -58,8 +58,8 @@ class DisplayModuleConductor:
         for module in valid_modules:
             # Pass off middleware execution to Wrangler
             module_name = module.name()
-            module.get_wrangler().run_sample(sample_id=self.sample_id,
-                                             module_name=module_name)
+            module.get_wrangler().help_run_sample(sample_id=self.sample_id,
+                                                  module_name=module_name)
 
     def direct_sample_group(self, sample_group):
         """Kick off computation for a sample group's relevant DisplayModules."""
@@ -72,7 +72,8 @@ class DisplayModuleConductor:
                 module.get_wrangler().help_run_sample_group(sample_group_id=sample_group.id,
                                                             module_name=module_name)
             except EmptyGroupResult:
-                current_app.logger.info('Attempted to run sample group with ')
+                current_app.logger.info(f'Attempted to run {module_name} sample group '
+                                        'without at least two samples')
 
     def direct_sample_groups(self):
         """Kick off computation for affected sample groups' relevant DisplayModules."""
