@@ -22,7 +22,7 @@ class MethylWrangler(GenericGeneWrangler):
     result_name = MODULE_NAME
 
     @classmethod
-    def run_sample_group(cls, sample_group_id):
+    def run_sample_group(cls, sample_group, samples):
         """Gather and process samples."""
-        result = cls.help_run_sample_group(sample_group_id, TOP_N, persist_result)
+        result = cls.help_run_generic_gene_group(sample_group, samples, TOP_N, persist_result)
         return result

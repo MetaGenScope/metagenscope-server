@@ -1,6 +1,9 @@
 """The Conductor module orchestrates Display module generation based on changing data."""
 
+from flask import current_app
+
 from app.display_modules import all_display_modules
+from app.display_modules.exceptions import EmptyGroupResult
 from app.samples.sample_models import Sample
 from app.sample_groups.sample_group_models import SampleGroup
 
@@ -54,7 +57,9 @@ class DisplayModuleConductor:
         valid_modules = self.get_valid_modules(tools_present)
         for module in valid_modules:
             # Pass off middleware execution to Wrangler
-            module.get_wrangler().run_sample(sample_id=self.sample_id)
+            module_name = module.name()
+            module.get_wrangler().run_sample(sample_id=self.sample_id,
+                                             module_name=module_name)
 
     def direct_sample_group(self, sample_group):
         """Kick off computation for a sample group's relevant DisplayModules."""
@@ -62,7 +67,12 @@ class DisplayModuleConductor:
         valid_modules = self.get_valid_modules(tools_present_in_all)
         for module in valid_modules:
             # Pass off middleware execution to Wrangler
-            module.get_wrangler().run_sample_group(sample_group_id=sample_group.id)
+            module_name = module.name()
+            try:
+                module.get_wrangler().help_run_sample_group(sample_group_id=sample_group.id,
+                                                            module_name=module_name)
+            except EmptyGroupResult:
+                current_app.logger.info('Attempted to run sample group with ')
 
     def direct_sample_groups(self):
         """Kick off computation for affected sample groups' relevant DisplayModules."""
