@@ -6,7 +6,7 @@ from app.display_modules.sample_similarity.tests.factory import create_mvp_sampl
 from app.display_modules.utils import (
     jsonify,
     categories_from_metadata,
-    persist_result,
+    persist_result_helper,
     collate_samples,
 )
 from app.samples.sample_models import Sample
@@ -41,15 +41,15 @@ class TestDisplayModuleUtilityTasks(BaseTestCase):
         self.assertIn('foo', result['valid_category'])
         self.assertIn('baz', result['valid_category'])
 
-    def test_persist_result(self):
-        """Ensure persist_result task works as intended."""
+    def test_persist_result_helper(self):
+        """Ensure persist_result_helper works as intended."""
         wrapper = AnalysisResultWrapper()
         analysis_result = AnalysisResultMeta(sample_similarity=wrapper).save()
         sample_similarity = create_mvp_sample_similarity()
 
-        persist_result.delay(sample_similarity,
-                             analysis_result.uuid,
-                             'sample_similarity').get()
+        persist_result_helper(sample_similarity,
+                              analysis_result.uuid,
+                              'sample_similarity')
         analysis_result.reload()
         self.assertIn('sample_similarity', analysis_result)
         self.assertIn('status', analysis_result['sample_similarity'])

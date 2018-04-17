@@ -4,6 +4,7 @@ import numpy as np
 from sklearn.manifold import TSNE
 
 from app.extensions import celery
+from app.display_modules.utils import persist_result_helper
 from app.tool_results.kraken import KrakenResultModule
 from app.tool_results.metaphlan2 import Metaphlan2ResultModule
 
@@ -149,4 +150,16 @@ def sample_similarity_reducer(args, samples):
         Metaphlan2ResultModule.name(): metaphlan_tool,
     }
 
-    return SampleSimilarityResult(categories=categories, tools=tools, data_records=data_records)
+    result_data = {
+        'categories': categories,
+        'tools': tools,
+        'data_records': data_records,
+    }
+    return result_data
+
+
+@celery.task(name='sample_similarity.persist_result')
+def persist_result(result_data, analysis_result_id, result_name):
+    """Persist Sample Similarity results."""
+    result = SampleSimilarityResult(**result_data)
+    persist_result_helper(result, analysis_result_id, result_name)

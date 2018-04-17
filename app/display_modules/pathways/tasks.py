@@ -4,6 +4,7 @@ import pandas as pd
 import numpy as np
 
 from app.extensions import celery
+from app.display_modules.utils import persist_result_helper
 from app.tool_results.humann2 import Humann2ResultModule
 
 from .constants import TOP_N
@@ -66,4 +67,12 @@ def filter_humann2_pathways(samples):
         out[sname] = {'pathway_abundances': path_abunds,
                       'pathway_coverages': path_covs}
 
-    return PathwayResult(samples=out)
+    result_data = {'samples': out}
+    return result_data
+
+
+@celery.task(name='pathways.persist_result')
+def persist_result(result_data, analysis_result_id, result_name):
+    """Persist Pathways results."""
+    result = PathwayResult(**result_data)
+    persist_result_helper(result, analysis_result_id, result_name)

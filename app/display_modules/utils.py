@@ -13,6 +13,15 @@ def jsonify(mongo_doc):
     return mongo_doc.to_mongo().to_dict()
 
 
+def persist_result_helper(result, analysis_result_id, result_name):
+    """Persist results to an Analysis Result model."""
+    analysis_result = AnalysisResultMeta.objects.get(uuid=analysis_result_id)
+    wrapper = getattr(analysis_result, result_name)
+    wrapper.data = result
+    wrapper.status = 'S'
+    analysis_result.save()
+
+
 @celery.task()
 def categories_from_metadata(samples, min_size=2):
     """
@@ -49,16 +58,6 @@ def categories_from_metadata(samples, min_size=2):
                   if len(category_values) >= min_size}
 
     return categories
-
-
-@celery.task()
-def persist_result(result, analysis_result_id, result_name):
-    """Persist results to an Analysis Result model."""
-    analysis_result = AnalysisResultMeta.objects.get(uuid=analysis_result_id)
-    wrapper = getattr(analysis_result, result_name)
-    wrapper.data = result
-    wrapper.status = 'S'
-    analysis_result.save()
 
 
 @celery.task()

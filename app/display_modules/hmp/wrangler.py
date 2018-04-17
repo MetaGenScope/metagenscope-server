@@ -3,12 +3,12 @@
 from celery import chain
 
 from app.display_modules.display_wrangler import DisplayModuleWrangler
-from app.display_modules.utils import jsonify, categories_from_metadata, persist_result
+from app.display_modules.utils import jsonify, categories_from_metadata
 from app.samples.sample_models import Sample
 from app.sample_groups.sample_group_models import SampleGroup
 
 from .constants import MODULE_NAME
-from .tasks import make_distributions, reducer_task
+from .tasks import make_distributions, reducer_task, persist_result
 
 
 class HMPWrangler(DisplayModuleWrangler):

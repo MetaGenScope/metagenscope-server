@@ -3,13 +3,13 @@
 from celery import chord
 
 from app.display_modules.display_wrangler import DisplayModuleWrangler
-from app.display_modules.utils import jsonify, categories_from_metadata, persist_result
+from app.display_modules.utils import jsonify, categories_from_metadata
 from app.sample_groups.sample_group_models import SampleGroup
 from app.tool_results.kraken import KrakenResultModule
 from app.tool_results.metaphlan2 import Metaphlan2ResultModule
 
 from .constants import MODULE_NAME
-from .tasks import taxa_tool_tsne, sample_similarity_reducer
+from .tasks import taxa_tool_tsne, sample_similarity_reducer, persist_result
 
 
 class SampleSimilarityWrangler(DisplayModuleWrangler):

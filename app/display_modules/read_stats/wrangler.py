@@ -2,20 +2,13 @@
 
 from celery import chain
 
-from app.extensions import celery
 from app.display_modules.display_wrangler import DisplayModuleWrangler
-from app.display_modules.utils import jsonify, persist_result, collate_samples
+from app.display_modules.utils import jsonify, collate_samples
 from app.sample_groups.sample_group_models import SampleGroup
 from app.tool_results.read_stats import ReadStatsToolResultModule
 
 from .constants import MODULE_NAME
-from .models import ReadStatsResult
-
-
-@celery.task()
-def read_stats_reducer(samples):
-    """Wrap collated samples as actual Result type."""
-    return ReadStatsResult(samples=samples)
+from .tasks import read_stats_reducer, persist_result
 
 
 class ReadStatsWrangler(DisplayModuleWrangler):

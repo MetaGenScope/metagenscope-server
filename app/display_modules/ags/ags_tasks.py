@@ -3,6 +3,7 @@
 from numpy import percentile
 
 from app.extensions import celery
+from app.display_modules.utils import persist_result_helper
 from app.tool_results.microbe_census import MicrobeCensusResultModule
 
 from .ags_models import AGSResult
@@ -42,9 +43,20 @@ def ags_distributions(samples):
     return ags_vals
 
 
-@celery.task
+@celery.task()
 def reducer_task(args):
     """Combine AGS component calculations."""
     categories = args[0]
     ags_dists = args[1]
-    return AGSResult(categories=categories, distributions=ags_dists)
+    result_data = {
+        'categories': categories,
+        'distributions': ags_dists,
+    }
+    return result_data
+
+
+@celery.task(name='ags.persist_result')
+def persist_result(result_data, analysis_result_id, result_name):
+    """Persist AGS results."""
+    result = AGSResult(**result_data)
+    persist_result_helper(result, analysis_result_id, result_name)

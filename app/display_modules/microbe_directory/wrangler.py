@@ -3,7 +3,7 @@
 from celery import chain
 
 from app.display_modules.display_wrangler import DisplayModuleWrangler
-from app.display_modules.utils import jsonify, persist_result, collate_samples
+from app.display_modules.utils import jsonify, collate_samples
 from app.sample_groups.sample_group_models import SampleGroup
 from app.tool_results.microbe_directory import (
     MicrobeDirectoryToolResult,
@@ -11,7 +11,7 @@ from app.tool_results.microbe_directory import (
 )
 
 from .constants import MODULE_NAME
-from .tasks import microbe_directory_reducer
+from .tasks import microbe_directory_reducer, persist_result
 
 
 class MicrobeDirectoryWrangler(DisplayModuleWrangler):

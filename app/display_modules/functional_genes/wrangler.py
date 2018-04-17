@@ -1,9 +1,18 @@
-"""Tasks for generating Virulence Factor results."""
+"""Tasks for generating Functional Genes results."""
 
+from app.extensions import celery
 from app.display_modules.generic_gene_set.wrangler import GenericGeneWrangler
+from app.display_modules.utils import persist_result_helper
 
 from .models import FunctionalGenesResult
 from .constants import MODULE_NAME, TOP_N, TOOL_MODULE_NAME
+
+
+@celery.task(name='functional_genes.persist_result')
+def persist_result(result_data, analysis_result_id, result_name):
+    """Persist Functional Genes results."""
+    result = FunctionalGenesResult(**result_data)
+    persist_result_helper(result, analysis_result_id, result_name)
 
 
 class FunctionalGenesWrangler(GenericGeneWrangler):
@@ -15,5 +24,5 @@ class FunctionalGenesWrangler(GenericGeneWrangler):
     @classmethod
     def run_sample_group(cls, sample_group_id):
         """Gather and process samples."""
-        result = cls.help_run_sample_group(FunctionalGenesResult, TOP_N, sample_group_id)
+        result = cls.help_run_sample_group(sample_group_id, TOP_N, persist_result)
         return result

@@ -3,10 +3,10 @@
 from celery import chord
 
 from app.display_modules.display_wrangler import DisplayModuleWrangler
-from app.display_modules.utils import jsonify, categories_from_metadata, persist_result
+from app.display_modules.utils import jsonify, categories_from_metadata
 from app.sample_groups.sample_group_models import SampleGroup
 
-from .ags_tasks import ags_distributions, reducer_task
+from .ags_tasks import ags_distributions, reducer_task, persist_result
 
 
 class AGSWrangler(DisplayModuleWrangler):

@@ -3,11 +3,11 @@
 from celery import chain
 
 from app.display_modules.display_wrangler import DisplayModuleWrangler
-from app.display_modules.utils import jsonify, persist_result
+from app.display_modules.utils import jsonify
 from app.sample_groups.sample_group_models import SampleGroup
 
 from .constants import MODULE_NAME
-from .tasks import filter_humann2_pathways
+from .tasks import filter_humann2_pathways, persist_result
 
 
 class PathwayWrangler(DisplayModuleWrangler):

@@ -3,6 +3,7 @@
 from numpy import percentile
 
 from app.extensions import celery
+from app.display_modules.utils import persist_result_helper
 from app.tool_results.hmp_sites import HmpSitesResultModule
 
 from .models import HMPResult
@@ -47,6 +48,16 @@ def reducer_task(args):
     categories = args[1]
     site_names = args[2]
 
-    return HMPResult(categories=categories,
-                     sites=site_names,
-                     data=distributions)
+    result_data = {
+        'categories': categories,
+        'sites': site_names,
+        'data': distributions,
+    }
+    return result_data
+
+
+@celery.task(name='hmp.persist_result')
+def persist_result(result_data, analysis_result_id, result_name):
+    """Persist HMP results."""
+    result = HMPResult(**result_data)
+    persist_result_helper(result, analysis_result_id, result_name)
