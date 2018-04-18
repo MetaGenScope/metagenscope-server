@@ -12,7 +12,7 @@ from app.display_modules.reads_classified.reads_classified_models import (
     ReadsClassifiedDatum,
 )
 from app.display_modules.reads_classified.reads_classified_wrangler import ReadsClassifiedWrangler
-
+from .constants import MODULE_NAME
 
 class ReadsClassifiedModule(DisplayModule):
     """Reads Classified display module."""
@@ -25,7 +25,7 @@ class ReadsClassifiedModule(DisplayModule):
     @classmethod
     def name(cls):
         """Return module's unique identifier string."""
-        return 'reads_classified'
+        return MODULE_NAME
 
     @classmethod
     def get_result_model(cls):
