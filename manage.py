@@ -101,7 +101,9 @@ def seed_db():
                   password='Foobar22')
 
     abrf_analysis_result.save()
-    abrf_2017_group = SampleGroup(name='ABRF 2017', analysis_result=abrf_analysis_result)
+    abrf_description = 'ABRF San Diego Mar 24th-29th 2017'
+    abrf_2017_group = SampleGroup(name='ABRF 2017', analysis_result=abrf_analysis_result,
+                                  description=abrf_description, theme='world-quant')
 
     uw_analysis_result.save()
     uw_sample = Sample(name='UW_Madison_00', analysis_result=uw_analysis_result).save()
