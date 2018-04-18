@@ -26,7 +26,7 @@ class SamplePlaceholder(db.Model):  # pylint: disable=too-few-public-methods
         self.sample_group_id = sample_group_id
 
 
-class SampleGroup(db.Model):
+class SampleGroup(db.Model):  # pylint: disable=too-many-instance-attributes
     """MetaGenScope Sample Group model."""
 
     __tablename__ = 'sample_groups'
