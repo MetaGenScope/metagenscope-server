@@ -38,7 +38,7 @@ class TestAncestryModule(BaseDisplayModuleTest):
             args = {
                 'name': f'Sample{i}',
                 'metadata': {'foobar': f'baz{i}'},
-                TOOL_MODULE_NAME: data
+                TOOL_MODULE_NAME: data,
             }
             return Sample(**args).save()
 
