@@ -38,7 +38,9 @@ class SampleGroup(db.Model):
     organization_id = db.Column(UUID(as_uuid=True), db.ForeignKey('organizations.id'))
 
     name = db.Column(db.String(128), unique=True, nullable=False)
+    description = db.Column(db.String(300), nullable=False, default='')
     access_scheme = db.Column(db.String(128), default='public', nullable=False)
+    theme = db.Column(db.String(16), nullable=False, default='')
     created_at = db.Column(db.DateTime, nullable=False)
 
     sample_placeholders = db.relationship(SamplePlaceholder)
@@ -46,12 +48,15 @@ class SampleGroup(db.Model):
 
     analysis_result_uuid = db.Column(UUID(as_uuid=True), nullable=False)
 
-    def __init__(
-            self, name, analysis_result, access_scheme='public',
+    def __init__(  # pylint: disable=too-many-arguments
+            self, name, analysis_result, description='',
+            access_scheme='public', theme='',
             created_at=datetime.datetime.utcnow()):
         """Initialize MetaGenScope User model."""
         self.name = name
+        self.description = description
         self.access_scheme = access_scheme
+        self.theme = theme
         self.created_at = created_at
         self.analysis_result_uuid = analysis_result.uuid
 
@@ -112,7 +117,9 @@ class SampleGroupSchema(BaseSchema):  # pylint: disable=too-few-public-methods
 
     uuid = fields.Str()
     name = fields.Str()
+    description = fields.Str()
     access_scheme = fields.Str()
+    theme = fields.Str()
     created_at = fields.Date()
     analysis_result_uuid = fields.Str()
 
