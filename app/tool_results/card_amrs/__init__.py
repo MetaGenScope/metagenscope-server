@@ -1,12 +1,12 @@
 """CARD AMR Alignment tool module."""
 
-from app.tool_results.tool_module import ToolResultModule
+from app.tool_results.modules import SampleToolResultModule
 
 from .constants import MODULE_NAME
 from .models import CARDAMRToolResult
 
 
-class CARDAMRResultModule(ToolResultModule):
+class CARDAMRResultModule(SampleToolResultModule):
     """CARD AMR Alignment tool module."""
 
     @classmethod

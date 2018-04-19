@@ -1,11 +1,11 @@
 """Virulence Factor tool module."""
 
-from app.tool_results.tool_module import ToolResultModule
+from app.tool_results.modules import SampleToolResultModule
 
 from .models import VFDBToolResult
 
 
-class VFDBResultModule(ToolResultModule):
+class VFDBResultModule(SampleToolResultModule):
     """Virulence Factor tool module."""
 
     @classmethod

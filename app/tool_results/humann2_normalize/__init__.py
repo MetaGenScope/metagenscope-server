@@ -1,12 +1,12 @@
 """Humann2 Normalize tool module."""
 
-from app.tool_results.tool_module import ToolResultModule
+from app.tool_results.modules import SampleToolResultModule
 
 from .constants import MODULE_NAME
 from .models import Humann2NormalizeToolResult
 
 
-class Humann2NormalizeResultModule(ToolResultModule):
+class Humann2NormalizeResultModule(SampleToolResultModule):
     """Humann2 Normalize tool module."""
 
     @classmethod

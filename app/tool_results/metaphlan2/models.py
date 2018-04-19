@@ -1,7 +1,7 @@
 """Metaphlan 2 tool module."""
 
 from app.extensions import mongoDB
-from app.tool_results.tool_module import ToolResult
+from app.tool_results.models import ToolResult
 
 
 class Metaphlan2Result(ToolResult):     # pylint: disable=too-few-public-methods

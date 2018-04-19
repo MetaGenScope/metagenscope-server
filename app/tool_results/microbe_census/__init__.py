@@ -2,7 +2,8 @@
 from mongoengine import ValidationError
 
 from app.extensions import mongoDB
-from app.tool_results.tool_module import ToolResult, ToolResultModule
+from app.tool_results.modules import SampleToolResultModule
+from app.tool_results.models import ToolResult
 
 
 class MicrobeCensusResult(ToolResult):  # pylint: disable=too-few-public-methods
@@ -28,7 +29,7 @@ class MicrobeCensusResult(ToolResult):  # pylint: disable=too-few-public-methods
             raise ValidationError(msg)
 
 
-class MicrobeCensusResultModule(ToolResultModule):
+class MicrobeCensusResultModule(SampleToolResultModule):
     """Microbe Census tool module."""
 
     @classmethod

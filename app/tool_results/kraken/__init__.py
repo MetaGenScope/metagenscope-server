@@ -1,11 +1,11 @@
 """Kraken tool module."""
 
-from app.tool_results.tool_module import ToolResultModule
+from app.tool_results.modules import SampleToolResultModule
 
 from .models import KrakenResult
 
 
-class KrakenResultModule(ToolResultModule):
+class KrakenResultModule(SampleToolResultModule):
     """Kraken tool module."""
 
     @classmethod

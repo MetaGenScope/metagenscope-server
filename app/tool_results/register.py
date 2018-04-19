@@ -10,15 +10,18 @@ from sqlalchemy.orm.exc import NoResultFound
 
 from app.display_modules.conductor import DisplayModuleConductor
 from app.samples.sample_models import Sample
+from app.sample_groups.sample_group_models import SampleGroup
 from app.users.user_models import User
 from app.users.user_helpers import authenticate
 
+from .modules import SampleToolResultModule, GroupToolResultModule
 
-def receive_upload(cls, resp, sample_uuid):
+
+def receive_sample_tool_upload(cls, resp, uuid):
     """Define handler for receiving uploads of analysis tool results."""
     try:
-        uuid = UUID(sample_uuid)
-        sample = Sample.objects.get(uuid=uuid)
+        safe_uuid = UUID(uuid)
+        sample = Sample.objects.get(uuid=safe_uuid)
     except ValueError:
         raise ParseError('Invalid UUID provided.')
     except DoesNotExist:
@@ -32,8 +35,8 @@ def receive_upload(cls, resp, sample_uuid):
         raise PermissionDenied('Authorization failed.')
 
     try:
-        post_json = request.get_json()
-        tool_result = cls.make_result_model(post_json)
+        payload = request.get_json()
+        tool_result = cls.make_result_model(payload)
         setattr(sample, cls.name(), tool_result)
         sample.save()
     except ValidationError as validation_error:
@@ -41,30 +44,59 @@ def receive_upload(cls, resp, sample_uuid):
 
     # Kick off middleware tasks
     try:
-        DisplayModuleConductor(sample_uuid, cls).shake_that_baton()
+        DisplayModuleConductor(safe_uuid, cls).shake_that_baton()
     except Exception:  # pylint: disable=broad-except
         current_app.logger.exception('Exception while coordinating display modules.')
 
-    return post_json, 201
+    return tool_result, 201
 
 
-def register_api_call(cls, router):
+def receive_group_tool_upload(cls, resp, uuid):
+    """Define handler for receiving uploads of analysis tool results for sample groups."""
+    try:
+        safe_uuid = UUID(uuid)
+        sample_group = SampleGroup.query.filter_by(id=safe_uuid).first()
+    except ValueError:
+        raise ParseError('Invalid UUID provided.')
+    except NoResultFound:
+        raise NotFound('Sample Group does not exist.')
+
+    # gh-21: Write actual validation:
+    try:
+        auth_user = User.query.filter_by(id=resp).one()
+        print(auth_user, str(safe_uuid))
+    except NoResultFound:
+        raise PermissionDenied('Authorization failed.')
+
+    try:
+        payload = request.get_json()
+        payload['sample_group_uuid'] = sample_group.id
+        group_tool_result = cls.make_result_model(payload)
+        group_tool_result.save()
+    except ValidationError as validation_error:
+        raise ParseError(str(validation_error))
+
+    # Kick off middleware tasks
+    # DisplayModuleConductor(sample_uuid, cls).shake_that_baton()
+
+    return group_tool_result, 201
+
+
+def register_tool_result(cls, router):
     """Register API endpoint for this display module type."""
-    endpoint_url = f'/samples/<sample_uuid>/{cls.name()}'
+    endpoint_url = cls.endpoint()
     endpoint_name = f'post_{cls.name()}'
 
     @authenticate
-    def view_function(resp, sample_uuid):
+    def view_function(resp, uuid):
         """Wrap receive_upload to provide class."""
-        return receive_upload(cls, resp, sample_uuid)
+        if issubclass(cls, SampleToolResultModule):
+            return receive_sample_tool_upload(cls, resp, uuid)
+        elif issubclass(cls, GroupToolResultModule):
+            return receive_group_tool_upload(cls, resp, uuid)
+        raise ParseError('Tool Result of unrecognized type.')
 
     router.add_url_rule(endpoint_url,
                         endpoint_name,
                         view_function,
                         methods=['POST'])
-
-
-def register_modules(modules, router):
-    """Register module API endpoints."""
-    for module in modules:
-        register_api_call(module, router)

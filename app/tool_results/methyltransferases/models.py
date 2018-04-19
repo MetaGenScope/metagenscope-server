@@ -1,7 +1,7 @@
 """Models for Methyltransferase tool module."""
 
 from app.extensions import mongoDB
-from app.tool_results.tool_module import ToolResult
+from app.tool_results.models import ToolResult
 
 
 class MethylRow(mongoDB.EmbeddedDocument):  # pylint: disable=too-few-public-methods
