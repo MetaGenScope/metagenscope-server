@@ -8,7 +8,7 @@ from flask_api.exceptions import NotFound, ParseError, PermissionDenied
 from mongoengine.errors import ValidationError, DoesNotExist
 from sqlalchemy.orm.exc import NoResultFound
 
-from app.display_modules.conductor import SampleConductor
+from app.display_modules.conductor import SampleConductor, GroupConductor
 from app.samples.sample_models import Sample
 from app.sample_groups.sample_group_models import SampleGroup
 from app.users.user_models import User
@@ -78,7 +78,11 @@ def receive_group_tool_upload(cls, resp, uuid):
         raise ParseError(str(validation_error))
 
     # Kick off middleware tasks
-    # DisplayModuleConductor(sample_uuid, cls).shake_that_baton()
+    try:
+        GroupConductor(safe_uuid, cls).shake_that_baton()
+    except Exception as exc:  # pylint: disable=broad-except
+        current_app.logger.exception('Exception while coordinating display modules.')
+        current_app.logger.exception(exc)
 
     # Return payload here to avoid per-class JSON serialization
     return payload, 201
