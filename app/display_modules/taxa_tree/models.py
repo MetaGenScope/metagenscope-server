@@ -1,10 +1,11 @@
 """Taxa Tree display models."""
 
-from app.extensions import mongoDB as mdb
 from mongoengine import ValidationError
+from app.extensions import mongoDB as mdb
 
 
 def validate_json_tree(root, parent=None):
+    """Check that a tree has the appropriate fields."""
     if 'name' not in root:
         raise ValidationError('Node does not contain name field')
 
@@ -35,5 +36,6 @@ class TaxaTreeResult(mdb.EmbeddedDocument):  # pylint: disable=too-few-public-me
     kraken = mdb.MapField(field=mdb.DynamicField(), required=True)
 
     def clean(self):
+        """Check that model is correct."""
         validate_json_tree(self.metaphlan2)
         validate_json_tree(self.kraken)
