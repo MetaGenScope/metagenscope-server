@@ -4,7 +4,7 @@
 
 import factory
 from app.display_modules.reads_classified import ReadsClassifiedResult
-from app.tool_results.reads_classified import create_values
+from app.tool_results.reads_classified.tests.factory import create_values
 
 
 class ReadsClassifiedFactory(factory.mongoengine.MongoEngineFactory):

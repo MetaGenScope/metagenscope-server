@@ -7,7 +7,7 @@ This chart shows the proportion of reads in each sample assigned to different gr
 from app.display_modules.display_module import DisplayModule
 from app.tool_results.reads_classified import ReadsClassifiedResultModule
 # Re-export modules
-from .models import ReadsClassifiedResult, ReadsClassifiedDatum
+from .models import ReadsClassifiedResult, SingleReadsClassifiedResult
 from .wrangler import ReadsClassifiedWrangler
 from .constants import MODULE_NAME
 
