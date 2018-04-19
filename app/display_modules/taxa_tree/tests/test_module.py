@@ -1,4 +1,4 @@
-"""Test suite for ReadStats display module."""
+"""Test suite for Taxa Tree display module."""
 
 from app.display_modules.display_module_base_test import BaseDisplayModuleTest
 from app.display_modules.read_stats.wrangler import ReadStatsWrangler
@@ -12,24 +12,24 @@ from app.tool_results.read_stats.tests.factory import (
 )
 
 
-class TestReadStatsModule(BaseDisplayModuleTest):
+class TestTaxaTreeModule(BaseDisplayModuleTest):
     """Test suite for ReadStats diplay module."""
 
-    def test_get_read_stats(self):
-        """Ensure getting a single ReadStats behaves correctly."""
-        rstats = ReadStatsFactory()
-        self.generic_getter_test(rstats, MODULE_NAME)
+    def test_get_taxa_tree(self):
+        """Ensure getting a single TaxaTree behaves correctly."""
+        ttree = TaxaTreeFactory()
+        self.generic_getter_test(ttree, MODULE_NAME)
 
-    def test_add_read_stats(self):
-        """Ensure ReadStats model is created correctly."""
+    def test_add_taxa_tree(self):
+        """Ensure TaxaTree model is created correctly."""
         samples = {
-            'test_sample_1': create_values(),
-            'test_sample_2': create_values(),
+            'metaphlan2': generate_random_tree(),
+            'kraken': generate_random_tree(),
         }
-        read_stats_result = ReadStatsResult(samples=samples)
-        self.generic_adder_test(read_stats_result, MODULE_NAME)
+        taxa_tree_result = TaxaTreeResult(samples=samples)
+        self.generic_adder_test(taxa_tree_result, MODULE_NAME)
 
-    def test_run_read_stats_sample_group(self):  # pylint: disable=invalid-name
+    def test_run_taxa_tree_sample(self):  # pylint: disable=invalid-name
         """Ensure ReadStats run_sample_group produces correct results."""
 
         def create_sample(i):

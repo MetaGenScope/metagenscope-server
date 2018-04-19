@@ -36,6 +36,10 @@ class BaseDisplayModuleTest(BaseTestCase):
         self.assertTrue(result.uuid)
         self.assertTrue(getattr(result, endpt))
 
+    def generic_run_single_sample(self, sample, wrangler, endpt):
+        """Check that we can run a wrangler on a set of samples."""
+        pass
+
     def generic_run_group_test(self, sample_builder, wrangler, endpt):
         """Check that we can run a wrangler on a set of samples."""
         sample_group = add_sample_group(name='SampleGroup01')
