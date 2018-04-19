@@ -20,8 +20,7 @@ class TestSampleConductor(BaseTestCase):
         """Ensure downstream_modules is computed correctly."""
         sample_id = str(uuid4())
         conductor = SampleConductor(sample_id, KrakenResultModule)
-        downstream_modules = conductor.get_downstream_modules()
-        self.assertIn(SampleSimilarityDisplayModule, downstream_modules)
+        self.assertIn(SampleSimilarityDisplayModule, conductor.downstream_modules)
 
     def test_get_valid_modules(self):
         """Ensure valid_modules is computed correctly."""
