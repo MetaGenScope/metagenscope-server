@@ -4,7 +4,7 @@ from app.extensions import mongoDB as mdb
 
 
 class SingleReadsClassifiedResult(mdb.EmbeddedDocument):  # pylint: disable=too-few-public-methods
-    """Reads Classified for one sample"""
+    """Reads Classified for one sample."""
 
     viral = mdb.IntField(required=True, default=0)
     archaea = mdb.IntField(required=True, default=0)
