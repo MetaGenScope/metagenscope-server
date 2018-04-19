@@ -4,6 +4,7 @@ import numpy as np
 from sklearn.manifold import TSNE
 
 from app.extensions import celery
+from app.display_modules.utils import persist_result_helper
 from app.tool_results.kraken import KrakenResultModule
 from app.tool_results.metaphlan2 import Metaphlan2ResultModule
 
@@ -116,7 +117,7 @@ def taxa_tool_tsne(samples, tool_name):
         'y_label': f'{tool_name} tsne y',
     }
 
-    sample_dict = {sample.name: getattr(sample, tool_name).taxa
+    sample_dict = {sample['name']: sample[tool_name]['taxa']
                    for sample in samples}
     samples = get_clean_samples(sample_dict)
     taxa_tsne = run_tsne(samples)
@@ -135,12 +136,12 @@ def sample_similarity_reducer(args, samples):
 
     data_records = []
     for sample in samples:
-        sample_id = sample.name
+        sample_id = sample['name']
         data_record = {'SampleID': sample_id}
         data_record.update(kraken_labeled[sample_id])
         data_record.update(metaphlan_labeled[sample_id])
         for category_name in categories.keys():
-            category_value = sample.metadata.get(category_name, 'None')
+            category_value = sample['metadata'].get(category_name, 'None')
             data_record[category_name] = category_value
         data_records.append(data_record)
 
@@ -149,4 +150,16 @@ def sample_similarity_reducer(args, samples):
         Metaphlan2ResultModule.name(): metaphlan_tool,
     }
 
-    return SampleSimilarityResult(categories=categories, tools=tools, data_records=data_records)
+    result_data = {
+        'categories': categories,
+        'tools': tools,
+        'data_records': data_records,
+    }
+    return result_data
+
+
+@celery.task(name='sample_similarity.persist_result')
+def persist_result(result_data, analysis_result_id, result_name):
+    """Persist Sample Similarity results."""
+    result = SampleSimilarityResult(**result_data)
+    persist_result_helper(result, analysis_result_id, result_name)

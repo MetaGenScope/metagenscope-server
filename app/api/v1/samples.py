@@ -43,7 +43,9 @@ def add_sample(resp):  # pylint: disable=unused-argument
 
     try:
         analysis_result = AnalysisResultMeta().save()
-        sample = Sample(name=sample_name, analysis_result=analysis_result).save()
+        sample = Sample(name=sample_name,
+                        analysis_result=analysis_result,
+                        metadata={'name': sample_name}).save()
         sample_group.sample_ids.append(sample.uuid)
         db.session.commit()
         result = sample_schema.dump(sample).data

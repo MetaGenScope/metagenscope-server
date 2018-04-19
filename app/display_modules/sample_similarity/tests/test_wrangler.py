@@ -36,7 +36,8 @@ class TestSampleSimilarityWrangler(BaseTestCase):
         sample_group = add_sample_group(name='SampleGroup01')
         sample_group.samples = [create_sample(i) for i in range(6)]
         db.session.commit()
-        SampleSimilarityWrangler.run_sample_group(sample_group.id).get()
+        SampleSimilarityWrangler.help_run_sample_group(sample_group.id,
+                                                       'sample_similarity').get()
         analysis_result = sample_group.analysis_result
         self.assertIn('sample_similarity', analysis_result)
         sample_similarity = analysis_result.sample_similarity

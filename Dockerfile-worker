@@ -16,5 +16,9 @@ COPY . /usr/src/app
 # Make startup scripts executable
 RUN chmod +x /usr/src/app/startup.sh /usr/src/app/wait-for-it.sh
 
+# Switch to celery user
+RUN useradd -ms /bin/bash celery; chown -R celery /usr/src/app
+USER celery
+
 # Run the worker
 CMD celery worker -A worker.celery --loglevel=info

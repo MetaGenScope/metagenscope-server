@@ -25,7 +25,7 @@ class TestAverageGenomeSizeWrangler(BaseTestCase):
         sample_group = add_sample_group(name='SampleGroup01')
         sample_group.samples = [create_sample(i) for i in range(10)]
         db.session.commit()
-        AGSWrangler.run_sample_group(sample_group.id).get()
+        AGSWrangler.help_run_sample_group(sample_group.id, 'average_genome_size').get()
         analysis_result = sample_group.analysis_result
         self.assertIn('average_genome_size', analysis_result)
         average_genome_size = analysis_result.average_genome_size

@@ -4,6 +4,7 @@ import pandas as pd
 import numpy as np
 
 from app.extensions import celery
+from app.display_modules.utils import persist_result_helper
 from app.tool_results.humann2 import Humann2ResultModule
 
 from .constants import TOP_N
@@ -12,7 +13,8 @@ from .models import PathwayResult
 
 def pathways_from_sample(sample):
     """Get pathways from a humann2 result."""
-    return getattr(sample, Humann2ResultModule.name()).pathways
+    module_name = Humann2ResultModule.name()
+    return sample[module_name]['pathways']
 
 
 def get_abund_tbl(sample_dict):
@@ -42,7 +44,7 @@ def get_top_paths(abund_tbl, abund_mean, top_n):
 @celery.task()
 def filter_humann2_pathways(samples):
     """Get the top N mean abundance pathways."""
-    sample_dict = {sample.name: pathways_from_sample(sample)
+    sample_dict = {sample['name']: pathways_from_sample(sample)
                    for sample in samples}
 
     abund_tbl, abund_mean = get_abund_tbl(sample_dict)
@@ -54,8 +56,8 @@ def filter_humann2_pathways(samples):
         path_covs = {}
         for path_name in path_names:
             try:
-                abund = path_tbl[path_name].abundance
-                cov = path_tbl[path_name].coverage
+                abund = path_tbl[path_name]['abundance']
+                cov = path_tbl[path_name]['coverage']
             except KeyError:
                 abund = 0
                 cov = 0
@@ -65,4 +67,12 @@ def filter_humann2_pathways(samples):
         out[sname] = {'pathway_abundances': path_abunds,
                       'pathway_coverages': path_covs}
 
-    return PathwayResult(samples=out)
+    result_data = {'samples': out}
+    return result_data
+
+
+@celery.task(name='pathways.persist_result')
+def persist_result(result_data, analysis_result_id, result_name):
+    """Persist Pathways results."""
+    result = PathwayResult(**result_data)
+    persist_result_helper(result, analysis_result_id, result_name)

@@ -3,25 +3,20 @@
 from celery import chord
 
 from app.display_modules.display_wrangler import DisplayModuleWrangler
-from app.display_modules.utils import categories_from_metadata, persist_result
-from app.sample_groups.sample_group_models import SampleGroup
+from app.display_modules.utils import categories_from_metadata
 from app.tool_results.kraken import KrakenResultModule
 from app.tool_results.metaphlan2 import Metaphlan2ResultModule
 
 from .constants import MODULE_NAME
-from .tasks import taxa_tool_tsne, sample_similarity_reducer
+from .tasks import taxa_tool_tsne, sample_similarity_reducer, persist_result
 
 
 class SampleSimilarityWrangler(DisplayModuleWrangler):
     """Task for generating Reads Classified results."""
 
     @classmethod
-    def run_sample_group(cls, sample_group_id):
+    def run_sample_group(cls, sample_group, samples):
         """Gather samples and process."""
-        sample_group = SampleGroup.query.filter_by(id=sample_group_id).first()
-        sample_group.analysis_result.set_module_status(MODULE_NAME, 'W')
-        samples = sample_group.samples
-
         reducer = sample_similarity_reducer.s(samples)
         persist_task = persist_result.s(sample_group.analysis_result_uuid,
                                         MODULE_NAME)

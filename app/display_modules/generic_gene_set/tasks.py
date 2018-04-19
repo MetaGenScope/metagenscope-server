@@ -11,7 +11,7 @@ def transform_sample(vfdb_tool_result, gene_names):
     out = {'rpkm': {}, 'rpkmg': {}}
     for gene_name in gene_names:
         try:
-            vals = vfdb_tool_result.genes[gene_name]
+            vals = vfdb_tool_result['genes'][gene_name]
             rpkm, rpkmg = vals['rpkm'], vals['rpkmg']
         except KeyError:
             rpkm, rpkmg = 0, 0
@@ -25,7 +25,7 @@ def get_rpkm_tbl(sample_dict):
     rpkm_dict = {}
     for sname, methyl_tool_result in sample_dict.items():
         rpkm_dict[sname] = {}
-        for gene, vals in methyl_tool_result.genes.items():
+        for gene, vals in methyl_tool_result['genes'].items():
             rpkm_dict[sname][gene] = vals['rpkm']
 
     # Columns are samples, rows are genes, vals are rpkms
@@ -45,9 +45,9 @@ def get_top_genes(rpkm_tbl, rpkm_mean, top_n):
 
 
 @celery.task()
-def filter_gene_results(samples, tool_result_name, result_type, top_n):
+def filter_gene_results(samples, tool_result_name, top_n):
     """Reduce Methyl results to the <top_n> mean abundance genes (rpkm)."""
-    sample_dict = {sample.name: getattr(sample, tool_result_name)
+    sample_dict = {sample['name']: sample[tool_result_name]
                    for sample in samples}
 
     rpkm_tbl, rpkm_mean = get_rpkm_tbl(sample_dict)
@@ -56,5 +56,5 @@ def filter_gene_results(samples, tool_result_name, result_type, top_n):
     filtered_sample_tbl = {sname: transform_sample(vfdb_tool_result, gene_names)
                            for sname, vfdb_tool_result in sample_dict.items()}
 
-    result = result_type(samples=filtered_sample_tbl)
-    return result
+    result_data = {'samples': filtered_sample_tbl}
+    return result_data

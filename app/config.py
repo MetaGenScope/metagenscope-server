@@ -19,6 +19,10 @@ class Config(object):
     TOKEN_EXPIRATION_SECONDS = 0
     MAX_CONTENT_LENGTH = 100 * 1000 * 1000
 
+    # Prevent MongoClient from connecting before Celery workers fork
+    # http://api.mongodb.com/python/current/faq.html#is-pymongo-fork-safe
+    MONGODB_CONNECT = False
+
     # Flask-API renderer
     DEFAULT_RENDERERS = [
         'app.api.renderers.EnvelopeJSONRenderer',
@@ -32,7 +36,7 @@ class Config(object):
     result_cache_max = None   # Do not limit cache
     task_always_eager = False
     task_eager_propagates = False
-    task_serializer = 'pickle'
+    task_serializer = 'json'
 
 
 class DevelopmentConfig(Config):

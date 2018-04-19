@@ -1,9 +1,18 @@
 """Wrangler for generating Methyl results."""
 
+from app.extensions import celery
 from app.display_modules.generic_gene_set.wrangler import GenericGeneWrangler
+from app.display_modules.utils import persist_result_helper
 
 from .models import MethylResult
 from .constants import MODULE_NAME, TOP_N
+
+
+@celery.task(name='methyl.persist_result')
+def persist_result(result_data, analysis_result_id, result_name):
+    """Persist Methyl results."""
+    result = MethylResult(**result_data)
+    persist_result_helper(result, analysis_result_id, result_name)
 
 
 class MethylWrangler(GenericGeneWrangler):
@@ -13,7 +22,7 @@ class MethylWrangler(GenericGeneWrangler):
     result_name = MODULE_NAME
 
     @classmethod
-    def run_sample_group(cls, sample_group_id):
+    def run_sample_group(cls, sample_group, samples):
         """Gather and process samples."""
-        result = cls.help_run_sample_group(MethylResult, TOP_N, sample_group_id)
+        result = cls.help_run_generic_gene_group(sample_group, samples, TOP_N, persist_result)
         return result

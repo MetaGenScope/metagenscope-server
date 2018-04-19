@@ -41,7 +41,7 @@ class BaseDisplayModuleTest(BaseTestCase):
         sample_group = add_sample_group(name='SampleGroup01')
         sample_group.samples = [sample_builder(i) for i in range(6)]
         db.session.commit()
-        wrangler.run_sample_group(sample_group.id).get()
+        wrangler.help_run_sample_group(sample_group.id, endpt).get()
         analysis_result = sample_group.analysis_result
         self.assertIn(endpt, analysis_result)
         wrangled = getattr(analysis_result, endpt)

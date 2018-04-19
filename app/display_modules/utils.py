@@ -1,8 +1,36 @@
 """Display module utilities."""
 
+from pprint import pformat
+
+from mongoengine import QuerySet
+from mongoengine.errors import ValidationError
+
 from app.analysis_results.analysis_result_models import AnalysisResultMeta
-from app.extensions import celery
-from app.sample_groups.sample_group_models import SampleGroup
+from app.extensions import celery, celery_logger
+
+
+def jsonify(mongo_doc):
+    """Convert Mongo document to JSON for serialization."""
+    if isinstance(mongo_doc, (QuerySet, list,)):
+        return [jsonify(element) for element in mongo_doc]
+    return mongo_doc.to_mongo().to_dict()
+
+
+def persist_result_helper(result, analysis_result_id, result_name):
+    """Persist results to an Analysis Result model."""
+    analysis_result = AnalysisResultMeta.objects.get(uuid=analysis_result_id)
+    wrapper = getattr(analysis_result, result_name)
+    try:
+        wrapper.data = result
+        wrapper.status = 'S'
+        analysis_result.save()
+    except ValidationError:
+        contents = pformat(jsonify(result))
+        celery_logger.exception(f'Could not save result with contents:\n{contents}')
+
+        wrapper.data = None
+        wrapper.status = 'E'
+        analysis_result.save()
 
 
 @celery.task()
@@ -27,7 +55,7 @@ def categories_from_metadata(samples, min_size=2):
     categories = {}
 
     # Gather categories and values
-    all_metadata = [sample.metadata for sample in samples]
+    all_metadata = [sample['metadata'] for sample in samples]
     for metadata in all_metadata:
         properties = [prop for prop in metadata.keys()]
         for prop in properties:
@@ -36,7 +64,7 @@ def categories_from_metadata(samples, min_size=2):
             categories[prop].add(metadata[prop])
 
     # Filter for minimum number of values
-    categories = {category_name: category_values
+    categories = {category_name: list(category_values)
                   for category_name, category_values in categories.items()
                   if len(category_values) >= min_size}
 
@@ -44,34 +72,14 @@ def categories_from_metadata(samples, min_size=2):
 
 
 @celery.task()
-def fetch_samples(sample_group_id):
-    """Return sample list for a SampleGroup based on ID."""
-    sample_group = SampleGroup.query.filter_by(id=sample_group_id).first()
-    samples = sample_group.samples
-    return samples
-
-
-@celery.task()
-def persist_result(result, analysis_result_id, result_name):
-    """Persist results to an Analysis Result model."""
-    analysis_result = AnalysisResultMeta.objects.get(uuid=analysis_result_id)
-    wrapper = getattr(analysis_result, result_name)
-    wrapper.data = result
-    wrapper.status = 'S'
-    analysis_result.save()
-
-
-@celery.task()
-def collate_samples(tool_name, fields, sample_group_id):
+def collate_samples(tool_name, fields, samples):
     """Group a set of Tool Result fields from a set of samples by sample name."""
-    sample_group = SampleGroup.query.filter_by(id=sample_group_id).first()
-    samples = sample_group.samples
-
     sample_dict = {}
     for sample in samples:
-        sample_dict[sample.name] = {}
-        tool_result = getattr(sample, tool_name)
+        sample_name = sample['name']
+        sample_dict[sample_name] = {}
+        tool_result = sample[tool_name]
         for field in fields:
-            sample_dict[sample.name][field] = getattr(tool_result, field)
+            sample_dict[sample_name][field] = tool_result[field]
 
     return sample_dict
