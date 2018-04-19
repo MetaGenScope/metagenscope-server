@@ -13,7 +13,7 @@ class SingleReadsClassifiedResult(mdb.EmbeddedDocument):  # pylint: disable=too-
     unknown = mdb.IntField(required=True, default=0)
 
 
-class ReadClassifiedResult(mdb.EmbeddedDocument):  # pylint: disable=too-few-public-methods
+class ReadsClassifiedResult(mdb.EmbeddedDocument):  # pylint: disable=too-few-public-methods
     """Read stats embedded result."""
 
     samples = mdb.MapField(field=SingleReadsClassifiedResult, required=True)
