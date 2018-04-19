@@ -20,7 +20,7 @@ from app.api.v1.users import users_blueprint
 from app.config import app_config
 from app.display_modules import all_display_modules
 from app.extensions import mongoDB, db, migrate, bcrypt, celery
-from app.tool_results import all_sample_results
+from app.tool_results import all_tool_results
 from app.tool_results.register import register_tool_result
 
 
@@ -76,7 +76,7 @@ def update_celery_settings(celery_app, config_class):
 def register_tool_result_modules(app):
     """Register each Tool Result module."""
     tool_result_modules_blueprint = Blueprint('tool_result_modules', __name__)
-    for tool_result in all_sample_results:
+    for tool_result in all_tool_results:
         register_tool_result(tool_result, tool_result_modules_blueprint)
     app.register_blueprint(tool_result_modules_blueprint, url_prefix=URL_PREFIX)
 

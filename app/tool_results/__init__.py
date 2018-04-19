@@ -16,7 +16,7 @@ from .shortbred import ShortbredResultModule
 from .vfdb import VFDBResultModule
 
 
-all_sample_results = [  # pylint: disable=invalid-name
+all_tool_results = [  # pylint: disable=invalid-name
     CARDAMRResultModule,
     FoodPetResultModule,
     HmpSitesResultModule,
@@ -32,6 +32,3 @@ all_sample_results = [  # pylint: disable=invalid-name
     ShortbredResultModule,
     VFDBResultModule,
 ]
-
-
-all_group_results = []  # pylint: disable=invalid-name
