@@ -48,7 +48,8 @@ def receive_sample_tool_upload(cls, resp, uuid):
     except Exception:  # pylint: disable=broad-except
         current_app.logger.exception('Exception while coordinating display modules.')
 
-    return tool_result, 201
+    # Return payload here to avoid per-class JSON serialization
+    return payload, 201
 
 
 def receive_group_tool_upload(cls, resp, uuid):
@@ -79,7 +80,8 @@ def receive_group_tool_upload(cls, resp, uuid):
     # Kick off middleware tasks
     # DisplayModuleConductor(sample_uuid, cls).shake_that_baton()
 
-    return group_tool_result, 201
+    # Return payload here to avoid per-class JSON serialization
+    return payload, 201
 
 
 def register_tool_result(cls, router):

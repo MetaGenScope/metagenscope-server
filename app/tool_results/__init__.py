@@ -30,6 +30,7 @@ all_sample_results = [  # pylint: disable=invalid-name
     ReadStatsToolResultModule,
     ReadsClassifiedResultModule,
     ShortbredResultModule,
+    VFDBResultModule,
 ]
 
 

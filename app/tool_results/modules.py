@@ -22,7 +22,9 @@ class BaseToolResultModule:
     @classmethod
     def make_result_model(cls, payload):
         """Process uploaded JSON (if necessary) and create result model."""
-        return cls.result_model()(**payload)
+        result_model_cls = cls.result_model()
+        result_model = result_model_cls(**payload)
+        return result_model
 
 
 class SampleToolResultModule(BaseToolResultModule):
