@@ -11,22 +11,13 @@ from app.sample_groups.sample_group_models import SampleGroup
 class DisplayModuleConductor:
     """The Conductor module orchestrates Display module generation based on ToolResult changes."""
 
-    def __init__(self, sample_id, tool_result_cls):
-        """
-        Initialize the Conductor.
+    def get_downstream_modules(self):
+        """Begin the orchestration of middleware tasks."""
+        raise NotImplementedError('Subclass must override.')
 
-        Parameters
-        ----------
-        sample_id : str
-            The ID of the Sample that had a ToolResult change event.
-        tool_result_cls: ToolResultModule
-            The class of the ToolResult that was changed.
-
-        """
-        self.sample_id = sample_id
-        self.tool_result_cls = tool_result_cls
-        self.downstream_modules = [module for module in all_display_modules
-                                   if module.is_dependent_on_tool(self.tool_result_cls)]
+    def shake_that_baton(self):
+        """Begin the orchestration of middleware tasks."""
+        raise NotImplementedError('Subclass must override.')
 
     def get_valid_modules(self, tools_present):
         """
@@ -44,11 +35,35 @@ class DisplayModuleConductor:
 
         """
         valid_modules = []
-        for module in self.downstream_modules:
+        for module in self.get_downstream_modules():
             dependencies = set([tool.name() for tool in module.required_tool_results()])
             if dependencies <= tools_present:
                 valid_modules.append(module)
         return valid_modules
+
+
+class SampleConductor(DisplayModuleConductor):
+    """Orchestrates Display Module generation based on SampleToolResult changes."""
+
+    def __init__(self, sample_id, tool_result_cls):
+        """
+        Initialize the Conductor.
+
+        Parameters
+        ----------
+        sample_id : str
+            The ID of the Sample that had a ToolResult change event.
+        tool_result_cls: ToolResultModule
+            The class of the ToolResult that was changed.
+
+        """
+        self.sample_id = sample_id
+        self.tool_result_cls = tool_result_cls
+
+    def get_downstream_modules(self):
+        """Begin the orchestration of middleware tasks."""
+        return [module for module in all_display_modules
+                if module.is_dependent_on_tool(self.tool_result_cls)]
 
     def direct_sample(self):
         """Kick off computation for the affected sample's relevant DisplayModules."""
