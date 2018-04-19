@@ -1,36 +1,34 @@
 """Modules for genomic analysis tool outputs."""
 
-import importlib
-import inspect
-import pkgutil
-import sys
-
-# Re-export modules
-from app.tool_results.tool_module import ToolResult, ToolResultModule
-
-
-def find_all_tool_modules():
-    """Find all Tool Result modules."""
-    package = sys.modules[__name__]
-    all_modules = pkgutil.iter_modules(package.__path__)
-    blacklist = ['register', 'tool_module', 'food_pet']
-    tool_module_names = [modname for importer, modname, ispkg in all_modules
-                         if modname not in blacklist]
-    tool_modules = [importlib.import_module(f'app.tool_results.{name}')
-                    for name in tool_module_names]
-
-    def get_tool_module(tool_module):
-        """Inspect ToolResult module and return its Module class."""
-        classmembers = inspect.getmembers(tool_module, inspect.isclass)
-        modules = [classmember for name, classmember in classmembers
-                   if name.endswith('ResultModule') and name != 'ToolResultModule']
-        if not modules:
-            return None
-        return modules[0]
-
-    results = [get_tool_module(module) for module in tool_modules]
-    results = [result for result in results if result is not None]
-    return results
+from .card_amrs import CARDAMRResultModule
+from .food_pet import FoodPetResultModule
+from .hmp_sites import HmpSitesResultModule
+from .humann2 import Humann2ResultModule
+from .humann2_normalize import Humann2NormalizeResultModule
+from .kraken import KrakenResultModule
+from .metaphlan2 import Metaphlan2ResultModule
+from .methyltransferases import MethylResultModule
+from .microbe_census import MicrobeCensusResultModule
+from .microbe_directory import MicrobeDirectoryResultModule
+from .read_stats import ReadStatsToolResultModule
+from .reads_classified import ReadsClassifiedResultModule
+from .shortbred import ShortbredResultModule
+from .vfdb import VFDBResultModule
 
 
-all_tool_result_modules = find_all_tool_modules()  # pylint: disable=invalid-name
+all_tool_results = [  # pylint: disable=invalid-name
+    CARDAMRResultModule,
+    FoodPetResultModule,
+    HmpSitesResultModule,
+    Humann2ResultModule,
+    Humann2NormalizeResultModule,
+    KrakenResultModule,
+    Metaphlan2ResultModule,
+    MethylResultModule,
+    MicrobeCensusResultModule,
+    MicrobeDirectoryResultModule,
+    ReadStatsToolResultModule,
+    ReadsClassifiedResultModule,
+    ShortbredResultModule,
+    VFDBResultModule,
+]

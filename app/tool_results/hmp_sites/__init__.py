@@ -3,7 +3,8 @@
 from mongoengine import ValidationError
 
 from app.extensions import mongoDB
-from app.tool_results.tool_module import ToolResult, ToolResultModule
+from app.tool_results.modules import SampleToolResultModule
+from app.tool_results.models import ToolResult
 
 from .constants import MODULE_NAME
 
@@ -40,7 +41,7 @@ class HmpSitesResult(ToolResult):       # pylint: disable=too-few-public-methods
         return ['skin', 'oral', 'urogenital_tract', 'airways']
 
 
-class HmpSitesResultModule(ToolResultModule):
+class HmpSitesResultModule(SampleToolResultModule):
     """HMP Sites tool module."""
 
     @classmethod

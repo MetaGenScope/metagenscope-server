@@ -1,7 +1,8 @@
 """Microbe Directory tool module."""
 
 from app.extensions import mongoDB
-from app.tool_results.tool_module import ToolResult, ToolResultModule
+from app.tool_results.modules import SampleToolResultModule
+from app.tool_results.models import ToolResult
 
 
 class MicrobeDirectoryToolResult(ToolResult):     # pylint: disable=too-few-public-methods
@@ -21,7 +22,7 @@ class MicrobeDirectoryToolResult(ToolResult):     # pylint: disable=too-few-publ
     gram_stain = mongoDB.DynamicField(required=True)
 
 
-class MicrobeDirectoryResultModule(ToolResultModule):
+class MicrobeDirectoryResultModule(SampleToolResultModule):
     """Microbe Directory tool module."""
 
     @classmethod

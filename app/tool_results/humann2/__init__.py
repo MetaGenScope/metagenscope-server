@@ -1,7 +1,8 @@
 """HUMANn2 tool module."""
 
 from app.extensions import mongoDB
-from app.tool_results.tool_module import ToolResult, ToolResultModule
+from app.tool_results.modules import SampleToolResultModule
+from app.tool_results.models import ToolResult
 
 from .constants import MODULE_NAME
 
@@ -22,7 +23,7 @@ class Humann2Result(ToolResult):  # pylint: disable=too-few-public-methods
     pathways = mongoDB.MapField(field=EmbeddedDoc(Humann2PathwaysRow), required=True)
 
 
-class Humann2ResultModule(ToolResultModule):
+class Humann2ResultModule(SampleToolResultModule):
     """HUMANn2 tool module."""
 
     @classmethod

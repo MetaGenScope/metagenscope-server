@@ -1,7 +1,7 @@
 """Models for Humann2 Normalize tool module."""
 
 from app.extensions import mongoDB
-from app.tool_results.tool_module import ToolResult
+from app.tool_results.models import ToolResult
 
 
 class Humann2NormalizeRow(mongoDB.EmbeddedDocument):  # pylint: disable=too-few-public-methods

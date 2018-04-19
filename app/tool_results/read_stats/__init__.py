@@ -1,7 +1,8 @@
 """Read Stats tool module."""
 
 from app.extensions import mongoDB
-from app.tool_results.tool_module import ToolResult, ToolResultModule
+from app.tool_results.modules import SampleToolResultModule
+from app.tool_results.models import ToolResult
 
 
 class ReadStatsSection(mongoDB.EmbeddedDocument):  # pylint: disable=too-few-public-methods
@@ -21,7 +22,7 @@ class ReadStatsToolResult(ToolResult):  # pylint: disable=too-few-public-methods
     raw = mongoDB.EmbeddedDocumentField(ReadStatsSection)
 
 
-class ReadStatsToolResultModule(ToolResultModule):
+class ReadStatsToolResultModule(SampleToolResultModule):
     """Read Stats tool module."""
 
     @classmethod

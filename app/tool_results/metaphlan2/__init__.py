@@ -1,11 +1,11 @@
 """Metaphlan 2 tool module."""
 
-from app.tool_results.tool_module import ToolResultModule
+from app.tool_results.modules import SampleToolResultModule
 
 from .models import Metaphlan2Result
 
 
-class Metaphlan2ResultModule(ToolResultModule):
+class Metaphlan2ResultModule(SampleToolResultModule):
     """Metaphlan 2 tool module."""
 
     @classmethod

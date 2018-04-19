@@ -1,11 +1,11 @@
 """Methyltransferase tool module."""
 
-from app.tool_results.tool_module import ToolResultModule
+from app.tool_results.modules import SampleToolResultModule
 
 from .models import MethylToolResult
 
 
-class MethylResultModule(ToolResultModule):
+class MethylResultModule(SampleToolResultModule):
     """Methyltransferase tool module."""
 
     @classmethod

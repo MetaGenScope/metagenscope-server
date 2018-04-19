@@ -5,7 +5,8 @@ This module is different in the new pipeline and should be ignored for now.
 """
 
 from app.extensions import mongoDB
-from app.tool_results.tool_module import ToolResult, ToolResultModule
+from app.tool_results.models import ToolResult
+from app.tool_results.modules import SampleToolResultModule
 
 
 class FoodPetResult(ToolResult):        # pylint: disable=too-few-public-methods
@@ -20,7 +21,7 @@ class FoodPetResult(ToolResult):        # pylint: disable=too-few-public-methods
     total_reads = mongoDB.IntField()
 
 
-class FoodPetResultModule(ToolResultModule):
+class FoodPetResultModule(SampleToolResultModule):
     """Food and Pet tool module."""
 
     @classmethod

@@ -1,7 +1,8 @@
 """Shortbred tool module."""
 
 from app.extensions import mongoDB
-from app.tool_results.tool_module import ToolResult, ToolResultModule
+from app.tool_results.modules import SampleToolResultModule
+from app.tool_results.models import ToolResult
 
 
 class ShortbredResult(ToolResult):      # pylint: disable=too-few-public-methods
@@ -11,7 +12,7 @@ class ShortbredResult(ToolResult):      # pylint: disable=too-few-public-methods
     abundances = mongoDB.MapField(mongoDB.FloatField(), required=True)
 
 
-class ShortbredResultModule(ToolResultModule):
+class ShortbredResultModule(SampleToolResultModule):
     """Shortbred tool module."""
 
     @classmethod
