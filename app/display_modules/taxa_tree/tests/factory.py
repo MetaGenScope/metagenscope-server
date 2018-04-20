@@ -14,16 +14,17 @@ def generate_random_tree(parent=None, level=0, parent_size=100):
         parent_name = None
         name = 'root'
         parent_size = 100
+        parent_list = name
     else:
         name = 'level_{}'.format(level)
         size = random() * parent_size
         parent_name = parent.split('|')[-1]
-
+        parent_list = parent + '|' + name
     children = []
     if random() < (1 / (level + 1)):
         children = [
             generate_random_tree(
-                parent=parent + '|' + name,
+                parent=parent_list,
                 level=level + 1,
                 parent_size=size,
             )
