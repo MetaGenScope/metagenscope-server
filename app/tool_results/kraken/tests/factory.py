@@ -22,11 +22,11 @@ def create_taxa(taxa_count):
     taxa = {}
     while len(taxa) < taxa_count:
         depth = random.randint(1, 3)
-        entry = f'd_{random.choices(DOMAINS)[0]}'
+        entry = f'd__{random.choices(DOMAINS)[0]}'
         if depth >= 2:
-            entry = f'{entry}|k_{random.choices(KINGDOMS)[0]}'
+            entry = f'{entry}|k__{random.choices(KINGDOMS)[0]}'
         if depth >= 3:
-            entry = f'{entry}|p_{random.choices(PHYLA)[0]}'
+            entry = f'{entry}|p__{random.choices(PHYLA)[0]}'
         taxa[entry] = random.randint(0, 8e07)
     return taxa
 

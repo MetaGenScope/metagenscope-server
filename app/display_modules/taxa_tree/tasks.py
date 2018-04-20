@@ -34,6 +34,13 @@ def convert_children_to_list(taxa_tree):
     return taxa_tree
 
 
+def get_taxa_tokens(taxon, delim, tkn_delim='__'):
+    """Return a list of cleaned tokens."""
+    tkns = taxon.split(delim)
+    tkns = [tkn.split(tkn_delim)[-1] for tkn in tkns]
+    return tkns
+
+
 def recurse_tree(tree, tkns, i, leaf_size):
     """Return a recursively built tree."""
     is_leaf = (i + 1) == len(tkns)
@@ -67,7 +74,7 @@ def reduce_taxa_list(taxa_list, delim='|'):
         'children': {}
     }
     for taxon, abund in taxa_list.items():
-        tkns = taxon.split(delim)
+        tkns = get_taxa_tokens(taxon)
         recurse_tree(taxa_tree, tkns, 0, factor * abund)
     taxa_tree = convert_children_to_list(taxa_tree)
     return taxa_tree
