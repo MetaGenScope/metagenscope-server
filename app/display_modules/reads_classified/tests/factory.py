@@ -3,7 +3,7 @@
 """Factory for generating Read Classified models for testing."""
 
 import factory
-from app.display_modules.reads_classified import ReadsClassifiedResult
+from app.display_modules.reads_classified.models import ReadsClassifiedResult
 from app.tool_results.reads_classified.tests.factory import create_values
 
 
