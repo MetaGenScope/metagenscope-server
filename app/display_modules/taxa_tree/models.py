@@ -20,7 +20,9 @@ def validate_json_tree(root, parent=None):
     if 'parent' not in root:
         raise ValidationError('Node does not contain parent field')
     elif parent and (root['parent'] != parent):
-        raise ValidationError('Listed parent does not match structural parent')
+        msg = 'Listed parent ({}) does not match structural parent ({})'
+        msg = msg.format(root['parent'], parent)
+        raise ValidationError(msg)
 
     if 'children' not in root:
         raise ValidationError('Node does not contain children field')
