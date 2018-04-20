@@ -15,6 +15,7 @@ def generate_random_tree(parent=None, level=0, parent_size=100):
         name = 'root'
         parent_size = 100
         parent_list = name
+        size = 100
     else:
         name = 'level_{}'.format(level)
         size = random() * parent_size
