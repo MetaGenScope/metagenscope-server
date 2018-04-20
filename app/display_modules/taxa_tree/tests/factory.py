@@ -8,7 +8,7 @@ import factory
 from app.display_modules.taxa_tree import TaxaTreeResult
 
 
-def generate_random_tree(parent=None, level=0, parent_size=100):
+def generate_random_tree(parent=None, level=0, parent_size=100, ind=0):
     """Return a random, plausible, taxa tree."""
     if parent is None:
         parent_name = None
@@ -17,7 +17,7 @@ def generate_random_tree(parent=None, level=0, parent_size=100):
         parent_list = name
         size = 100
     else:
-        name = 'level_{}'.format(level)
+        name = 'level_{}_{}'.format(level, ind)
         size = random() * parent_size
         parent_name = parent.split('|')[-1]
         parent_list = parent + '|' + name
@@ -28,8 +28,9 @@ def generate_random_tree(parent=None, level=0, parent_size=100):
                 parent=parent_list,
                 level=level + 1,
                 parent_size=size,
+                ind=i,
             )
-            for _ in range(randint(3, 6))
+            for i in range(randint(3, 6))
         ]
 
     return {
