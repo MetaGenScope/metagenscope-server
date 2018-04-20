@@ -26,7 +26,7 @@ from app.analysis_results.analysis_result_models import AnalysisResultMeta
 from app.samples.sample_models import Sample
 from app.sample_groups.sample_group_models import SampleGroup
 
-from seed import abrf_analysis_result, uw_analysis_result
+from seed import abrf_analysis_result, uw_analysis_result, reads_classified
 
 
 app = create_app()
@@ -100,10 +100,18 @@ def seed_db():
                   email='chm2042@med.cornell.edu',
                   password='Foobar22')
 
+
+    abrf_analysis_result_01 = AnalysisResultMeta(reads_classified=reads_classified).save()
+    abrf_sample_01 = Sample(name='SomethingUnique_A', theme='world-quant',
+                            analysis_result=abrf_analysis_result_01).save()
+    abrf_analysis_result_02 = AnalysisResultMeta(reads_classified=reads_classified).save()
+    abrf_sample_02 = Sample(name='SomethingUnique_B', theme='world-quant',
+                            analysis_result=abrf_analysis_result_02).save()
     abrf_analysis_result.save()
     abrf_description = 'ABRF San Diego Mar 24th-29th 2017'
     abrf_2017_group = SampleGroup(name='ABRF 2017', analysis_result=abrf_analysis_result,
                                   description=abrf_description, theme='world-quant')
+    abrf_2017_group.samples = [abrf_sample_01, abrf_sample_02]
 
     uw_analysis_result.save()
     uw_sample = Sample(name='UW_Madison_00', analysis_result=uw_analysis_result).save()

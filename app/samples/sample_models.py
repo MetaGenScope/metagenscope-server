@@ -21,6 +21,7 @@ class BaseSample(Document):
     name = mongoDB.StringField(unique=True)
     metadata = mongoDB.DictField(default={})
     analysis_result = mongoDB.LazyReferenceField(AnalysisResultMeta)
+    theme = mongoDB.StringField(default='')
     created_at = mongoDB.DateTimeField(default=datetime.datetime.utcnow)
 
     meta = {'allow_inheritance': True}
@@ -52,6 +53,7 @@ class SampleSchema(BaseSchema):
     name = fields.Str()
     metadata = fields.Dict()
     analysis_result_uuid = fields.Str()
+    theme = fields.Str()
     created_at = fields.Date()
 
     @pre_dump(pass_many=False)
