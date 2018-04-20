@@ -74,7 +74,7 @@ def reduce_taxa_list(taxa_list, delim='|'):
         'children': {}
     }
     for taxon, abund in taxa_list.items():
-        tkns = get_taxa_tokens(taxon)
+        tkns = get_taxa_tokens(taxon, delim)
         recurse_tree(taxa_tree, tkns, 0, factor * abund)
     taxa_tree = convert_children_to_list(taxa_tree)
     return taxa_tree
