@@ -2,7 +2,7 @@
 
 from random import randint
 
-from app.tool_results.reads_classified import ReadsClassifiedResult
+from app.tool_results.reads_classified import ReadsClassifiedToolResult
 
 
 def create_values():
@@ -19,4 +19,4 @@ def create_values():
 def create_read_stats():
     """Create ReadStatsResult with randomized field data."""
     packed_data = create_values()
-    return ReadsClassifiedResult(**packed_data)
+    return ReadsClassifiedToolResult(**packed_data)
