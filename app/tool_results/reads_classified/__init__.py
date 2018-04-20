@@ -1,13 +1,13 @@
 """Reads Classified tool module."""
-from math import isclose
-from mongoengine import ValidationError
 
 from app.extensions import mongoDB
 from app.tool_results.modules import SampleToolResultModule
 from app.tool_results.models import ToolResult
 
+from .constants import MODULE_NAME
 
-class ReadsClassifiedResult(ToolResult):  # pylint: disable=too-few-public-methods
+
+class ReadsClassifiedToolResult(ToolResult):  # pylint: disable=too-few-public-methods
     """Reads Classified tool's result type."""
 
     viral = mongoDB.IntField(required=True, default=0)
@@ -23,9 +23,9 @@ class ReadsClassifiedResultModule(SampleToolResultModule):
     @classmethod
     def name(cls):
         """Return Reads Classified module's unique identifier string."""
-        return 'reads_classified'
+        return MODULE_NAME
 
     @classmethod
     def result_model(cls):
         """Return Reads Classified module's model class."""
-        return ReadsClassifiedResult
+        return ReadsClassifiedToolResult

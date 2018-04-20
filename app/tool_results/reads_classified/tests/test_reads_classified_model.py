@@ -1,7 +1,7 @@
 """Test suite for Reads Classified tool result model."""
 
 from app.samples.sample_models import Sample
-from app.tool_results.reads_classified import ReadsClassifiedResult
+from app.tool_results.reads_classified import ReadsClassifiedToolResult
 from app.tool_results.reads_classified.tests.constants import TEST_READS
 
 from tests.base import BaseTestCase
@@ -12,7 +12,7 @@ class TestReadsClassifiedModel(BaseTestCase):
 
     def test_add_reads_classified_result(self):  # pylint: disable=invalid-name
         """Ensure Reads Classified result model is created correctly."""
-        reads_classified = ReadsClassifiedResult(**TEST_READS)
+        reads_classified = ReadsClassifiedToolResult(**TEST_READS)
         sample = Sample(name='SMPL_01', reads_classified=reads_classified).save()
         self.assertTrue(sample.reads_classified)
         tool_result = sample.reads_classified
@@ -28,7 +28,7 @@ class TestReadsClassifiedModel(BaseTestCase):
         partial_reads = dict(TEST_READS)
         partial_reads.pop('host', None)
         partial_reads['unknown'] = 100
-        reads_classified = ReadsClassifiedResult(**partial_reads)
+        reads_classified = ReadsClassifiedToolResult(**partial_reads)
         sample = Sample(name='SMPL_01', reads_classified=reads_classified).save()
         self.assertTrue(sample.reads_classified)
         tool_result = sample.reads_classified

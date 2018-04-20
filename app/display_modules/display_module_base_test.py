@@ -1,4 +1,5 @@
 """Helper functions for display module tests."""
+
 import json
 
 from app import db
@@ -25,9 +26,10 @@ class BaseDisplayModuleTest(BaseTestCase):
             data = json.loads(response.data.decode())
             self.assertEqual(response.status_code, 200)
             self.assertIn('success', data['status'])
-            self.assertEqual(data['data']['status'], 'S')
+            analysis_result = data['data']
+            self.assertEqual(analysis_result['status'], 'S')
             for field in verify_fields:
-                self.assertIn(field, data['data']['data'])
+                self.assertIn(field, analysis_result['data'])
 
     def generic_adder_test(self, data, endpt):
         """Check that we can add an analysis result."""

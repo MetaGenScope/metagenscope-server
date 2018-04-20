@@ -15,12 +15,10 @@ from .loader import (
 
 sample_similarity = AnalysisResultWrapper(status='S', data=load_sample_similarity())
 taxon_abundance = AnalysisResultWrapper(status='S', data=load_taxon_abundance())
-reads_classified = AnalysisResultWrapper(status='S', data=load_reads_classified())
 hmp = AnalysisResultWrapper(status='S', data=load_hmp())
 ags = AnalysisResultWrapper(status='S', data=load_ags())
 
 abrf_analysis_result = AnalysisResultMeta(sample_similarity=sample_similarity,
                                           taxon_abundance=taxon_abundance,
-                                          reads_classified=reads_classified,
                                           hmp=hmp,
                                           average_genome_size=ags)

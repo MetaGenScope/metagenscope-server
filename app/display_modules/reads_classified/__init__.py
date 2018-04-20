@@ -5,13 +5,12 @@ This chart shows the proportion of reads in each sample assigned to different gr
 """
 
 from app.display_modules.display_module import DisplayModule
+from app.tool_results.reads_classified import ReadsClassifiedResultModule
 
 # Re-export modules
-from app.display_modules.reads_classified.reads_classified_models import (
-    ReadsClassifiedResult,
-    ReadsClassifiedDatum,
-)
-from app.display_modules.reads_classified.reads_classified_wrangler import ReadsClassifiedWrangler
+from .models import ReadsClassifiedResult, SingleReadsClassifiedResult
+from .wrangler import ReadsClassifiedWrangler
+from .constants import MODULE_NAME
 
 
 class ReadsClassifiedModule(DisplayModule):
@@ -20,12 +19,12 @@ class ReadsClassifiedModule(DisplayModule):
     @staticmethod
     def required_tool_results():
         """Enumerate which ToolResult modules a sample must have."""
-        return []
+        return [ReadsClassifiedResultModule]
 
     @classmethod
     def name(cls):
         """Return module's unique identifier string."""
-        return 'reads_classified'
+        return MODULE_NAME
 
     @classmethod
     def get_result_model(cls):

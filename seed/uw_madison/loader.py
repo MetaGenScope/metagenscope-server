@@ -14,12 +14,6 @@ def load_reads_classified():
     """Load Reads Classified source JSON."""
     filename = os.path.join(LOCATION, 'reads-classified.json')
     with open(filename, 'r') as source:
-        datastore = json.load(source)
-        categories = datastore['categories']
-        sample_names = ['UW_Madison_00']
-        data = [{'category': category, 'values': [datastore['data'][index]]}
-                for index, category in enumerate(categories)]
-        result = ReadsClassifiedResult(categories=categories,
-                                       sample_names=sample_names,
-                                       data=data)
+        samples = {'UW_Madison_00': json.load(source)}
+        result = ReadsClassifiedResult(samples=samples)
         return result
