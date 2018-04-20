@@ -40,7 +40,7 @@ class BaseDisplayModuleTest(BaseTestCase):
         """Check that we can run a wrangler on a single samples."""
         sample = add_sample(name='Sample01', sample_kwargs=sample_kwargs)
         db.session.commit()
-        wrangler.run_sample(sample.id).get()
+        wrangler.help_run_sample(sample.id, endpt).get()
         analysis_result = sample.analysis_result
         self.assertIn(endpt, analysis_result)
         wrangled_sample = getattr(analysis_result, endpt)

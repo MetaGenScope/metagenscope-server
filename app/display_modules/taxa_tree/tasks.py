@@ -1,16 +1,11 @@
 """Tasks for TaxaTree Wrangler."""
 
 from app.extensions import celery
+from app.display_modules.utils import persist_result_helper
 from app.tool_results.metaphlan2 import Metaphlan2ResultModule
 from app.tool_results.kraken import KrakenResultModule
 
 from .models import TaxaTreeResult
-
-
-@celery.task()
-def taxa_tree_reducer(args):
-    """Wrap collated samples as actual Result type."""
-    return TaxaTreeResult(**args)
 
 
 def get_total(taxa_list, delim):
@@ -83,11 +78,18 @@ def reduce_taxa_list(taxa_list, delim='|'):
 @celery.task()
 def trees_from_sample(sample):
     """Build taxa trees for a given sample."""
-    metaphlan2 = getattr(sample, Metaphlan2ResultModule.name())
-    metaphlan2 = reduce_taxa_list(metaphlan2.taxa)
-    kraken = getattr(sample, KrakenResultModule.name())
-    kraken = reduce_taxa_list(kraken.taxa)
+    metaphlan2 = sample[Metaphlan2ResultModule.name()]
+    metaphlan2 = reduce_taxa_list(metaphlan2['taxa'])
+    kraken = sample[KrakenResultModule.name()]
+    kraken = reduce_taxa_list(kraken['taxa'])
     return {
         'kraken': kraken,
         'metaphlan2': metaphlan2,
     }
+
+
+@celery.task(name='taxa_tree.persist_result')
+def persist_result(result_data, analysis_result_id, result_name):
+    """Persist Taxa Tree results."""
+    result = TaxaTreeResult(**result_data)
+    persist_result_helper(result, analysis_result_id, result_name)
