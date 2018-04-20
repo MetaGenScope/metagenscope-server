@@ -22,11 +22,11 @@ class TestTaxaTreeModule(BaseDisplayModuleTest):
 
     def test_add_taxa_tree(self):
         """Ensure TaxaTree model is created correctly."""
-        samples = {
-            'metaphlan2': generate_random_tree(),
-            'kraken': generate_random_tree(),
+        kwargs = {
+            Metaphlan2ResultModule.name(): generate_random_tree(),
+            KrakenResultModule.name(): generate_random_tree(),
         }
-        taxa_tree_result = TaxaTreeResult(samples=samples)
+        taxa_tree_result = TaxaTreeResult(**kwargs)
         self.generic_adder_test(taxa_tree_result, MODULE_NAME)
 
     def test_run_taxa_tree_sample(self):  # pylint: disable=invalid-name
