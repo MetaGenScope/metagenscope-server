@@ -38,7 +38,7 @@ class BaseDisplayModuleTest(BaseTestCase):
 
     def generic_run_sample_test(self, sample_kwargs, wrangler, endpt):
         """Check that we can run a wrangler on a single samples."""
-        sample = add_sample(sample_kwargs=sample_kwargs)
+        sample = add_sample(name='Sample01', sample_kwargs=sample_kwargs)
         db.session.commit()
         wrangler.run_sample(sample.id).get()
         analysis_result = sample.analysis_result
