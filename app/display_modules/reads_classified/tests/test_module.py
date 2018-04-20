@@ -29,6 +29,13 @@ class TestReadsClassifiedModule(BaseDisplayModuleTest):
         read_class_result = ReadsClassifiedResult(samples=samples)
         self.generic_adder_test(read_class_result, MODULE_NAME)
 
+    def test_run_reads_classified_sample(self):  # pylint: disable=invalid-name
+        """Ensure TaxaTree run_sample produces correct results."""
+        kwargs = {
+            TOOL_MODULE_NAME: create_read_stats(),
+        }
+        self.generic_run_sample_test(kwargs, ReadsClassifiedWrangler, MODULE_NAME)
+
     def test_run_reads_classified_sample_group(self):  # pylint: disable=invalid-name
         """Ensure ReadsClassified run_sample_group produces correct results."""
         def create_sample(i):
