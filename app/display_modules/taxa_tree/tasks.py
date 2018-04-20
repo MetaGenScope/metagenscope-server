@@ -59,11 +59,9 @@ def recurse_tree(tree, tkns, i, leaf_size):
             tree['children'][tkn]['parent'] = tkns[i - 1]
         if is_leaf:
             tree['children'][tkn]['size'] = leaf_size
-    if i != 0:
-        assert tree['children'][tkn]['parent'] != 'root', '{} : {}'.format(tkn, tkns)
     if is_leaf:
         return tree['children'][tkn]
-    return recurse_tree(tree, tkns, i + 1, leaf_size)
+    return recurse_tree(tree['children'][tkn], tkns, i + 1, leaf_size)
 
 
 def reduce_taxa_list(taxa_list, delim='|'):
