@@ -27,7 +27,7 @@ def generate_random_tree(parent=None, level=0, parent_size=100):
                 level=level + 1,
                 parent_size=size,
             )
-            for _ in randint(3, 6)
+            for _ in range(randint(3, 6))
         ]
 
     return {
