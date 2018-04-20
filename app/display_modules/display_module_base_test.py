@@ -7,7 +7,7 @@ from app.analysis_results.analysis_result_models import (
     AnalysisResultWrapper
 )
 from tests.base import BaseTestCase
-from tests.utils import add_sample_group
+from tests.utils import add_sample_group, add_sample
 
 
 class BaseDisplayModuleTest(BaseTestCase):

@@ -15,7 +15,7 @@ class TaxaTreeDisplayModule(DisplayModule):
     @staticmethod
     def required_tool_results():
         """Return a list of the necessary result modules for taxa tree."""
-        return [KrakenResultModule, Metaphlan2ResultModule]
+        return [Metaphlan2ResultModule, KrakenResultModule]
 
     @classmethod
     def name(cls):
