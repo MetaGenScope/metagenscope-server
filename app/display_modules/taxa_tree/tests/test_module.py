@@ -13,7 +13,7 @@ from .factory import generate_random_tree, TaxaTreeFactory
 
 
 class TestTaxaTreeModule(BaseDisplayModuleTest):
-    """Test suite for ReadStats diplay module."""
+    """Test suite for TaxaTree display module."""
 
     def test_get_taxa_tree(self):
         """Ensure getting a single TaxaTree behaves correctly."""
@@ -30,7 +30,7 @@ class TestTaxaTreeModule(BaseDisplayModuleTest):
         self.generic_adder_test(taxa_tree_result, MODULE_NAME)
 
     def test_run_taxa_tree_sample(self):  # pylint: disable=invalid-name
-        """Ensure ReadStats run_sample_group produces correct results."""
+        """Ensure TaxaTree run_sample produces correct results."""
         kwargs = {
             KrakenResultModule.name(): create_kraken(),
             Metaphlan2ResultModule.name(): create_metaphlan2(),

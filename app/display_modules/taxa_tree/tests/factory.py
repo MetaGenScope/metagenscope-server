@@ -10,13 +10,14 @@ from app.display_modules.taxa_tree import TaxaTreeResult
 
 def generate_random_tree(parent=None, level=0, parent_size=100):
     """Return a random, plausible, taxa tree."""
-    name = 'level_{}'.format(level)
-    size = random() * parent_size
-    parent_name = parent.split('|')[-1]
     if parent is None:
         parent_name = None
         name = 'root'
         parent_size = 100
+    else:
+        name = 'level_{}'.format(level)
+        size = random() * parent_size
+        parent_name = parent.split('|')[-1]
 
     children = []
     if random() < (1 / (level + 1)):
