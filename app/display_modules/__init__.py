@@ -10,6 +10,7 @@ from app.display_modules.read_stats import ReadStatsDisplayModule
 from app.display_modules.pathways import PathwaysDisplayModule
 from app.display_modules.reads_classified import ReadsClassifiedModule
 from app.display_modules.sample_similarity import SampleSimilarityDisplayModule
+from app.display_modules.taxa_tree import TaxaTreeDisplayModule
 from app.display_modules.taxon_abundance import TaxonAbundanceDisplayModule
 from app.display_modules.virulence_factors import VirulenceFactorsDisplayModule
 
@@ -25,6 +26,7 @@ all_display_modules = [  # pylint: disable=invalid-name
     PathwaysDisplayModule,
     ReadsClassifiedModule,
     SampleSimilarityDisplayModule,
+    TaxaTreeDisplayModule,
     TaxonAbundanceDisplayModule,
     VirulenceFactorsDisplayModule,
 ]

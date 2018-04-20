@@ -7,7 +7,7 @@ from app.analysis_results.analysis_result_models import (
     AnalysisResultWrapper
 )
 from tests.base import BaseTestCase
-from tests.utils import add_sample_group
+from tests.utils import add_sample_group, add_sample
 
 
 class BaseDisplayModuleTest(BaseTestCase):
@@ -35,6 +35,16 @@ class BaseDisplayModuleTest(BaseTestCase):
         result = AnalysisResultMeta(**{endpt: wrapper}).save()
         self.assertTrue(result.uuid)
         self.assertTrue(getattr(result, endpt))
+
+    def generic_run_sample_test(self, sample_kwargs, wrangler, endpt):
+        """Check that we can run a wrangler on a single samples."""
+        sample = add_sample(name='Sample01', sample_kwargs=sample_kwargs)
+        db.session.commit()
+        wrangler.help_run_sample(sample.id, endpt).get()
+        analysis_result = sample.analysis_result.fetch()
+        self.assertIn(endpt, analysis_result)
+        wrangled_sample = getattr(analysis_result, endpt)
+        self.assertEqual(wrangled_sample.status, 'S')
 
     def generic_run_group_test(self, sample_builder, wrangler, endpt):
         """Check that we can run a wrangler on a set of samples."""
