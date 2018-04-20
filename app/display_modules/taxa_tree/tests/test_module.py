@@ -18,13 +18,14 @@ class TestTaxaTreeModule(BaseDisplayModuleTest):
     def test_get_taxa_tree(self):
         """Ensure getting a single TaxaTree behaves correctly."""
         ttree = TaxaTreeFactory()
-        self.generic_getter_test(ttree, MODULE_NAME)
+        self.generic_getter_test(ttree, MODULE_NAME,
+                                 verify_fields=('metaphlan2', 'kraken'))
 
     def test_add_taxa_tree(self):
         """Ensure TaxaTree model is created correctly."""
         kwargs = {
-            Metaphlan2ResultModule.name(): generate_random_tree(),
-            KrakenResultModule.name(): generate_random_tree(),
+            'metaphlan2': generate_random_tree(),
+            'kraken': generate_random_tree(),
         }
         taxa_tree_result = TaxaTreeResult(**kwargs)
         self.generic_adder_test(taxa_tree_result, MODULE_NAME)
