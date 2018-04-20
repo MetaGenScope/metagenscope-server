@@ -1,7 +1,6 @@
 """Tasks for TaxaTree Wrangler."""
 
 from app.extensions import celery
-from app.samples.sample_models import Sample
 from app.tool_results.metaphlan2 import Metaphlan2ResultModule
 from app.tool_results.kraken import KrakenResultModule
 
@@ -15,6 +14,10 @@ def taxa_tree_reducer(args):
 
 
 def get_total(taxa_list, delim):
+    """Return the total abundance in the taxa list.
+
+    This is not the sum b/c taxa lists are trees, implicitly.
+    """
     total = 0
     for taxon, abund in taxa_list.items():
         tkns = taxon.split(delim)
@@ -24,6 +27,7 @@ def get_total(taxa_list, delim):
 
 
 def convert_children_to_list(taxa_tree):
+    """Convert a dictionary of children to a list, recursively."""
     children = taxa_tree['children']
     taxa_tree['children'] = [convert_children_to_list(child)
                              for child in children.values()]
@@ -31,6 +35,7 @@ def convert_children_to_list(taxa_tree):
 
 
 def recurse_tree(tree, tkns, i, leaf_size):
+    """Return a recursively built tree."""
     is_leaf = (i + 1) == len(tkns)
     tkn = tkns[i]
     try:
@@ -49,11 +54,11 @@ def recurse_tree(tree, tkns, i, leaf_size):
 
     if is_leaf:
         return tree['children'][tkn]
-    else:
-        return recurse_tree(tree, tkns, i + 1, leaf_size)
+    return recurse_tree(tree, tkns, i + 1, leaf_size)
 
 
 def reduce_taxa_list(taxa_list, delim='|'):
+    """Return a tree built from a taxa list."""
     factor = 100 / get_total(taxa_list, delim)
     taxa_tree = {
         'name': 'root',
@@ -70,6 +75,7 @@ def reduce_taxa_list(taxa_list, delim='|'):
 
 @celery.task()
 def trees_from_sample(sample):
+    """Build taxa trees for a given sample."""
     metaphlan2 = getattr(sample, Metaphlan2ResultModule.name())
     metaphlan2 = reduce_taxa_list(metaphlan2.taxa)
     kraken = getattr(sample, KrakenResultModule.name())

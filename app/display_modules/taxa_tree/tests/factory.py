@@ -2,14 +2,14 @@
 
 """Factory for generating Taxa Tree models for testing."""
 
-import factory
 from random import random, randint
+import factory
 
 from app.display_modules.taxa_tree import TaxaTreeResult
-from app.tool_results.read_stats.tests.factory import create_values
 
 
 def generate_random_tree(parent=None, level=0, parent_size=100):
+    """Return a random, plausible, taxa tree."""
     name = 'level_{}'.format(level)
     size = random() * parent_size
     parent_name = parent.split('|')[-1]
