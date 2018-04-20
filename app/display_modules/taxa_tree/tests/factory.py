@@ -1,6 +1,6 @@
 # pylint: disable=missing-docstring,too-few-public-methods
 
-"""Factory for generating ReadStats models for testing."""
+"""Factory for generating Taxa Tree models for testing."""
 
 import factory
 from random import random, randint
@@ -17,11 +17,10 @@ def generate_random_tree(parent=None, level=0, parent_size=100):
         parent_name = None
         name = 'root'
         parent_size = 100
-    node = {
-        'name': name,
-        'size': size,
-        'parent': parent_name,
-        'children': [
+
+    children = []
+    if random() < (1 / (level + 1)):
+        children = [
             generate_random_tree(
                 parent=parent + '|' + name,
                 level=level + 1,
@@ -29,10 +28,13 @@ def generate_random_tree(parent=None, level=0, parent_size=100):
             )
             for _ in randint(3, 6)
         ]
+
+    return {
+        'name': name,
+        'size': size,
+        'parent': parent_name,
+        'children': children
     }
-    if random() < 0.5:
-        node['children'] = []
-    return node
 
 
 class TaxaTreeFactory(factory.mongoengine.MongoEngineFactory):

@@ -1,15 +1,15 @@
 """Test suite for Taxa Tree display module."""
 
 from app.display_modules.display_module_base_test import BaseDisplayModuleTest
-from app.display_modules.read_stats.wrangler import ReadStatsWrangler
-from app.display_modules.read_stats.models import ReadStatsResult
-from app.display_modules.read_stats.constants import MODULE_NAME
-from app.display_modules.read_stats.tests.factory import ReadStatsFactory
-from app.samples.sample_models import Sample
-from app.tool_results.read_stats.tests.factory import (
-    create_read_stats,
-    create_values
-)
+from app.display_modules.taxa_tree.wrangler import TaxaTreeWrangler
+from app.display_modules.taxa_tree.models import TaxaTreeResult
+from app.display_modules.taxa_tree.constants import MODULE_NAME
+from app.tool_results.kraken import KrakenResultModule
+from app.tool_results.kraken.tests.factory import create_kraken
+from app.tool_results.metaphlan2 import Metaphlan2ResultModule
+from app.tool_results.metaphlan2.tests.factory import create_metaphlan2
+
+from .factory import generate_random_tree, TaxaTreeFactory
 
 
 class TestTaxaTreeModule(BaseDisplayModuleTest):
@@ -31,14 +31,8 @@ class TestTaxaTreeModule(BaseDisplayModuleTest):
 
     def test_run_taxa_tree_sample(self):  # pylint: disable=invalid-name
         """Ensure ReadStats run_sample_group produces correct results."""
-
-        def create_sample(i):
-            """Create unique sample for index i."""
-            data = create_read_stats()
-            return Sample(name=f'Sample{i}',
-                          metadata={'foobar': f'baz{i}'},
-                          read_stats=data).save()
-
-        self.generic_run_group_test(create_sample,
-                                    ReadStatsWrangler,
-                                    MODULE_NAME)
+        kwargs = {
+            KrakenResultModule.name(): create_kraken(),
+            Metaphlan2ResultModule.name(): create_metaphlan2(),
+        }
+        self.generic_run_sample_test(kwargs, TaxaTreeWrangler, MODULE_NAME)
