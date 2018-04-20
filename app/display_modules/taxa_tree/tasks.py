@@ -45,6 +45,7 @@ def recurse_tree(tree, tkns, i, leaf_size):
     """Return a recursively built tree."""
     is_leaf = (i + 1) == len(tkns)
     tkn = tkns[i]
+
     try:
         tree['children'][tkn]
     except KeyError:
@@ -58,7 +59,8 @@ def recurse_tree(tree, tkns, i, leaf_size):
             tree['children'][tkn]['parent'] = tkns[i - 1]
         if is_leaf:
             tree['children'][tkn]['size'] = leaf_size
-
+    if i != 0:
+        assert tree['children'][tkn]['parent'] != 'root', '{} : {}'.format(tkn, tkns)
     if is_leaf:
         return tree['children'][tkn]
     return recurse_tree(tree, tkns, i + 1, leaf_size)
