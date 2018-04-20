@@ -41,7 +41,7 @@ class BaseDisplayModuleTest(BaseTestCase):
         sample = add_sample(name='Sample01', sample_kwargs=sample_kwargs)
         db.session.commit()
         wrangler.help_run_sample(sample.id, endpt).get()
-        analysis_result = sample.analysis_result
+        analysis_result = sample.analysis_result.fetch()
         self.assertIn(endpt, analysis_result)
         wrangled_sample = getattr(analysis_result, endpt)
         self.assertEqual(wrangled_sample.status, 'S')
