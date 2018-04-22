@@ -18,9 +18,11 @@ class ReadStatsWrangler(DisplayModuleWrangler):
         """Gather and process samples."""
         analysis_group_uuid = sample_group.analysis_result_uuid
 
-        collate_task = collate_samples.s(ReadStatsToolResultModule.name(),
-                                         ['raw', 'microbial'],
-                                         samples)
+        collate_task = collate_samples.s(
+            ReadStatsToolResultModule.name(),
+            ReadStatsToolResultModule.result_model().stat_fields(),
+            samples
+        )
         persist_task = persist_result.s(analysis_group_uuid, MODULE_NAME)
 
         task_chain = chain(collate_task,

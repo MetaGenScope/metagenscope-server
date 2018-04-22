@@ -5,7 +5,7 @@ from app.tool_results.modules import SampleToolResultModule
 from app.tool_results.models import ToolResult
 
 
-class ReadStatsSection(mongoDB.EmbeddedDocument):  # pylint: disable=too-few-public-methods
+class ReadStatsToolResult(ToolResult):  # pylint: disable=too-few-public-methods
     """A set of consistent fields for read stats."""
 
     num_reads = mongoDB.IntField()
@@ -13,13 +13,9 @@ class ReadStatsSection(mongoDB.EmbeddedDocument):  # pylint: disable=too-few-pub
     codons = mongoDB.MapField(field=mongoDB.IntField(), required=True)
     tetramers = mongoDB.MapField(field=mongoDB.IntField(), required=True)
 
-
-class ReadStatsToolResult(ToolResult):  # pylint: disable=too-few-public-methods
-    """Read Stats result type."""
-
-    # Accept any JSON
-    microbial = mongoDB.EmbeddedDocumentField(ReadStatsSection)
-    raw = mongoDB.EmbeddedDocumentField(ReadStatsSection)
+    @staticmethod
+    def stat_fields():
+        return ['num_reads', 'gc_content', 'codons', 'tetramers']
 
 
 class ReadStatsToolResultModule(SampleToolResultModule):
