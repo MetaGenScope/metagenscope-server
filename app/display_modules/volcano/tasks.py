@@ -9,7 +9,6 @@ from app.extensions import celery
 from app.tool_results.card_amrs import CARDAMRResultModule
 from app.tool_results.kraken import KrakenResultModule
 from app.tool_results.metaphlan2 import Metaphlan2ResultModule
-from app.tool_results.humann2 import Humann2ResultModule
 
 from .models import VolcanoResult
 
@@ -101,7 +100,6 @@ def make_volcanos(categories, samples):
         CARDAMRResultModule.name(),
         KrakenResultModule.name(),
         Metaphlan2ResultModule.name(),
-        Humann2ResultModule.name(),
     ]
     out = {'categories': categories}
     for tool_name in tool_names:
