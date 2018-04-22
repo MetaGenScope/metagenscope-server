@@ -10,20 +10,22 @@ StringList = mdb.ListField(mdb.StringField())   # pylint: disable=invalid-name
 
 class XYZPoint(mdb.EmbeddedDocument):  # pylint: disable=too-few-public-methods
     """Represent a 3d point."""
-    x = mdb.FloatField(required=True)
-    y = mdb.FloatField(required=True)
-    z = mdb.FloatField(default=1)
+
+    xval = mdb.FloatField(required=True)
+    yval = mdb.FloatField(required=True)
+    zval = mdb.FloatField(default=1)
     name = mdb.StringField()
 
 
 class ToolCategoryDocument(mdb.EmbeddedDocument):  # pylint: disable=too-few-public-methods
     """The base data type that generates a particular plot."""
+
     pval_histogram = mdb.ListField(EmbeddedDoc(XYZPoint))
     scatter_plot = mdb.ListField(EmbeddedDoc(XYZPoint), required=True)
 
 
 class ToolDocument(mdb.EmbeddedDocument):  # pylint: disable=too-few-public-methods
-    """Organize all 'plots' from a particular tool"""
+    """Organize all 'plots' from a particular tool."""
 
     tool_categories = mdb.MapField(
         field=mdb.MapField(field=ToolCategoryDocument),

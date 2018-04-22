@@ -17,7 +17,7 @@ def make_dataframe(samples, tool_name):
     """Return a pandas dataframe for the given tool."""
     tbl = {}
     for sample in samples:
-        tbl[sample.name] = sample['tool_name']
+        tbl[sample.name] = sample[tool_name]
     return pd.DataFrame(tbl, orient='index').fillna(0)
 
 
@@ -32,40 +32,40 @@ def get_cases(category_name, category_value, samples):
     return cases, controls
 
 
-def get_lfcs(df, cases, controls):
+def get_lfcs(tool_df, cases, controls):
     """Return two series: LFC of means and mean of cases."""
-    caseMeans = df.loc[cases].mean(index=1)
-    controlMeans = df.loc[controls].mean(index=1)
-    lfcs = (caseMeans / controlMeans).apply(np.log2)
-    return lfcs, caseMeans
+    case_means = tool_df.loc[cases].mean(index=1)
+    control_means = tool_df.loc[controls].mean(index=1)
+    lfcs = (case_means / control_means).apply(np.log2)
+    return lfcs, case_means
 
 
-def get_nlps(df, cases, controls):
+def get_nlps(tool_df, cases, controls):
     """Return a series of nlps for each column and a list of raw pvalues."""
-    ps = []
+    pvals = []
 
     def mwu(col):
         """Perform MWU test on a column of the dataframe."""
-        _, p = mannwhitneyu(col[cases], col[controls])
-        p *= 2  # correct for two sided
-        assert p <= 1.0
-        ps.append(p)
-        nlp = -np.log10(p)
+        _, pval = mannwhitneyu(col[cases], col[controls])
+        pval *= 2  # correct for two sided
+        assert pval <= 1.0
+        pvals.append(pval)
+        nlp = -np.log10(pval)
         return nlp
 
-    nlps = df.apply(mwu, imdex=1)
-    return nlps, ps
+    nlps = tool_df.apply(mwu, imdex=1)
+    return nlps, pvals
 
 
-def pval_hist(ps, bin_width=0.05):
+def pval_hist(pvals, bin_width=0.05):
     """Return a histogram of pvalues."""
-    nBins = int(1 / bin_width + 0.5)
+    nbins = int(1 / bin_width + 0.5)
     bins = {bin_width * i: 0
-            for i in range(nBins)}
-    for p in ps:
+            for i in range(nbins)}
+    for pval in pvals:
         for bin_start in bins:
             bin_end = bin_start + bin_width
-            if (p >= bin_start) and (p < bin_end):
+            if (pval >= bin_start) and (pval < bin_end):
                 bins[bin_start] += 1
                 break
 
@@ -76,19 +76,19 @@ def pval_hist(ps, bin_width=0.05):
 
 def handle_one_tool_category(category_name, category_value, samples, tool_name):
     """Return the JSON for a ToolCategoryDocument."""
-    df = make_dataframe(samples, tool_name)
+    tool_df = make_dataframe(samples, tool_name)
     cases, controls = get_cases(category_name, category_value, samples)
-    lfcs, caseMeans = get_lfcs(df, cases, controls)
-    nlps, ps = get_nlps(df, cases, controls)
+    lfcs, case_means = get_lfcs(tool_df, cases, controls)
+    nlps, pvals = get_nlps(tool_df, cases, controls)
 
     out = {
         'scatter_plot': pd.concat({
-            'x': lfcs,
-            'y': nlps,
-            'z': caseMeans,
-            'name': df.index,
+            'xval': lfcs,
+            'yval': nlps,
+            'zval': case_means,
+            'name': tool_df.index,
         }).to_dict(orient='records'),
-        'pval_histogram': pval_hist(ps)
+        'pval_histogram': pval_hist(pvals)
     }
     return out
 

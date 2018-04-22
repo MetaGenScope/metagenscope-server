@@ -2,9 +2,10 @@
 
 """Factory for generating Volcano models for testing."""
 
-import factory
+
 from random import random, randint
 
+import factory
 from app.display_modules.volcano import VolcanoResult
 
 
@@ -13,21 +14,22 @@ def make_pval_hist():
     bin_width, nbins = 0.05, 20
 
     return [
-        {'x': i * bin_width, 'y': randint(1, 10)}
+        {'xval': i * bin_width, 'yval': randint(1, 10)}
         for i in range(nbins)
     ]
 
 
 def make_scatter_plot():
     """Return random scatter plot."""
-    def pt():
+    def make_pt():
+        """Return a random point."""
         return {
-            'x': randint(-1, 1) * 2 * random(),
-            'y': 2 * random(),
-            'z': random(),
+            'xval': randint(-1, 1) * 2 * random(),
+            'yval': 2 * random(),
+            'zval': random(),
             'name': 'pt_{}'.format(hash(randint(1, 1000)))
         }
-    return [pt() for _ in range(randint(100, 1000))]
+    return [make_pt() for _ in range(randint(100, 1000))]
 
 
 def make_tool_category():
