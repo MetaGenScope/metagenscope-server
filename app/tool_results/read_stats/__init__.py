@@ -15,6 +15,7 @@ class ReadStatsToolResult(ToolResult):  # pylint: disable=too-few-public-methods
 
     @staticmethod
     def stat_fields():
+        """Return a list of the stats collected."""
         return ['num_reads', 'gc_content', 'codons', 'tetramers']
 
 

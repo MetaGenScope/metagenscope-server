@@ -3,7 +3,7 @@
 from app.extensions import mongoDB as mdb
 
 
-class ReadStatsSample(mdb.EmbeddedDocument):
+class ReadStatsSample(mdb.EmbeddedDocument):  # pylint: disable=too-few-public-methods
     """A set of consistent fields for read stats."""
 
     num_reads = mdb.IntField()
