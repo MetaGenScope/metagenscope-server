@@ -1,24 +1,77 @@
 # pylint: disable=missing-docstring,too-few-public-methods
 
-"""Factory for generating Read Classified models for testing."""
+"""Factory for generating Volcano models for testing."""
 
 import factory
-from app.display_modules.reads_classified.models import ReadsClassifiedResult
-from app.tool_results.reads_classified.tests.factory import create_values
+from random import random, randint
+
+from app.display_modules.volcano import VolcanoResult
 
 
-class ReadsClassifiedFactory(factory.mongoengine.MongoEngineFactory):
-    """Factory for Analysis Result's Read Stats."""
+def make_pval_hist():
+    """Return random pval hist."""
+    bin_width, nbins = 0.05, 20
+
+    return [
+        {'x': i * bin_width, 'y': randint(1, 10)}
+        for i in range(nbins)
+    ]
+
+
+def make_scatter_plot():
+    """Return random scatter plot."""
+    def pt():
+        return {
+            'x': randint(-1, 1) * 2 * random(),
+            'y': 2 * random(),
+            'z': random(),
+            'name': 'pt_{}'.format(hash(randint(1, 1000)))
+        }
+    return [pt() for _ in range(randint(100, 1000))]
+
+
+def make_tool_category():
+    """Return random tool category."""
+    return {
+        'pval_histogram': make_pval_hist(),
+        'scatter_plot': make_scatter_plot(),
+    }
+
+
+def make_tool_doc(categories):
+    """Return random tool doc."""
+    return {
+        'tool_categories': {
+            cat_name: {
+                cat_val: {} for cat_val in cat_vals
+            } for cat_name, cat_vals in categories.items()
+        }
+    }
+
+
+class VolcanoFactory(factory.mongoengine.MongoEngineFactory):
+    """Factory for Analysis Result's Volcano."""
 
     class Meta:
         """Factory metadata."""
 
-        model = ReadsClassifiedResult
+        model = VolcanoResult
 
     @factory.lazy_attribute
-    def samples(self):  # pylint: disable=no-self-use
-        """Generate random samples."""
-        samples = {}
-        for i in range(10):
-            samples[f'Sample{i}'] = create_values()
-        return samples
+    def categories(self):  # pylint: disable=no-self-use
+        """Generate random categories."""
+        return {
+            'cat_name_{}'.format(i): [
+                'cat_name_{}_val_{}'.format(i, j)
+                for j in range(randint(3, 6))
+            ] for i in range(randint(3, 6))
+        }
+
+    @factory.lazy_attribute
+    def tools(self):
+        """Generate random tool stack."""
+        tool_names = ['tool_{}'.format(i) for i in range(randint(3, 6))]
+        return {
+            tool_name: make_tool_doc(self.categories)
+            for tool_name in tool_names
+        }
