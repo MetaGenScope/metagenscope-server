@@ -6,14 +6,11 @@ from app.tool_results.read_stats import ReadStatsToolResult
 
 
 def create_tetramers():
-    """Return a dict with plausible values for tetramers.
-
-    Note: this is broken in the CAP, this test reflects the broken state.
-    """
-    return {'C': randint(100, 1000),
-            'T': randint(100, 1000),
-            'A': randint(100, 1000),
-            'G': randint(100, 1000)}
+    """Return a dict with plausible values for tetramers."""
+    return {'CCCC': randint(100, 1000),
+            'TTTT': randint(100, 1000),
+            'AAAA': randint(100, 1000),
+            'GGGG': randint(100, 1000)}
 
 
 def create_codons():
@@ -21,10 +18,10 @@ def create_codons():
 
     Note: this is broken in the CAP, this test reflects the broken state.
     """
-    return {'C': randint(100, 1000),
-            'T': randint(100, 1000),
-            'A': randint(100, 1000),
-            'G': randint(100, 1000)}
+    return {'CCC': randint(100, 1000),
+            'TTT': randint(100, 1000),
+            'AAA': randint(100, 1000),
+            'GGG': randint(100, 1000)}
 
 
 def create_one():
@@ -39,7 +36,7 @@ def create_one():
 
 def create_values():
     """Create read stat values."""
-    return {'raw': create_one(), 'microbial': create_one()}
+    return create_one()
 
 
 def create_read_stats():
