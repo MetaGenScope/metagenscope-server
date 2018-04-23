@@ -96,7 +96,7 @@ def make_taxa_table(samples, tool_name):
     taxa_tbl = {}
     for sample in samples:
         try:
-            taxa_tbl[sample.name] = getattr(sample, tool_name)
+            taxa_tbl[sample.name] = sample[tool_name]
         except KeyError:
             pass
     taxa_tbl = pd.DataFrame(taxa_tbl, orient='index')
