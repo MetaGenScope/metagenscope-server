@@ -7,9 +7,9 @@ from app.display_modules.taxon_abundance.constants import MODULE_NAME
 from app.display_modules.taxon_abundance.wrangler import TaxonAbundanceWrangler
 from app.samples.sample_models import Sample
 from app.tool_results.kraken import KrakenResultModule
-from app.tool_results.kraken.tests.factory import create_metaphlan2
+from app.tool_results.kraken.tests.factory import create_kraken
 from app.tool_results.metaphlan2 import Metaphlan2ResultModule
-from app.tool_results.metaphlan2.tests.factory import create_kraken
+from app.tool_results.metaphlan2.tests.factory import create_metaphlan2
 
 
 def flow_model():
