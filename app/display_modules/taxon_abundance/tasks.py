@@ -12,6 +12,7 @@ from .models import TaxonAbundanceResult
 
 
 def get_ranks(*tkns):
+    """Return a rank code from a taxon ID."""
     out = []
     for tkn in tkns:
         rank = tkn.strip()[0].lower()
@@ -23,13 +24,14 @@ def get_ranks(*tkns):
 
 
 def node(tbl, key, name, value):
+    """Update the node table."""
     try:
         tbl[key]['value'] += value
     except KeyError:
         display_name = name
         if '__' in display_name:
             display_name = display_name.split('__')[1]
-        return {
+        tbl[key] = {
             'id': name,
             'nodeName': display_name,
             'nodeValue': 100,
@@ -37,6 +39,7 @@ def node(tbl, key, name, value):
 
 
 def link(tbl, key, source, target, value):
+    """Update the link table."""
     try:
         tbl[key]['value'] += value
     except KeyError:
@@ -48,11 +51,12 @@ def link(tbl, key, source, target, value):
 
 
 def handle_one_taxon(nodes, links, sample_name, taxon, abundance):
+    """Process a single taxon line."""
     taxa_tkns = taxon.split('|')
     for prev_taxa, cur_taxa in zip([None] + taxa_tkns[:-1], taxa_tkns):
         node_set = nodes['k']
         if prev_taxa:
-            cur_rank, prev_rank = get_ranks(cur_taxa, prev_taxa)
+            cur_rank = get_ranks(cur_taxa)
             node_set = nodes[cur_rank]
 
         if cur_taxa == taxa_tkns[-1]:
@@ -65,7 +69,7 @@ def handle_one_taxon(nodes, links, sample_name, taxon, abundance):
 
 
 def make_flow(taxa_vecs, min_abundance=0.05):
-    """
+    """Return a JSON flow object.
 
     Takes a dict of sample_name to normalized taxa vectors
     """
@@ -87,7 +91,8 @@ def make_flow(taxa_vecs, min_abundance=0.05):
         }
 
 
-def make_taxa_table(samples):
+def make_taxa_table(samples, tool_name):
+    """Return a scaled taxa table."""
     taxa_tbl = {}
     for sample in samples:
         try:
@@ -102,17 +107,17 @@ def make_taxa_table(samples):
 
 @celery.task()
 def make_all_flows(samples):
-    """Determine HMP distributions by site and category."""
+    """Determine flows by tool."""
     flow_tbl = {}
     tool_names = [Metaphlan2ResultModule.name(), KrakenResultModule.name()]
     for tool_name in tool_names:
-        taxa_tbl = make_taxa_table(samples)
+        taxa_tbl = make_taxa_table(samples, tool_name)
         flow_tbl[tool_name] = make_flow(taxa_tbl)
     return flow_tbl
 
 
 @celery.task(name='taxon_abundance.persist_result')
 def persist_result(result_data, analysis_result_id, result_name):
-    """Persist HMP results."""
+    """Persist Taxon results."""
     result = TaxonAbundanceResult(**result_data)
     persist_result_helper(result, analysis_result_id, result_name)

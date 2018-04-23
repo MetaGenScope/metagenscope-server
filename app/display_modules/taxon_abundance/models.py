@@ -21,7 +21,7 @@ class TaxonAbundanceEdge(mdb.EmbeddedDocument):     # pylint: disable=too-few-pu
     value = mdb.FloatField(required=True)
 
 
-class TaxonAbundanceResult(mdb.EmbeddedDocument):   # pylint: disable=too-few-public-methods
+class TaxonAbundanceFlow(mdb.EmbeddedDocument):   # pylint: disable=too-few-public-methods
     """Taxon Abundance document type."""
 
     # Do not store depth of node because this can be derived from the edges
@@ -38,3 +38,10 @@ class TaxonAbundanceResult(mdb.EmbeddedDocument):   # pylint: disable=too-few-pu
             if edge.target not in node_ids:
                 msg = f'Could not find Edge target [{edge.target}] in nodes!'
                 raise ValidationError(msg)
+
+
+class TaxonAbundanceResult(mdb.EmbeddedDocument):   # pylint: disable=too-few-public-methods
+    """Taxon Abundance document type."""
+
+    metaphlan2 = mdb.EmbeddedDocument(TaxonAbundanceFlow)
+    kraken = mdb.EmbeddedDocument(TaxonAbundanceFlow)

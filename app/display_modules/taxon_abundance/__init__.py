@@ -23,12 +23,12 @@ class TaxonAbundanceDisplayModule(DisplayModule):
 
     @staticmethod
     def required_tool_results():
-        """Enumerate which ToolResult modules a sample must have."""
+        """Enumerate which ToolResult modules a taxon abundance sample must have."""
         return [Metaphlan2ResultModule, KrakenResultModule]
 
     @classmethod
     def name(cls):
-        """Return module's unique identifier string."""
+        """Return taxon abundance's unique identifier string."""
         return MODULE_NAME
 
     @classmethod
