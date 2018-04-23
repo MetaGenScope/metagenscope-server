@@ -62,8 +62,8 @@ class TestTaxonAbundanceResult(BaseDisplayModuleTest):
             return Sample(**{
                 'name': f'Sample{i}',
                 'metadata': {'foobar': f'baz{i}'},
-                KrakenResultModule.name(): create_taxa(100),
-                Metaphlan2ResultModule.name(): create_taxa(100)
+                KrakenResultModule.name(): {'taxa': create_taxa(100)},
+                Metaphlan2ResultModule.name(): {'taxa': create_taxa(100)},
             }).save()
 
         self.generic_run_group_test(create_sample,
