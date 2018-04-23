@@ -1,7 +1,6 @@
 """Tasks to process Taxon Abundance results."""
 
 import pandas as pd
-from sklearn.preprocessing import MinMaxScaler
 
 from app.extensions import celery
 from app.display_modules.utils import persist_result_helper
@@ -100,8 +99,7 @@ def make_taxa_table(samples, tool_name):
         except KeyError:
             pass
     taxa_tbl = pd.DataFrame.from_dict(taxa_tbl, orient='index')
-    taxa_tbl_scaled = MinMaxScaler().fit_transform(taxa_tbl.as_matrix())
-    taxa_tbl = pd.DataFrame.from_dict(taxa_tbl_scaled, orient='index').to_dict(orient='index')
+    taxa_tbl = taxa_tbl.apply(lambda x: x / x.sum(), axis=0)
     return taxa_tbl
 
 
