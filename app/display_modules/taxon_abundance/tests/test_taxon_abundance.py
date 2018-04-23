@@ -7,13 +7,10 @@ from app.display_modules.taxon_abundance import TaxonAbundanceResult
 from tests.base import BaseTestCase
 
 
-class TestTaxonAbundanceResult(BaseTestCase):
-    """Test suite for Taxon Abundance model."""
-
-    def test_add_taxon_abundance(self):
-        """Ensure Taxon Abundance model is created correctly."""
-
-        nodes = [
+def flow_model():
+    """Return an example flow model."""
+    return {
+        'nodes': [
             {
                 'id': 'left_root',
                 'name': 'left_root',
@@ -24,17 +21,22 @@ class TestTaxonAbundanceResult(BaseTestCase):
                 'name': 'right_root',
                 'value': 3.5,
             },
-        ]
-
-        edges = [
+        ], 'edges': [
             {
                 'source': 'left_root',
                 'target': 'right_root',
                 'value': 1.0,
             },
         ]
+    }
 
-        taxon_abundance = TaxonAbundanceResult(nodes=nodes, edges=edges)
+
+class TestTaxonAbundanceResult(BaseTestCase):
+    """Test suite for Taxon Abundance model."""
+
+    def test_add_taxon_abundance(self):
+        """Ensure Taxon Abundance model is created correctly."""
+        taxon_abundance = TaxonAbundanceResult(kraken=flow_model(), metaphlan2=flow_model())
         wrapper = AnalysisResultWrapper(data=taxon_abundance)
         result = AnalysisResultMeta(taxon_abundance=wrapper).save()
         self.assertTrue(result.id)
@@ -42,24 +44,7 @@ class TestTaxonAbundanceResult(BaseTestCase):
 
     def test_add_missing_node(self):
         """Ensure saving model fails if edge references missing node."""
-
-        nodes = [
-            {
-                'id': 'left_root',
-                'name': 'left_root',
-                'value': 3.5,
-            },
-        ]
-
-        edges = [
-            {
-                'source': 'left_root',
-                'target': 'right_root',
-                'value': 1.0,
-            },
-        ]
-
-        taxon_abundance = TaxonAbundanceResult(nodes=nodes, edges=edges)
+        taxon_abundance = TaxonAbundanceResult(kraken=flow_model(), metaphlan2=flow_model())
         wrapper = AnalysisResultWrapper(data=taxon_abundance)
         result = AnalysisResultMeta(taxon_abundance=wrapper)
         self.assertRaises(ValidationError, result.save)
