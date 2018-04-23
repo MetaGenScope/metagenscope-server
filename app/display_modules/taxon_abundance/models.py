@@ -25,7 +25,10 @@ class TaxonAbundanceFlow(mdb.EmbeddedDocument):   # pylint: disable=too-few-publ
     """Taxon Abundance document type."""
 
     # Do not store depth of node because this can be derived from the edges
-    nodes = mdb.EmbeddedDocumentListField(TaxonAbundanceNode, required=True)
+    nodes = mdb.EmbeddedDocumentListField(
+        mdb.EmbeddedDocumentListField(TaxonAbundanceNode),
+        required=True
+    )
     edges = mdb.EmbeddedDocumentListField(TaxonAbundanceEdge, required=True)
 
     def clean(self):

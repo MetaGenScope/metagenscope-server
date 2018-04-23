@@ -116,11 +116,8 @@ def make_all_flows(samples):
         save_tool_name = 'kraken'
         if 'metaphlan2' in tool_name:
             save_tool_name = 'metaphlan2'
-        try:
-            flow_tbl[save_tool_name] = make_flow(taxa_tbl)
-        except FieldDoesNotExist:
-            msg = str(taxa_tbl)
-            assert False, msg
+
+        flow_tbl[save_tool_name] = make_flow(taxa_tbl)
 
     return flow_tbl
 
@@ -128,5 +125,9 @@ def make_all_flows(samples):
 @celery.task(name='taxon_abundance.persist_result')
 def persist_result(result_data, analysis_result_id, result_name):
     """Persist Taxon results."""
-    result = TaxonAbundanceResult(**result_data)
+    try:
+        result = TaxonAbundanceResult(**result_data)
+    except FieldDoesNotExist:
+        msg = str(result_data)
+        assert False, msg
     persist_result_helper(result, analysis_result_id, result_name)
