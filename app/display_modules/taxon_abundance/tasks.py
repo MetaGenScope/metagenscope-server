@@ -2,6 +2,8 @@
 
 import pandas as pd
 
+from mongoengine.errors import FieldDoesNotExist
+
 from app.extensions import celery
 from app.display_modules.utils import persist_result_helper
 from app.tool_results.metaphlan2 import Metaphlan2ResultModule
@@ -114,7 +116,12 @@ def make_all_flows(samples):
         save_tool_name = 'kraken'
         if 'metaphlan2' in tool_name:
             save_tool_name = 'metaphlan2'
-        flow_tbl[save_tool_name] = make_flow(taxa_tbl)
+        try:
+            flow_tbl[save_tool_name] = make_flow(taxa_tbl)
+        except FieldDoesNotExist:
+            msg = str(taxa_tbl)
+            assert False, msg
+
     return flow_tbl
 
 
