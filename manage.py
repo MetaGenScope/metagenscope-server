@@ -102,10 +102,10 @@ def seed_db():
 
 
     abrf_analysis_result_01 = AnalysisResultMeta(reads_classified=reads_classified).save()
-    abrf_sample_01 = Sample(name='SomethingUnique_A', theme='world-quant',
+    abrf_sample_01 = Sample(name='SomethingUnique_A', theme='world-quant-sample',
                             analysis_result=abrf_analysis_result_01).save()
     abrf_analysis_result_02 = AnalysisResultMeta(reads_classified=reads_classified).save()
-    abrf_sample_02 = Sample(name='SomethingUnique_B', theme='world-quant',
+    abrf_sample_02 = Sample(name='SomethingUnique_B', theme='world-quant-sample',
                             analysis_result=abrf_analysis_result_02).save()
     abrf_analysis_result.save()
     abrf_description = 'ABRF San Diego Mar 24th-29th 2017'
