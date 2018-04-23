@@ -54,7 +54,7 @@ def handle_one_taxon(nodes, links, sample_name, taxon, abundance):
     taxa_tkns = taxon.split('|')
     for prev_taxa, cur_taxa in zip([None] + taxa_tkns[:-1], taxa_tkns):
         node_set = nodes['k']
-        cur_rank = get_ranks(cur_taxa)
+        cur_rank = get_ranks(cur_taxa)[0]
         node_set = nodes[cur_rank]
 
         if cur_taxa == taxa_tkns[-1]:
