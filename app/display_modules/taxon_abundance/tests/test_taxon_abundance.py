@@ -6,8 +6,9 @@ from app.display_modules.taxon_abundance import TaxonAbundanceResult
 from app.display_modules.taxon_abundance.constants import MODULE_NAME
 from app.display_modules.taxon_abundance.wrangler import TaxonAbundanceWrangler
 from app.samples.sample_models import Sample
+from app.tool_results.kraken import KrakenResultModule
 from app.tool_results.kraken.tests.factory import create_taxa
-
+from app.tool_results.metaphlan2 import Metaphlan2ResultModule
 
 def flow_model():
     """Return an example flow model."""
@@ -47,17 +48,19 @@ class TestTaxonAbundanceResult(BaseDisplayModuleTest):
     def test_get_taxon_abundance(self):
         """Ensure getting a single TaxonAbundance behaves correctly."""
         taxon_abundance = TaxonAbundanceResult(kraken=flow_model(), metaphlan2=flow_model())
-        self.generic_getter_test(taxon_abundance, MODULE_NAME)
+        self.generic_getter_test(taxon_abundance, MODULE_NAME, verify_fields=('metaphlan2', 'kraken'))
 
     def test_run_taxon_abundance_sample_group(self):  # pylint: disable=invalid-name
         """Ensure TaxonAbundance run_sample_group produces correct results."""
 
         def create_sample(i):
             """Create unique sample for index i."""
-            return Sample(name=f'Sample{i}',
-                          metadata={'foobar': f'baz{i}'},
-                          kraken=create_taxa(100),
-                          metaphlan2=create_taxa(100)).save()
+            return Sample(**{
+                'name': f'Sample{i}',
+                'metadata': {'foobar': f'baz{i}'},
+                'KrakenResultModule.name()': create_taxa(100),
+                'Metaphlan2ResultModule.name()': create_taxa(100)
+            }).save()
 
         self.generic_run_group_test(create_sample,
                                     TaxonAbundanceWrangler,
