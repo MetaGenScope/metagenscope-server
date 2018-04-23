@@ -1,12 +1,12 @@
 """Test suite for Taxon Abundance model."""
 
 from app.analysis_results.analysis_result_models import AnalysisResultMeta, AnalysisResultWrapper
+from app.display_modules.display_module_base_test import BaseDisplayModuleTest
 from app.display_modules.taxon_abundance import TaxonAbundanceResult
 from app.display_modules.taxon_abundance.constants import MODULE_NAME
 from app.display_modules.taxon_abundance.wrangler import TaxonAbundanceWrangler
 from app.samples.sample_models import Sample
 from app.tool_results.kraken.tests.factory import create_taxa
-from tests.base import BaseTestCase
 
 
 def flow_model():
@@ -33,7 +33,7 @@ def flow_model():
     }
 
 
-class TestTaxonAbundanceResult(BaseTestCase):
+class TestTaxonAbundanceResult(BaseDisplayModuleTest):
     """Test suite for Taxon Abundance model."""
 
     def test_add_taxon_abundance(self):
