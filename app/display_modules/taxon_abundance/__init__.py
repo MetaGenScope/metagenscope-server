@@ -10,12 +10,12 @@ larger proportions of taxa in a given sample.
 
 from app.display_modules.display_module import DisplayModule
 
-from app.display_modules.taxon_abundance.taxon_abundance_models import (
-    TaxonAbundanceResult,
-    TaxonAbundanceNode,
-    TaxonAbundanceEdge,
-)
-from app.display_modules.taxon_abundance.taxon_abundance_wrangler import TaxonAbundanceWrangler
+from app.tool_results.metaphlan2 import Metaphlan2ResultModule
+from app.tool_results.kraken import KrakenResultModule
+
+from .constants import MODULE_NAME
+from .models import TaxonAbundanceResult
+from .wrangler import TaxonAbundanceWrangler
 
 
 class TaxonAbundanceDisplayModule(DisplayModule):
@@ -24,12 +24,12 @@ class TaxonAbundanceDisplayModule(DisplayModule):
     @staticmethod
     def required_tool_results():
         """Enumerate which ToolResult modules a sample must have."""
-        return []
+        return [Metaphlan2ResultModule, KrakenResultModule]
 
     @classmethod
     def name(cls):
         """Return module's unique identifier string."""
-        return 'taxon_abundance'
+        return MODULE_NAME
 
     @classmethod
     def get_result_model(cls):
