@@ -99,9 +99,9 @@ def make_taxa_table(samples, tool_name):
             taxa_tbl[sample['name']] = sample[tool_name]
         except KeyError:
             pass
-    taxa_tbl = pd.DataFrame(taxa_tbl, orient='index')
+    taxa_tbl = pd.DataFrame.from_dict(taxa_tbl, orient='index')
     taxa_tbl_scaled = MinMaxScaler().fit_transform(taxa_tbl.values)
-    taxa_tbl = pd.DataFrame(taxa_tbl_scaled).to_dict(oreint='index')
+    taxa_tbl = pd.DataFrame.from_dict(taxa_tbl_scaled, orient='index').to_dict(orient='index')
     return taxa_tbl
 
 
