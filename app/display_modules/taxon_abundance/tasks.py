@@ -98,8 +98,12 @@ def make_taxa_table(samples, tool_name):
             taxa_tbl[sample['name']] = sample[tool_name]
         except KeyError:
             pass
-    taxa_tbl = pd.DataFrame.from_dict(taxa_tbl, orient='index')
-    taxa_tbl = taxa_tbl.apply(lambda x: x / x.sum(), axis=0)
+    try:
+        taxa_tbl = pd.DataFrame.from_dict(taxa_tbl, orient='index')
+        taxa_tbl = taxa_tbl.apply(lambda col: col / col.sum(), axis=0)
+    except TypeError:
+        msg = str(taxa_tbl)
+        assert False, msg
     return taxa_tbl
 
 
