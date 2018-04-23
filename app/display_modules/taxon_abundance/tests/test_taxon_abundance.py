@@ -7,8 +7,9 @@ from app.display_modules.taxon_abundance.constants import MODULE_NAME
 from app.display_modules.taxon_abundance.wrangler import TaxonAbundanceWrangler
 from app.samples.sample_models import Sample
 from app.tool_results.kraken import KrakenResultModule
-from app.tool_results.kraken.tests.factory import create_taxa
+from app.tool_results.kraken.tests.factory import create_metaphlan2
 from app.tool_results.metaphlan2 import Metaphlan2ResultModule
+from app.tool_results.metaphlan2.tests.factory import create_kraken
 
 
 def flow_model():
@@ -62,8 +63,8 @@ class TestTaxonAbundanceResult(BaseDisplayModuleTest):
             return Sample(**{
                 'name': f'Sample{i}',
                 'metadata': {'foobar': f'baz{i}'},
-                KrakenResultModule.name(): {'taxa': create_taxa(100)},
-                Metaphlan2ResultModule.name(): {'taxa': create_taxa(100)},
+                KrakenResultModule.name(): create_kraken(),
+                Metaphlan2ResultModule.name(): create_metaphlan2(),
             }).save()
 
         self.generic_run_group_test(create_sample,
