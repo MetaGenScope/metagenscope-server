@@ -10,6 +10,7 @@ from app.tool_results.kraken import KrakenResultModule
 from app.tool_results.kraken.tests.factory import create_taxa
 from app.tool_results.metaphlan2 import Metaphlan2ResultModule
 
+
 def flow_model():
     """Return an example flow model."""
     return {
