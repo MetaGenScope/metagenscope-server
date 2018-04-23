@@ -111,7 +111,10 @@ def make_all_flows(samples):
     tool_names = [Metaphlan2ResultModule.name(), KrakenResultModule.name()]
     for tool_name in tool_names:
         taxa_tbl = make_taxa_table(samples, tool_name)
-        flow_tbl[tool_name] = make_flow(taxa_tbl)
+        save_tool_name = 'kraken'
+        if 'metaphlan2' in tool_name:
+            save_tool_name = 'metaphlan2'
+        flow_tbl[save_tool_name] = make_flow(taxa_tbl)
     return flow_tbl
 
 
