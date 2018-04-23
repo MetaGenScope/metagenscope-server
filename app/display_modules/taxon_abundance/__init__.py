@@ -24,7 +24,8 @@ class TaxonAbundanceDisplayModule(DisplayModule):
     @staticmethod
     def required_tool_results():
         """Enumerate which ToolResult modules a taxon abundance sample must have."""
-        return [Metaphlan2ResultModule, KrakenResultModule]
+        taxa_modules = [Metaphlan2ResultModule, KrakenResultModule]
+        return taxa_modules
 
     @classmethod
     def name(cls):
