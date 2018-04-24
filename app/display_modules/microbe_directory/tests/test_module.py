@@ -1,4 +1,5 @@
 """Test suite for Microbe Directory diplay module."""
+
 from app.display_modules.display_module_base_test import BaseDisplayModuleTest
 from app.display_modules.microbe_directory.wrangler import MicrobeDirectoryWrangler
 from app.samples.sample_models import Sample

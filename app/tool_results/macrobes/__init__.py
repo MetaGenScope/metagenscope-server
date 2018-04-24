@@ -1,4 +1,4 @@
-"""Virulence Factor tool module."""
+"""Macrobe tool module."""
 
 from app.tool_results.modules import SampleToolResultModule
 
@@ -6,15 +6,15 @@ from .constants import MODULE_NAME
 from .models import MacrobeToolResult
 
 
-class VFDBResultModule(SampleToolResultModule):
-    """Virulence Factor tool module."""
+class MacrobeResultModule(SampleToolResultModule):
+    """Macrobe tool module."""
 
     @classmethod
     def name(cls):
-        """Return Virulence Factor module's unique identifier string."""
-        return 'vfdb_quantify'
+        """Return Macrobe module's unique identifier string."""
+        return MODULE_NAME
 
     @classmethod
     def result_model(cls):
-        """Return Virulence Factor module's model class."""
+        """Return Macrobe module's model class."""
         return MacrobeToolResult
