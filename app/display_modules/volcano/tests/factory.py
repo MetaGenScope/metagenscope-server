@@ -45,7 +45,7 @@ def make_tool_doc(categories):
     return {
         'tool_categories': {
             cat_name: {
-                cat_val: {} for cat_val in cat_vals
+                cat_val: make_tool_category() for cat_val in cat_vals
             } for cat_name, cat_vals in categories.items()
         }
     }
