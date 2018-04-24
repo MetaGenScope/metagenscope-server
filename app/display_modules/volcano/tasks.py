@@ -103,11 +103,11 @@ def handle_one_tool_category(category_name, category_value, samples, tool_name):
     nlps, pvals = get_nlps(tool_df, cases, controls)
 
     out = {
-        'scatter_plot': pd.concat({
+        'scatter_plot': pd.DataFrame({
             'xval': lfcs,
             'yval': nlps,
             'zval': case_means,
-            'name': tool_df.index,
+            'name': tool_df.index.to_series(),
         }).to_dict(orient='records'),
         'pval_histogram': pval_hist(pvals)
     }
