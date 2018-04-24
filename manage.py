@@ -15,6 +15,7 @@ COV = coverage.coverage(
 )
 COV.start()
 
+from uuid import UUID
 
 from flask_script import Manager
 from flask_migrate import MigrateCommand, upgrade
@@ -109,9 +110,14 @@ def seed_db():
     abrf_sample_02 = Sample(name='SomethingUnique_B', theme='world-quant-sample',
                             analysis_result=abrf_analysis_result_02).save()
     abrf_analysis_result.save()
+
+    abrf_uuid = UUID('00000000-0000-4000-8000-000000000000')
     abrf_description = 'ABRF San Diego Mar 24th-29th 2017'
-    abrf_2017_group = SampleGroup(name='ABRF 2017', analysis_result=abrf_analysis_result,
-                                  description=abrf_description, theme='world-quant')
+    abrf_2017_group = SampleGroup(name='ABRF 2017',
+                                  analysis_result=abrf_analysis_result,
+                                  description=abrf_description,
+                                  theme='world-quant')
+    abrf_2017_group.id = abrf_uuid
     abrf_2017_group.samples = [abrf_sample_01, abrf_sample_02]
 
     uw_analysis_result.save()
@@ -121,7 +127,8 @@ def seed_db():
                                    analysis_result=uw_group_result)
     uw_madison_group.samples = [uw_sample]
 
-    fuzz_group = create_saved_group()
+    fuzz_uuid = UUID('00000000-0000-4000-8000-000000000001')
+    fuzz_group = create_saved_group(uuid=fuzz_uuid)
 
     mason_lab = Organization(name='Mason Lab', admin_email='benjamin.blair.chrobot@gmail.com')
     mason_lab.users = [bchrobot, dcdanko, cmason]
