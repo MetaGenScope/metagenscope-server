@@ -6,6 +6,7 @@ from .hmp_sites import HmpSitesResultModule
 from .humann2 import Humann2ResultModule
 from .humann2_normalize import Humann2NormalizeResultModule
 from .kraken import KrakenResultModule
+from .macrobes import MacrobeResultModule
 from .metaphlan2 import Metaphlan2ResultModule
 from .methyltransferases import MethylResultModule
 from .microbe_census import MicrobeCensusResultModule
@@ -23,6 +24,7 @@ all_tool_results = [  # pylint: disable=invalid-name
     Humann2ResultModule,
     Humann2NormalizeResultModule,
     KrakenResultModule,
+    MacrobeResultModule,
     Metaphlan2ResultModule,
     MethylResultModule,
     MicrobeCensusResultModule,
