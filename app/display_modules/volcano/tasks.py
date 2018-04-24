@@ -90,7 +90,7 @@ def pval_hist(pvals, bin_width=0.05):
                 bins[bin_start] += 1
                 break
 
-    pts = [{'x': bin_start, 'y': nps}
+    pts = [{'xval': bin_start, 'yval': nps}
            for bin_start, nps in bins.items()]
     return pts
 
@@ -128,7 +128,7 @@ def make_volcanos(categories, samples):
         for category_name, category_values in categories.items():
             tool_tbl[category_name] = {}
             for category_value in category_values:
-                tool_tbl[category_value] = handle_one_tool_category(
+                tool_tbl[category_name][category_value] = handle_one_tool_category(
                     category_name,
                     category_value,
                     samples,
