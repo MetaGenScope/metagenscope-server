@@ -3,7 +3,7 @@
 from celery import chain
 
 from app.display_modules.display_wrangler import DisplayModuleWrangler
-from app.display_modules.utils import persist_result_helper
+from app.display_modules.utils import jsonify, persist_result_helper
 from app.extensions import celery
 from app.tool_results.macrobes import MacrobeResultModule
 
@@ -31,6 +31,18 @@ def persist_result(result_data, analysis_result_id, result_name):
 
 class MicrobeDirectoryWrangler(DisplayModuleWrangler):
     """Tasks for generating virulence results."""
+
+    @classmethod
+    def run_sample(cls, sample_id, sample):
+        """Gather single sample and process."""
+        samples = [jsonify(sample)]
+        collate_task = collate_macrobes.s(samples)
+        persist_task = persist_result.s(sample.analysis_result.pk, MODULE_NAME)
+
+        task_chain = chain(collate_task, persist_task)
+        result = task_chain.delay()
+
+        return result
 
     @classmethod
     def run_sample_group(cls, sample_group, samples):
