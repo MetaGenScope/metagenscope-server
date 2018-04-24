@@ -21,5 +21,5 @@ class MacrobeFactory(factory.mongoengine.MongoEngineFactory):
         """Generate random samples."""
         samples = {}
         for i in range(10):
-            samples[f'Sample{i}'] = create_values()
+            samples[f'Sample{i}'] = create_values()['rpkm']
         return samples
