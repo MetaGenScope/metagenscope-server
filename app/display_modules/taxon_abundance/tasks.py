@@ -37,8 +37,8 @@ def node(tbl, key, name, rank, value):
             display_name = display_name.split('__')[1]
         tbl[key] = {
             'id': name,
-            'nodeName': display_name,
-            'nodeValue': 100,
+            'name': display_name,
+            'value': 100,
             'rank': rank,
         }
 
