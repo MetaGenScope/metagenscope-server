@@ -2,14 +2,21 @@
 
 """Factory for generating Microbe Directory models for testing."""
 
+from random import randint
+
 import factory
+
+
+def randvalue():
+    """Create random value."""
+    return float(randint(0, 70) / 10)
 
 
 def create_one_sample():
     """Return an example sample for VFDBResult."""
     return {
-        'rpkm': {'sample_gene_1': 2.1, 'sample_gene_2': 3.5},
-        'rpkmg': {'sample_gene_1': 5.1, 'sample_gene_2': 4.5},
+        'rpkm': {'sample_gene_1': randvalue(), 'sample_gene_2': randvalue()},
+        'rpkmg': {'sample_gene_1': randvalue(), 'sample_gene_2': randvalue()},
     }
 
 
