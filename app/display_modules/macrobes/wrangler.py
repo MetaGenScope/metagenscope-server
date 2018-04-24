@@ -18,7 +18,7 @@ def collate_macrobes(samples):
     sample_dict = {}
     for sample in samples:
         sample_name = sample['name']
-        sample_dict[sample_name] = sample[MacrobeResultModule.name()]['macrobes']
+        sample_dict[sample_name] = sample[MacrobeResultModule.name()]['macrobes']['rpkm']
     sample_tbl = DataFrame.from_dict(sample_dict, orient='index').fillna(0)
     return {'samples': sample_tbl.to_dict()}
 
