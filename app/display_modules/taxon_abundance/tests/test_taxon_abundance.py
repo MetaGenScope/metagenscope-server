@@ -20,11 +20,13 @@ def flow_model():
                 'id': 'left_root',
                 'name': 'left_root',
                 'value': 3.5,
+                'rank': 'l',
             },
             {
                 'id': 'right_root',
                 'name': 'right_root',
                 'value': 3.5,
+                'rank': 'r',
             },
         ], 'edges': [
             {

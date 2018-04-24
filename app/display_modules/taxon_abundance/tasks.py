@@ -85,7 +85,7 @@ def make_flow(taxa_vecs, min_abundance=0.05):
             handle_one_taxon(nodes, links, sample_name, taxon, abundance)
 
         return {
-            'nodes': [nodes[rank] for rank in TAXA_RANKS],
+            'nodes': nodes.values(),
             'edges': links.values()
         }
 
