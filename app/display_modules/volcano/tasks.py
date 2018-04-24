@@ -95,6 +95,22 @@ def pval_hist(pvals, bin_width=0.05):
     return pts
 
 
+def filter_nans(pts):
+    """Remove points that have nans or infinites."""
+    out = []
+    for one_pt in pts:
+        good = True
+        for val in one_pt.values():
+            try:
+                if np.isnan(val) or np.isfinite(val):
+                    good = False
+            except TypeError:
+                pass
+        if good:
+            out.append(one_pt)
+    return out
+
+
 def handle_one_tool_category(category_name, category_value, samples, tool_name):
     """Return the JSON for a ToolCategoryDocument."""
     tool_df = make_dataframe(samples, tool_name)
@@ -107,10 +123,11 @@ def handle_one_tool_category(category_name, category_value, samples, tool_name):
             'xval': lfcs,
             'yval': nlps,
             'zval': case_means,
-            'name': tool_df.index.to_series(),
+            'name': list(tool_df.columns.values),
         }).to_dict(orient='records'),
         'pval_histogram': pval_hist(pvals)
     }
+    out['scatter_plot'] = filter_nans(out['scatter_plot'])
     return out
 
 
