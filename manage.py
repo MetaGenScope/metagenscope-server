@@ -27,6 +27,7 @@ from app.samples.sample_models import Sample
 from app.sample_groups.sample_group_models import SampleGroup
 
 from seed import abrf_analysis_result, uw_analysis_result, reads_classified
+from seed.fuzz import create_saved_group
 
 
 app = create_app()
@@ -120,9 +121,11 @@ def seed_db():
                                    analysis_result=uw_group_result)
     uw_madison_group.samples = [uw_sample]
 
+    fuzz_group = create_saved_group()
+
     mason_lab = Organization(name='Mason Lab', admin_email='benjamin.blair.chrobot@gmail.com')
     mason_lab.users = [bchrobot, dcdanko, cmason]
-    mason_lab.sample_groups = [abrf_2017_group, uw_madison_group]
+    mason_lab.sample_groups = [abrf_2017_group, uw_madison_group, fuzz_group]
 
     db.session.add(mason_lab)
     db.session.commit()
