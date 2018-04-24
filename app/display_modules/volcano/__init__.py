@@ -16,10 +16,8 @@ and testable.
 
 from app.display_modules.display_module import DisplayModule
 from app.display_modules.sample_similarity.constants import MODULE_NAME
-from app.tool_results.card_amrs import CARDAMRResultModule
 from app.tool_results.kraken import KrakenResultModule
 from app.tool_results.metaphlan2 import Metaphlan2ResultModule
-from app.tool_results.humann2 import Humann2ResultModule
 
 # Re-export modules
 from .constants import MODULE_NAME
@@ -34,10 +32,8 @@ class VolcanoDisplayModule(DisplayModule):
     def required_tool_results():
         """Enumerate which ToolResult modules a sample must have."""
         return [
-            CARDAMRResultModule,
             KrakenResultModule,
             Metaphlan2ResultModule,
-            Humann2ResultModule,
         ]
 
     @classmethod

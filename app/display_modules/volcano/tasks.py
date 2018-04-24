@@ -6,7 +6,6 @@ from scipy.stats import mannwhitneyu
 
 from app.display_modules.utils import persist_result_helper
 from app.extensions import celery
-from app.tool_results.card_amrs import CARDAMRResultModule
 from app.tool_results.kraken import KrakenResultModule
 from app.tool_results.metaphlan2 import Metaphlan2ResultModule
 
@@ -15,9 +14,10 @@ from .models import VolcanoResult
 
 def make_dataframe(samples, tool_name):
     """Return a pandas dataframe for the given tool."""
+    key = 'taxa'  # this will eventually change based on tool name
     tbl = {}
     for sample in samples:
-        tbl[sample['name']] = sample[tool_name]
+        tbl[sample['name']] = sample[tool_name][key]
     return pd.DataFrame.from_dict(tbl, orient='index').fillna(0)
 
 
@@ -46,7 +46,10 @@ def get_nlps(tool_df, cases, controls):
 
     def mwu(col):
         """Perform MWU test on a column of the dataframe."""
-        _, pval = mannwhitneyu(col.as_matrix([cases]), col.as_matrix([controls]))
+        col_cases = col.as_matrix([cases])
+        col_controls = col.as_matrix([controls])
+        print(col_cases)
+        _, pval = mannwhitneyu(col_cases, col_controls)
         pval *= 2  # correct for two sided
         assert pval <= 1.0
         pvals.append(pval)
@@ -97,7 +100,6 @@ def handle_one_tool_category(category_name, category_value, samples, tool_name):
 def make_volcanos(categories, samples):
     """Return the JSON for a VolcanoResult."""
     tool_names = [
-        CARDAMRResultModule.name(),
         KrakenResultModule.name(),
         Metaphlan2ResultModule.name(),
     ]
