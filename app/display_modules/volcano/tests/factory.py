@@ -11,7 +11,7 @@ from app.display_modules.volcano import VolcanoResult
 
 def make_pval_hist():
     """Return random pval hist."""
-    bin_width, nbins = 0.05, 20
+    bin_width, nbins = 0.25, 4
 
     return [
         {'xval': i * bin_width, 'yval': randint(1, 10)}
@@ -29,7 +29,7 @@ def make_scatter_plot():
             'zval': random(),
             'name': 'pt_{}'.format(hash(randint(1, 1000)))
         }
-    return [make_pt() for _ in range(randint(100, 1000))]
+    return [make_pt() for _ in range(randint(3, 100))]
 
 
 def make_tool_category():
