@@ -43,8 +43,12 @@ class TestTaxonAbundanceResult(BaseDisplayModuleTest):
 
     def test_add_taxon_abundance(self):
         """Ensure Taxon Abundance model is created correctly."""
-        taxon_abundance = TaxonAbundanceResult(kraken=flow_model(),
-                                               metaphlan2=flow_model())
+        taxon_abundance = TaxonAbundanceResult(**{
+            'by_tool': {
+                'kraken': flow_model(),
+                'metaphlan2': flow_model()
+            }
+        })
         wrapper = AnalysisResultWrapper(data=taxon_abundance)
         result = AnalysisResultMeta(taxon_abundance=wrapper).save()
         self.assertTrue(result.id)
@@ -52,8 +56,12 @@ class TestTaxonAbundanceResult(BaseDisplayModuleTest):
 
     def test_get_taxon_abundance(self):
         """Ensure getting a single TaxonAbundance behaves correctly."""
-        taxon_abundance = TaxonAbundanceResult(kraken=flow_model(),
-                                               metaphlan2=flow_model())
+        taxon_abundance = TaxonAbundanceResult(**{
+            'by_tool': {
+                'kraken': flow_model(),
+                'metaphlan2': flow_model()
+            }
+        })
         self.generic_getter_test(taxon_abundance, MODULE_NAME,
                                  verify_fields=('metaphlan2', 'kraken'))
 
