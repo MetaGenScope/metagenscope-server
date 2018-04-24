@@ -2,8 +2,6 @@
 
 import pandas as pd
 
-from mongoengine.errors import FieldDoesNotExist
-
 from app.extensions import celery
 from app.display_modules.utils import persist_result_helper
 from app.tool_results.metaphlan2 import Metaphlan2ResultModule
