@@ -12,7 +12,7 @@ from app.tool_results.kraken import KrakenResultModule
 from .models import TaxonAbundanceResult
 
 
-TAXA_RANKS = 'kpcofgs'
+TAXA_RANKS = 'kpcofgs'  # kingdom, phylum, classus...
 
 
 def get_ranks(*tkns):
@@ -118,15 +118,11 @@ def make_all_flows(samples):
 
         flow_tbl[save_tool_name] = make_flow(taxa_tbl)
 
-    return flow_tbl
+    return {'by_tool': flow_tbl}
 
 
 @celery.task(name='taxon_abundance.persist_result')
 def persist_result(result_data, analysis_result_id, result_name):
     """Persist Taxon results."""
-    try:
-        result = TaxonAbundanceResult(**result_data)
-    except FieldDoesNotExist:
-        msg = str(result_data)
-        assert False, msg
+    result = TaxonAbundanceResult(**result_data)
     persist_result_helper(result, analysis_result_id, result_name)

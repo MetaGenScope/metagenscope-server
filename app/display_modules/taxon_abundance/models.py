@@ -46,5 +46,7 @@ class TaxonAbundanceFlow(mdb.EmbeddedDocument):   # pylint: disable=too-few-publ
 class TaxonAbundanceResult(mdb.EmbeddedDocument):   # pylint: disable=too-few-public-methods
     """Taxon Abundance document type."""
 
-    metaphlan2 = mdb.EmbeddedDocumentField(TaxonAbundanceFlow)
-    kraken = mdb.EmbeddedDocumentField(TaxonAbundanceFlow)
+    by_tool = mdb.MapField(
+        field=mdb.EmbeddedDocumentField(TaxonAbundanceFlow),
+        required=True
+    )
