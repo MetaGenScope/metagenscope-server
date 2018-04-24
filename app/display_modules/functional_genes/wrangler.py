@@ -24,8 +24,8 @@ class FunctionalGenesWrangler(GenericGeneWrangler):
     @classmethod
     def run_sample(cls, sample_id, sample):
         """Gather single sample and process."""
-        result = cls.help_run_generic_sample(sample, TOP_N, persist_result)
-        return result
+        func_result = cls.help_run_generic_sample(sample, TOP_N, persist_result)
+        return func_result
 
     @classmethod
     def run_sample_group(cls, sample_group, samples):

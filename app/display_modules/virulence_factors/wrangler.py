@@ -24,8 +24,8 @@ class VFDBWrangler(GenericGeneWrangler):
     @classmethod
     def run_sample(cls, sample_id, sample):
         """Gather single sample and process."""
-        result = cls.help_run_generic_sample(sample, TOP_N, persist_result)
-        return result
+        vfdb_result = cls.help_run_generic_sample(sample, TOP_N, persist_result)
+        return vfdb_result
 
     @classmethod
     def run_sample_group(cls, sample_group, samples):
