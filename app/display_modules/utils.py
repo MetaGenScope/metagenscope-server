@@ -5,6 +5,7 @@ from pprint import pformat
 from mongoengine import QuerySet
 from mongoengine.errors import ValidationError
 from numpy import percentile
+from sys import stderr
 
 from app.analysis_results.analysis_result_models import AnalysisResultMeta
 from app.extensions import celery, celery_logger
@@ -42,6 +43,7 @@ def persist_result_helper(result, analysis_result_id, result_name):
     except ValidationError:
         contents = pformat(jsonify(result))
         celery_logger.exception(f'Could not save result with contents:\n{contents}')
+        print(f'Could not save result with contents:\n{contents}', file=stderr)
 
         wrapper.data = None
         wrapper.status = 'E'

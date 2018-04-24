@@ -90,7 +90,7 @@ def pval_hist(pvals, bin_width=0.05):
                 bins[bin_start] += 1
                 break
 
-    pts = [{'xval': bin_start, 'yval': nps}
+    pts = [{'name': 'histo_{}'.format(bin_start), 'xval': bin_start, 'yval': nps}
            for bin_start, nps in bins.items()]
     return pts
 
