@@ -6,12 +6,9 @@ from app.samples.sample_models import Sample
 from app.display_modules.macrobes.models import MacrobeResult
 from app.display_modules.macrobes.constants import MODULE_NAME
 from app.tool_results.macrobes import MacrobeResultModule
-from app.tool_results.macrobes.tests.factory import (
-    create_values,
-    create_macrobe
-)
+from app.tool_results.macrobes.tests.factory import create_macrobe
 
-from .factory import MacrobeFactory
+from .factory import MacrobeFactory, create_one_sample
 
 
 class TestMicrobeDirectoryModule(BaseDisplayModuleTest):
@@ -25,8 +22,8 @@ class TestMicrobeDirectoryModule(BaseDisplayModuleTest):
     def test_add_macrobes(self):
         """Ensure Macrobe model is created correctly."""
         samples = {
-            'sample_1': create_values(),
-            'sample_2': create_values(),
+            'sample_1': create_one_sample(),
+            'sample_2': create_one_sample(),
         }
         macrobe_result = MacrobeResult(samples=samples)
         self.generic_adder_test(macrobe_result, MODULE_NAME)
