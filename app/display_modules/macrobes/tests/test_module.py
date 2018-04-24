@@ -11,7 +11,7 @@ from app.tool_results.macrobes.tests.factory import create_macrobe
 from .factory import MacrobeFactory, create_one_sample
 
 
-class TestMicrobeDirectoryModule(BaseDisplayModuleTest):
+class TestMacrobeModule(BaseDisplayModuleTest):
     """Test suite for Macrobe diplay module."""
 
     def test_get_macrobes(self):
