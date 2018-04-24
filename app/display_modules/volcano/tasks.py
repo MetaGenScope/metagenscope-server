@@ -101,9 +101,9 @@ def make_volcanos(categories, samples):
         KrakenResultModule.name(),
         Metaphlan2ResultModule.name(),
     ]
-    out = {'categories': categories}
+    out = {'categories': categories, 'tools': {}}
     for tool_name in tool_names:
-        out['tools'][tool_name]['tool_categories'] = {}
+        out['tools'][tool_name] = {'tool_categories': {}}
         tool_tbl = out['tools'][tool_name]['tool_categories']
         for category_name, category_values in categories.items():
             tool_tbl[category_name] = {}
