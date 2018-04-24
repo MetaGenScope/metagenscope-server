@@ -66,6 +66,9 @@ def get_nlps(tool_df, cases, controls):
         pvals.append(pval)
         nlp = -np.log10(pval)
         return nlp
+    for col_name in tool_df:
+        col = tool_df[col_name]
+        mwu(col)
 
     try:
         nlps = tool_df.apply(mwu, axis=0)
