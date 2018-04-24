@@ -55,11 +55,11 @@ def get_nlps(tool_df, cases, controls):
     """Return a series of nlps for each column and a list of raw pvalues."""
     pvals = []
 
-    def mwu(col):
+    def mwu(col_cases, col_controls):
         """Perform MWU test on a column of the dataframe."""
-        col_cases = col.as_matrix([cases])
-        col_controls = col.as_matrix([controls])
-        _, pval = mannwhitneyu(col_cases, col_controls)
+        col_cases_array = col_cases.as_matrix()
+        col_controls_array = col_controls.as_matrix()
+        _, pval = mannwhitneyu(col_cases_array, col_controls_array)
 
         pval *= 2  # correct for two sided
         assert pval <= 1.0
@@ -70,7 +70,9 @@ def get_nlps(tool_df, cases, controls):
     nlps = {}
     for col_name in tool_df:
         col = tool_df[col_name]
-        nlps[col_name] = mwu(col)
+        col_cases = col[cases]
+        col_controls = col[controls]
+        nlps[col_name] = mwu(col_cases, col_controls)
     nlps = pd.Series(nlps)
 
     return nlps, pvals
