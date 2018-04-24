@@ -46,7 +46,7 @@ def get_nlps(tool_df, cases, controls):
 
     def mwu(col):
         """Perform MWU test on a column of the dataframe."""
-        _, pval = mannwhitneyu(col[cases], col[controls])
+        _, pval = mannwhitneyu(col.as_matrix([cases]), col.as_matrix([controls]))
         pval *= 2  # correct for two sided
         assert pval <= 1.0
         pvals.append(pval)
