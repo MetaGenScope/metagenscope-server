@@ -1,10 +1,10 @@
 """Test suite for Macrobe display module."""
 
 from app.display_modules.display_module_base_test import BaseDisplayModuleTest
-from app.display_modules.macrobe.wrangler import MacrobeWrangler
+from app.display_modules.macrobes.wrangler import MacrobeWrangler
 from app.samples.sample_models import Sample
-from app.display_modules.macrobe.models import MacrobeResult
-from app.display_modules.macrobe.constants import MODULE_NAME
+from app.display_modules.macrobes.models import MacrobeResult
+from app.display_modules.macrobes.constants import MODULE_NAME
 from app.tool_results.macrobes import MacrobeResultModule
 from app.tool_results.macrobes.tests.factory import (
     create_values,

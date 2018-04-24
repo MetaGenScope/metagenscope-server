@@ -1,6 +1,7 @@
 """Wrangler for Macrobe Directory results."""
 
 from celery import chain
+from pandas import DataFrame
 
 from app.display_modules.display_wrangler import DisplayModuleWrangler
 from app.display_modules.utils import jsonify, persist_result_helper
@@ -29,7 +30,7 @@ def persist_result(result_data, analysis_result_id, result_name):
     persist_result_helper(result, analysis_result_id, result_name)
 
 
-class MicrobeDirectoryWrangler(DisplayModuleWrangler):
+class MacrobeWrangler(DisplayModuleWrangler):
     """Tasks for generating virulence results."""
 
     @classmethod

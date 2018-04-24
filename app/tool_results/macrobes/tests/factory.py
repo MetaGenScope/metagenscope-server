@@ -5,7 +5,7 @@ from random import randint
 from app.tool_results.macrobes import MacrobeToolResult
 
 
-macrobes = ['house cat', 'cow', 'pig', 'chicken']
+MACROBE_NAMES = ['house cat', 'cow', 'pig', 'chicken']
 
 
 def simulate_macrobe():
@@ -17,7 +17,7 @@ def simulate_macrobe():
 
 def create_values():
     """Create methyl values."""
-    macrobe_tbl = {macrobe: simulate_macrobe() for macrobe in macrobes}
+    macrobe_tbl = {macrobe: simulate_macrobe() for macrobe in MACROBE_NAMES}
     out = {
         'macrobes': macrobe_tbl,
     }
