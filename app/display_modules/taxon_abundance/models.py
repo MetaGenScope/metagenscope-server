@@ -25,7 +25,7 @@ class TaxonAbundanceFlow(mdb.EmbeddedDocument):   # pylint: disable=too-few-publ
     """Taxon Abundance document type."""
 
     nodes = mdb.ListField(
-        mdb.ListField(TaxonAbundanceNode()),
+        mdb.ListField(TaxonAbundanceNode),
         required=True
     )
     edges = mdb.EmbeddedDocumentListField(TaxonAbundanceEdge, required=True)
