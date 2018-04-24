@@ -32,7 +32,8 @@ def load_taxon_abundance():
         return {
             'id': node['id'],
             'name': node['nodeName'],
-            'value': node['nodeValue']
+            'value': node['nodeValue'],
+            'rank': 'somerank',
         }
 
     filename = os.path.join(LOCATION, 'taxaflow.json')
