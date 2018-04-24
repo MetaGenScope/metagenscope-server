@@ -3,7 +3,7 @@
 from uuid import uuid4
 
 from app import db
-from app.analysis_results.analysis_result_models import AnalysisResultMeta
+from app.analysis_results.analysis_result_models import AnalysisResultMeta, AnalysisResultWrapper
 from app.display_modules.ags.tests.factory import AGSFactory
 from app.display_modules.card_amrs.tests.factory import CARDGenesFactory
 from app.display_modules.functional_genes.tests.factory import FunctionalGenesFactory
@@ -17,6 +17,11 @@ from app.display_modules.reads_classified.tests.factory import ReadsClassifiedFa
 from app.display_modules.sample_similarity.tests.factory import create_mvp_sample_similarity
 from app.display_modules.virulence_factors.tests.factory import VFDBFactory
 from app.sample_groups.sample_group_models import SampleGroup
+
+
+def wrap_result(result):
+    """Wrap display result in status wrapper."""
+    return AnalysisResultWrapper(status='S', data=result)
 
 
 def create_saved_group(uuid=None):
@@ -33,19 +38,19 @@ def create_saved_group(uuid=None):
     db.session.commit()
 
     # Add the results
-    analysis_result.average_genome_size = AGSFactory()
-    analysis_result.card_amr_genes = CARDGenesFactory()
-    analysis_result.functional_genes = FunctionalGenesFactory()
-    analysis_result.hmp = HMPFactory()
-    analysis_result.macrobe_abundance = MacrobeFactory()
-    analysis_result.methyltransferases = MethylsFactory()
-    analysis_result.microbe_directory = MicrobeDirectoryFactory()
-    analysis_result.pathways = PathwayFactory()
-    analysis_result.read_stats = ReadStatsFactory()
-    analysis_result.reads_classified = ReadsClassifiedFactory()
-    analysis_result.sample_similarity = create_mvp_sample_similarity()
+    analysis_result.average_genome_size = wrap_result(AGSFactory())
+    analysis_result.card_amr_genes = wrap_result(CARDGenesFactory())
+    analysis_result.functional_genes = wrap_result(FunctionalGenesFactory())
+    analysis_result.hmp = wrap_result(HMPFactory())
+    analysis_result.macrobe_abundance = wrap_result(MacrobeFactory())
+    analysis_result.methyltransferases = wrap_result(MethylsFactory())
+    analysis_result.microbe_directory = wrap_result(MicrobeDirectoryFactory())
+    analysis_result.pathways = wrap_result(PathwayFactory())
+    analysis_result.read_stats = wrap_result(ReadStatsFactory())
+    analysis_result.reads_classified = wrap_result(ReadsClassifiedFactory())
+    analysis_result.sample_similarity = wrap_result(create_mvp_sample_similarity())
     # analysis_result.taxon_abundance =
-    analysis_result.virulence_factors = VFDBFactory()
+    analysis_result.virulence_factors = wrap_result(VFDBFactory())
     analysis_result.save()
 
     return sample_group
