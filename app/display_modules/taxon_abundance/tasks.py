@@ -12,6 +12,9 @@ from app.tool_results.kraken import KrakenResultModule
 from .models import TaxonAbundanceResult
 
 
+TAXA_RANKS = 'kpcofgs'
+
+
 def get_ranks(*tkns):
     """Return a rank code from a taxon ID."""
     out = []
@@ -19,7 +22,7 @@ def get_ranks(*tkns):
         rank = tkn.strip()[0].lower()
         if rank == 'd':
             rank = 'k'
-        assert rank in 'kpcofgs'
+        assert rank in TAXA_RANKS
         out.append(rank)
     return out
 
@@ -74,10 +77,8 @@ def make_flow(taxa_vecs, min_abundance=0.05):
     Takes a dict of sample_name to normalized taxa vectors
     """
     links = {}
-    nodes = {
-        'samples': {},
-        'k': {}, 'p': {}, 'c': {}, 'o': {}, 'f': {}, 'g': {}, 's': {},
-    }
+    nodes = {rank: {} for rank in TAXA_RANKS}
+    nodes['samples'] = {}
     for sample_name, taxa_vec in taxa_vecs.items():
         node(nodes['samples'], sample_name, sample_name, 100)
         for taxon, abundance in taxa_vec.items():
@@ -86,7 +87,7 @@ def make_flow(taxa_vecs, min_abundance=0.05):
             handle_one_taxon(nodes, links, sample_name, taxon, abundance)
 
         return {
-            'nodes': [el for el in nodes.values()],
+            'nodes': [nodes[rank] for rank in TAXA_RANKS],
             'edges': links.values()
         }
 
