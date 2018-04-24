@@ -63,7 +63,7 @@ class TestTaxonAbundanceResult(BaseDisplayModuleTest):
             }
         })
         self.generic_getter_test(taxon_abundance, MODULE_NAME,
-                                 verify_fields=('metaphlan2', 'kraken'))
+                                 verify_fields=('by_tool',))
 
     def test_run_taxon_abundance_sample_group(self):  # pylint: disable=invalid-name
         """Ensure TaxonAbundance run_sample_group produces correct results."""
