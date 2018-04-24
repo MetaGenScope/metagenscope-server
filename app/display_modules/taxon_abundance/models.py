@@ -11,6 +11,7 @@ class TaxonAbundanceNode(mdb.EmbeddedDocument):     # pylint: disable=too-few-pu
     id = mdb.StringField(required=True)
     name = mdb.StringField(required=True)
     value = mdb.FloatField(required=True)
+    rank = mdb.StringField(required=True)
 
 
 class TaxonAbundanceEdge(mdb.EmbeddedDocument):     # pylint: disable=too-few-public-methods
@@ -21,11 +22,13 @@ class TaxonAbundanceEdge(mdb.EmbeddedDocument):     # pylint: disable=too-few-pu
     value = mdb.FloatField(required=True)
 
 
-class TaxonAbundanceResult(mdb.EmbeddedDocument):   # pylint: disable=too-few-public-methods
+class TaxonAbundanceFlow(mdb.EmbeddedDocument):   # pylint: disable=too-few-public-methods
     """Taxon Abundance document type."""
 
-    # Do not store depth of node because this can be derived from the edges
-    nodes = mdb.EmbeddedDocumentListField(TaxonAbundanceNode, required=True)
+    nodes = mdb.ListField(
+        mdb.EmbeddedDocumentField(TaxonAbundanceNode),
+        required=True
+    )
     edges = mdb.EmbeddedDocumentListField(TaxonAbundanceEdge, required=True)
 
     def clean(self):
@@ -38,3 +41,12 @@ class TaxonAbundanceResult(mdb.EmbeddedDocument):   # pylint: disable=too-few-pu
             if edge.target not in node_ids:
                 msg = f'Could not find Edge target [{edge.target}] in nodes!'
                 raise ValidationError(msg)
+
+
+class TaxonAbundanceResult(mdb.EmbeddedDocument):   # pylint: disable=too-few-public-methods
+    """Taxon Abundance document type."""
+
+    by_tool = mdb.MapField(
+        field=mdb.EmbeddedDocumentField(TaxonAbundanceFlow),
+        required=True
+    )

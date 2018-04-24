@@ -39,9 +39,16 @@ def load_taxon_abundance():
     with open(filename, 'r') as source:
         datastore = json.load(source)['payload']['metaphlan2']
         nodes = [item for sublist in datastore['times'] for item in sublist]
-        nodes = [transform_node(node) for node in nodes]
-        result = TaxonAbundanceResult(nodes=nodes,
-                                      edges=datastore['links'])
+        cleaned_datastore = {
+            'nodes': [transform_node(node) for node in nodes],
+            'edges': datastore['links']
+        }
+        result = TaxonAbundanceResult(**{
+            'by_tool': {
+                'kraken': cleaned_datastore,
+                'metaphlan2': cleaned_datastore,
+            }
+        })
         return result
 
 
