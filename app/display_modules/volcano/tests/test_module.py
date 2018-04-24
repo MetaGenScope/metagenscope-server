@@ -24,7 +24,8 @@ class TestVolcanoModule(BaseDisplayModuleTest):
     def test_get_volcano(self):
         """Ensure getting a single Volcano behaves correctly."""
         reads_class = VolcanoFactory()
-        self.generic_getter_test(reads_class, MODULE_NAME)
+        self.generic_getter_test(reads_class, MODULE_NAME,
+                                 verify_fields=('categories', 'tools'))
 
     def test_add_volcano(self):
         """Ensure Volcano model is created correctly."""
