@@ -19,7 +19,7 @@ def clean_vector(vec):
         new_key = key.split('|')[-1]
         new_key = new_key.split('__')[-1]
         out[new_key] = val
-    return val
+    return out
 
 
 def make_dataframe(samples, tool_name):
@@ -28,7 +28,8 @@ def make_dataframe(samples, tool_name):
     tbl = {}
     for sample in samples:
         tbl[sample['name']] = clean_vector(sample[tool_name][key])
-    return pd.DataFrame.from_dict(tbl, orient='index', dtype=np.float64).fillna(0)
+    tool_tbl = pd.DataFrame.from_dict(tbl, orient='index', dtype=np.float64)  # pylint: disable=no-member
+    return tool_tbl.fillna(0)
 
 
 def get_cases(category_name, category_value, samples):
@@ -55,7 +56,7 @@ def get_nlps(tool_df, cases, controls):
     pvals = []
 
     def mwu(col):
-        """Perform MWU test on a column of the dataframe."""      
+        """Perform MWU test on a column of the dataframe."""
         col_cases = col.as_matrix([cases])
         col_controls = col.as_matrix([controls])
         _, pval = mannwhitneyu(col_cases, col_controls)
