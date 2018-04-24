@@ -66,15 +66,13 @@ def get_nlps(tool_df, cases, controls):
         pvals.append(pval)
         nlp = -np.log10(pval)
         return nlp
+
+    nlps = {}
     for col_name in tool_df:
         col = tool_df[col_name]
-        mwu(col)
+        nlps[col_name] = mwu(col)
+    nlps = pd.Series(nlps)
 
-    try:
-        nlps = tool_df.apply(mwu, axis=0)
-    except TypeError:
-        msg = str(tool_df)
-        assert False, msg
     return nlps, pvals
 
 
