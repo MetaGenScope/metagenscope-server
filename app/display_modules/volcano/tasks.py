@@ -34,8 +34,8 @@ def get_cases(category_name, category_value, samples):
 
 def get_lfcs(tool_df, cases, controls):
     """Return two series: LFC of means and mean of cases."""
-    case_means = tool_df.loc[cases].mean(index=1)
-    control_means = tool_df.loc[controls].mean(index=1)
+    case_means = tool_df.loc[cases].mean(axis=1)
+    control_means = tool_df.loc[controls].mean(axis=1)
     lfcs = (case_means / control_means).apply(np.log2)
     return lfcs, case_means
 
@@ -53,7 +53,7 @@ def get_nlps(tool_df, cases, controls):
         nlp = -np.log10(pval)
         return nlp
 
-    nlps = tool_df.apply(mwu, imdex=1)
+    nlps = tool_df.apply(mwu, axis=1)
     return nlps, pvals
 
 
