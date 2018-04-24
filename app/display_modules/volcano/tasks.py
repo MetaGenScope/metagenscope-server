@@ -12,13 +12,23 @@ from app.tool_results.metaphlan2 import Metaphlan2ResultModule
 from .models import VolcanoResult
 
 
+def clean_vector(vec):
+    """Clean a taxa vec."""
+    out = {}
+    for key, val in vec.items():
+        new_key = key.split('|')[-1]
+        new_key = new_key.split('__')[-1]
+        out[new_key] = val
+    return val
+
+
 def make_dataframe(samples, tool_name):
     """Return a pandas dataframe for the given tool."""
     key = 'taxa'  # this will eventually change based on tool name
     tbl = {}
     for sample in samples:
-        tbl[sample['name']] = sample[tool_name][key]
-    return pd.DataFrame.from_dict(tbl, orient='index').fillna(0)
+        tbl[sample['name']] = clean_vector(sample[tool_name][key])
+    return pd.DataFrame.from_dict(tbl, orient='index', dtype=np.float64).fillna(0)
 
 
 def get_cases(category_name, category_value, samples):
@@ -45,18 +55,22 @@ def get_nlps(tool_df, cases, controls):
     pvals = []
 
     def mwu(col):
-        """Perform MWU test on a column of the dataframe."""
+        """Perform MWU test on a column of the dataframe."""      
         col_cases = col.as_matrix([cases])
         col_controls = col.as_matrix([controls])
-        print(col_cases)
         _, pval = mannwhitneyu(col_cases, col_controls)
+
         pval *= 2  # correct for two sided
         assert pval <= 1.0
         pvals.append(pval)
         nlp = -np.log10(pval)
         return nlp
 
-    nlps = tool_df.apply(mwu, axis=0)
+    try:
+        nlps = tool_df.apply(mwu, axis=0)
+    except TypeError:
+        msg = str(tool_df)
+        assert False, msg
     return nlps, pvals
 
 
