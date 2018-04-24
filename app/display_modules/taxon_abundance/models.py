@@ -11,6 +11,7 @@ class TaxonAbundanceNode(mdb.EmbeddedDocument):     # pylint: disable=too-few-pu
     id = mdb.StringField(required=True)
     name = mdb.StringField(required=True)
     value = mdb.FloatField(required=True)
+    rank = mdb.StringField(required=True)
 
 
 class TaxonAbundanceEdge(mdb.EmbeddedDocument):     # pylint: disable=too-few-public-methods
@@ -25,7 +26,7 @@ class TaxonAbundanceFlow(mdb.EmbeddedDocument):   # pylint: disable=too-few-publ
     """Taxon Abundance document type."""
 
     nodes = mdb.ListField(
-        mdb.ListField(mdb.EmbeddedDocumentField(TaxonAbundanceNode)),
+        mdb.EmbeddedDocumentField(TaxonAbundanceNode),
         required=True
     )
     edges = mdb.EmbeddedDocumentListField(TaxonAbundanceEdge, required=True)

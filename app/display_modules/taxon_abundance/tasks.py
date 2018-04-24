@@ -27,7 +27,7 @@ def get_ranks(*tkns):
     return out
 
 
-def node(tbl, key, name, value):
+def node(tbl, key, name, rank, value):
     """Update the node table."""
     try:
         tbl[key]['value'] += value
@@ -39,6 +39,7 @@ def node(tbl, key, name, value):
             'id': name,
             'nodeName': display_name,
             'nodeValue': 100,
+            'rank': rank,
         }
 
 
@@ -58,12 +59,10 @@ def handle_one_taxon(nodes, links, sample_name, taxon, abundance):
     """Process a single taxon line."""
     taxa_tkns = taxon.split('|')
     for prev_taxa, cur_taxa in zip([None] + taxa_tkns[:-1], taxa_tkns):
-        node_set = nodes['k']
         cur_rank = get_ranks(cur_taxa)[0]
-        node_set = nodes[cur_rank]
 
         if cur_taxa == taxa_tkns[-1]:
-            node(node_set, cur_taxa, cur_taxa, abundance)
+            node(nodes, cur_taxa, cur_taxa, cur_rank, abundance)
             if cur_rank == 's':
                 link(links, cur_taxa + sample_name, cur_taxa, sample_name, abundance)
 
@@ -77,10 +76,9 @@ def make_flow(taxa_vecs, min_abundance=0.05):
     Takes a dict of sample_name to normalized taxa vectors
     """
     links = {}
-    nodes = {rank: {} for rank in TAXA_RANKS}
-    nodes['samples'] = {}
+    nodes = {}
     for sample_name, taxa_vec in taxa_vecs.items():
-        node(nodes['samples'], sample_name, sample_name, 100)
+        node(nodes, sample_name, sample_name, 'samples', 100)
         for taxon, abundance in taxa_vec.items():
             if (abundance < min_abundance) or 't__' in taxon:
                 continue
