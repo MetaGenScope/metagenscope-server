@@ -43,11 +43,11 @@ def persist_result_helper(result, analysis_result_id, result_name):
     except ValidationError:
         contents = pformat(jsonify(result))
         celery_logger.exception(f'Could not save result with contents:\n{contents}')
-        print(f'Could not save result with contents:\n{contents}', file=stderr)
 
         wrapper.data = None
         wrapper.status = 'E'
         analysis_result.save()
+        raise ValidationError
 
 
 def boxplot(values):
