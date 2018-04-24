@@ -17,15 +17,15 @@ def make_dataframe(samples, tool_name):
     """Return a pandas dataframe for the given tool."""
     tbl = {}
     for sample in samples:
-        tbl[sample.name] = sample[tool_name]
-    return pd.DataFrame(tbl, orient='index').fillna(0)
+        tbl[sample['name']] = sample[tool_name]
+    return pd.DataFrame.from_dict(tbl, orient='index').fillna(0)
 
 
 def get_cases(category_name, category_value, samples):
     """Return sets for case and control sample names."""
     cases, controls = set(), set()
     for sample in samples:
-        if sample.metadata[category_name] == category_value:
+        if sample['metadata'][category_name] == category_value:
             cases.add(sample.name)
             continue
         controls.add(sample.name)
