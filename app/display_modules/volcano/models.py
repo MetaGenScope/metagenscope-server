@@ -28,7 +28,7 @@ class ToolDocument(mdb.EmbeddedDocument):  # pylint: disable=too-few-public-meth
     """Organize all 'plots' from a particular tool."""
 
     tool_categories = mdb.MapField(
-        field=mdb.MapField(field=ToolCategoryDocument),
+        field=mdb.MapField(field=EmbeddedDoc(ToolCategoryDocument)),
         required=True
     )
 
