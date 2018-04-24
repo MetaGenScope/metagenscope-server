@@ -26,9 +26,9 @@ def get_cases(category_name, category_value, samples):
     cases, controls = set(), set()
     for sample in samples:
         if sample['metadata'][category_name] == category_value:
-            cases.add(sample.name)
+            cases.add(sample['name'])
             continue
-        controls.add(sample.name)
+        controls.add(sample['name'])
     return cases, controls
 
 
