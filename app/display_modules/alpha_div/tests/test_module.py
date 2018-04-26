@@ -2,8 +2,13 @@
 
 from app.display_modules.display_module_base_test import BaseDisplayModuleTest
 from app.display_modules.alpha_div import (
+    AlphaDivWrangler,
     AlphaDiversityResult,
     MODULE_NAME,
+)
+from app.samples.sample_models import Sample
+from app.tool_results.alpha_diversity.tests.factory import (
+    create_alpha_diversity,
 )
 
 from .factory import AlphaDivFactory, create_categories, create_tools, create_by_tool
@@ -30,4 +35,14 @@ class TestAlphaDivModule(BaseDisplayModuleTest):
 
     def test_run_alpha_div_sample_group(self):  # pylint: disable=invalid-name
         """Ensure Alpha Diversity run_sample_group produces correct results."""
-        pass
+
+        def create_sample(i):
+            """Create unique sample for index i."""
+            data = create_alpha_diversity()
+            return Sample(name=f'Sample{i}',
+                          metadata={'foobar': f'baz{i}'},
+                          alpha_diversity_stats=data).save()
+
+        self.generic_run_group_test(create_sample,
+                                    AlphaDivWrangler,
+                                    MODULE_NAME)
