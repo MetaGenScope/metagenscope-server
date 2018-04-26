@@ -1,5 +1,7 @@
 """Tasks to process Volcano results."""
 
+from pprint import pprint
+
 import numpy as np
 import pandas as pd
 from scipy.stats import mannwhitneyu
@@ -89,25 +91,24 @@ def pval_hist(pvals, bin_width=0.05):
             if (pval >= bin_start) and (pval < bin_end):
                 bins[bin_start] += 1
                 break
-
-    pts = [{'name': 'histo_{}'.format(bin_start), 'xval': bin_start, 'yval': nps}
+    pts = [{'name': f'histo_{bin_start}', 'xval': bin_start, 'yval': nps}
            for bin_start, nps in bins.items()]
     return pts
 
 
-def filter_nans(pts):
+def filter_nans(points):
     """Remove points that have nans or infinites."""
     out = []
-    for one_pt in pts:
+    for point in points:
         good = True
-        for val in one_pt.values():
+        for value in point.values():
             try:
-                if np.isnan(val) or np.isfinite(val):
-                    good = False
+                good = good and np.isfinite(value)
             except TypeError:
+                # 'name' attribute
                 pass
         if good:
-            out.append(one_pt)
+            out.append(point)
     return out
 
 
@@ -118,16 +119,19 @@ def handle_one_tool_category(category_name, category_value, samples, tool_name):
     lfcs, case_means = get_lfcs(tool_df, cases, controls)
     nlps, pvals = get_nlps(tool_df, cases, controls)
 
+    scatter_values = {
+        'xval': lfcs,
+        'yval': nlps,
+        'zval': case_means,
+        'name': list(tool_df.columns.values),
+    }
+    scatter_plot = pd.DataFrame(scatter_values).to_dict(orient='records')
+    scatter_plot = filter_nans(scatter_plot)
+
     out = {
-        'scatter_plot': pd.DataFrame({
-            'xval': lfcs,
-            'yval': nlps,
-            'zval': case_means,
-            'name': list(tool_df.columns.values),
-        }).to_dict(orient='records'),
+        'scatter_plot': scatter_plot,
         'pval_histogram': pval_hist(pvals)
     }
-    out['scatter_plot'] = filter_nans(out['scatter_plot'])
     return out
 
 
