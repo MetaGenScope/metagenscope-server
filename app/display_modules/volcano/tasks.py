@@ -127,7 +127,7 @@ def handle_one_tool_category(category_name, category_value, samples, tool_name):
 
     out = {
         'scatter_plot': scatter_plot,
-        'pval_histogram': pval_hist(pvals)
+        'pval_histogram': pval_hist(pvals),
     }
     return out
 

@@ -30,12 +30,12 @@ class TestVolcanoModule(BaseDisplayModuleTest):
     def test_add_volcano(self):
         """Ensure Volcano model is created correctly."""
         categories = {
-            'cat_name_{}'.format(i): [
-                'cat_name_{}_val_{}'.format(i, j)
+            f'cat_name_{i}': [
+                f'cat_name_{i}_val_{j}'
                 for j in range(randint(3, 6))
             ] for i in range(randint(3, 6))
         }
-        tool_names = ['tool_{}'.format(i) for i in range(randint(3, 6))]
+        tool_names = [f'tool_{i}' for i in range(randint(3, 6))]
         tools = {
             tool_name: make_tool_doc(categories)
             for tool_name in tool_names

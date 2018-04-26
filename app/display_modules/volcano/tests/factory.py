@@ -13,10 +13,8 @@ def make_pval_hist():
     """Return random pval hist."""
     bin_width, nbins = 0.25, 4
 
-    return [
-        {'xval': i * bin_width, 'yval': randint(1, 10)}
-        for i in range(nbins)
-    ]
+    return [{'xval': i * bin_width, 'yval': randint(1, 10)}
+            for i in range(nbins)]
 
 
 def make_scatter_plot():
@@ -27,7 +25,7 @@ def make_scatter_plot():
             'xval': randint(-1, 1) * 2 * random(),
             'yval': 2 * random(),
             'zval': random(),
-            'name': 'pt_{}'.format(hash(randint(1, 1000)))
+            'name': 'pt_{}'.format(hash(randint(1, 1000))),
         }
     return [make_pt() for _ in range(randint(3, 100))]
 
@@ -63,8 +61,8 @@ class VolcanoFactory(factory.mongoengine.MongoEngineFactory):
     def categories(self):  # pylint: disable=no-self-use
         """Generate random categories."""
         return {
-            'cat_name_{}'.format(i): [
-                'cat_name_{}_val_{}'.format(i, j)
+            f'cat_name_{i}': [
+                f'cat_name_{i}_val_{j}'
                 for j in range(randint(3, 6))
             ] for i in range(randint(3, 6))
         }
@@ -73,7 +71,6 @@ class VolcanoFactory(factory.mongoengine.MongoEngineFactory):
     def tools(self):
         """Generate random tool stack."""
         tool_names = ['tool_{}'.format(i) for i in range(randint(3, 6))]
-        return {
-            tool_name: make_tool_doc(self.categories)
-            for tool_name in tool_names
-        }
+        result = {tool_name: make_tool_doc(self.categories)
+                  for tool_name in tool_names}
+        return result
