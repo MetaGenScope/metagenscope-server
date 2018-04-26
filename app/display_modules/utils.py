@@ -5,7 +5,6 @@ from pprint import pformat
 from mongoengine import QuerySet
 from mongoengine.errors import ValidationError
 from numpy import percentile
-from sys import stderr
 
 from app.analysis_results.analysis_result_models import AnalysisResultMeta
 from app.extensions import celery, celery_logger

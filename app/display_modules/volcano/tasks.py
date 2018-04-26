@@ -1,7 +1,5 @@
 """Tasks to process Volcano results."""
 
-from pprint import pprint
-
 import numpy as np
 import pandas as pd
 from scipy.stats import mannwhitneyu
@@ -98,18 +96,17 @@ def pval_hist(pvals, bin_width=0.05):
 
 def filter_nans(points):
     """Remove points that have nans or infinites."""
-    out = []
-    for point in points:
-        good = True
-        for value in point.values():
-            try:
-                good = good and np.isfinite(value)
-            except TypeError:
-                # 'name' attribute
-                pass
-        if good:
-            out.append(point)
-    return out
+    def test_point(point):
+        """Test a single point for validity."""
+        for coord in ['xval', 'yval', 'zval']:
+            value = point[coord]
+            # isfinite checks against infinity and nan
+            if not np.isfinite(value):
+                return False
+        return True
+
+    result = [point for point in points if test_point(point)]
+    return result
 
 
 def handle_one_tool_category(category_name, category_value, samples, tool_name):
