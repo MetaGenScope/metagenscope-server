@@ -46,7 +46,6 @@ def persist_result_helper(result, analysis_result_id, result_name):
         wrapper.data = None
         wrapper.status = 'E'
         analysis_result.save()
-        raise ValidationError
 
 
 def boxplot(values):
