@@ -12,8 +12,9 @@ class TestAncestryModel(BaseToolResultTest):
     def test_add_ancestry(self):
         """Ensure Ancestry tool result model is created correctly."""
         ancestry = create_ancestry()
-        self.generic_add_test(ancestry, MODULE_NAME)
+        self.generic_add_sample_tool_test(ancestry, MODULE_NAME)
 
     def test_upload_ancestry(self):
         """Ensure a raw Ancestry tool result can be uploaded."""
-        self.generic_test_upload(create_values(), MODULE_NAME)
+        payload = create_values()
+        self.generic_test_upload_sample(payload, MODULE_NAME)

@@ -3,7 +3,8 @@
 from mongoengine import ValidationError
 
 from app.extensions import mongoDB
-from app.tool_results.tool_module import ToolResult, ToolResultModule
+from app.tool_results.modules import SampleToolResultModule
+from app.tool_results.models import ToolResult
 
 from .constants import MODULE_NAME, KNOWN_LOCATIONS
 
@@ -22,7 +23,7 @@ class AncestryToolResult(ToolResult):  # pylint: disable=too-few-public-methods
                 raise ValidationError('Value in bad range.')
 
 
-class AncestryResultModule(ToolResultModule):
+class AncestryResultModule(SampleToolResultModule):
     """Ancestry tool module."""
 
     @classmethod

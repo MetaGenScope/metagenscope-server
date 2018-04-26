@@ -4,33 +4,30 @@ from celery import chain
 from pandas import DataFrame
 
 from app.display_modules.display_wrangler import DisplayModuleWrangler
-from app.display_modules.utils import persist_result, collate_samples
+from app.display_modules.utils import collate_samples
 from app.extensions import celery
-from app.sample_groups.sample_group_models import SampleGroup
 from app.tool_results.ancestry import AncestryToolResult
 
 from .constants import MODULE_NAME, TOOL_MODULE_NAME
-from .models import AncestryResult
+from .tasks import persist_result
 
 
 @celery.task()
 def ancestry_reducer(samples):
     """Wrap collated samples as actual Result type."""
-    samples = DataFrame().fillna(0).to_dict()
-    return AncestryResult(samples=samples)
+    framed_samples = DataFrame(samples).fillna(0).to_dict()
+    result_data = {'samples': framed_samples}
+    return result_data
 
 
 class AncestryWrangler(DisplayModuleWrangler):
     """Tasks for generating ancestry results."""
 
     @classmethod
-    def run_sample_group(cls, sample_group_id):
+    def run_sample_group(cls, sample_group, samples):
         """Gather and process samples."""
-        sample_group = SampleGroup.query.filter_by(id=sample_group_id).first()
-        sample_group.analysis_result.set_module_status(MODULE_NAME, 'W')
-
-        collate_fields = AncestryToolResult._fields
-        collate_task = collate_samples.s(TOOL_MODULE_NAME, collate_fields, sample_group_id)
+        collate_fields = list(AncestryToolResult._fields.keys())
+        collate_task = collate_samples.s(TOOL_MODULE_NAME, collate_fields, samples)
         reducer_task = ancestry_reducer.s()
         persist_task = persist_result.s(sample_group.analysis_result_uuid, MODULE_NAME)
 
