@@ -22,12 +22,11 @@ def clean_vector(vec):
     return out
 
 
-def make_dataframe(samples, tool_name):
+def make_dataframe(samples, tool_name, dataframe_key):
     """Return a pandas dataframe for the given tool."""
-    key = 'taxa'  # this will eventually change based on tool name
     tbl = {}
     for sample in samples:
-        tbl[sample['name']] = clean_vector(sample[tool_name][key])
+        tbl[sample['name']] = clean_vector(sample[tool_name][dataframe_key])
     tool_tbl = pd.DataFrame.from_dict(tbl, orient='index', dtype=np.float64)  # pylint: disable=no-member
     return tool_tbl.fillna(0)
 
@@ -109,9 +108,10 @@ def filter_nans(points):
     return result
 
 
-def handle_one_tool_category(category_name, category_value, samples, tool_name):
+def handle_one_tool_category(category_name, category_value,
+                             samples, tool_name, dataframe_key):
     """Return the JSON for a ToolCategoryDocument."""
-    tool_df = make_dataframe(samples, tool_name)
+    tool_df = make_dataframe(samples, tool_name, dataframe_key)
     cases, controls = get_cases(category_name, category_value, samples)
     lfcs, case_means = get_lfcs(tool_df, cases, controls)
     nlps, pvals = get_nlps(tool_df, cases, controls)
@@ -135,12 +135,12 @@ def handle_one_tool_category(category_name, category_value, samples, tool_name):
 @celery.task()
 def make_volcanos(categories, samples):
     """Return the JSON for a VolcanoResult."""
-    tool_names = [
-        KrakenResultModule.name(),
-        Metaphlan2ResultModule.name(),
-    ]
+    dataframe_keys = {
+        KrakenResultModule.name(): 'taxa',
+        Metaphlan2ResultModule.name(): 'taxa',
+    }
     out = {'categories': categories, 'tools': {}}
-    for tool_name in tool_names:
+    for tool_name, dataframe_key in dataframe_keys.items():
         out['tools'][tool_name] = {'tool_categories': {}}
         tool_tbl = out['tools'][tool_name]['tool_categories']
         for category_name, category_values in categories.items():
@@ -151,6 +151,7 @@ def make_volcanos(categories, samples):
                     category_value,
                     samples,
                     tool_name,
+                    dataframe_key,
                 )
     return out
 
