@@ -24,8 +24,9 @@ class TestAlphaDivModule(BaseDisplayModuleTest):
 
     def test_get_alpha_div(self):
         """Ensure getting a single Alpha Diversity behaves correctly."""
-        alpha_diversity = AlphaDivFactory().save()
-        self.generic_getter_test(alpha_diversity, MODULE_NAME)
+        alpha_diversity = AlphaDivFactory()
+        fields = ('categories', 'tool_names', 'by_tool')
+        self.generic_getter_test(alpha_diversity, MODULE_NAME, verify_fields=fields)
 
     def test_run_alpha_div_sample_group(self):  # pylint: disable=invalid-name
         """Ensure Alpha Diversity run_sample_group produces correct results."""
