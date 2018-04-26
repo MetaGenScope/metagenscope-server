@@ -1,0 +1,32 @@
+"""Test suite for Alpha Diversity diplay module."""
+
+from app.display_modules.display_module_base_test import BaseDisplayModuleTest
+from app.display_modules.alpha_div import (
+    AlphaDiversityResult,
+    MODULE_NAME,
+)
+
+from .factory import AlphaDivFactory, create_categories, create_tools, create_by_tool
+
+
+class TestAlphaDivModule(BaseDisplayModuleTest):
+    """Test suite for Alpha Diversity diplay module."""
+
+    def test_add_alpha_div(self):
+        """Ensure Alpha Diversity model is created correctly."""
+        packed_data = {
+            'categories': create_categories(),
+            'tool_names': create_tools(),
+        }
+        packed_data['by_tool'] = create_by_tool(packed_data)
+        alpha_div_result = AlphaDiversityResult(**packed_data)
+        self.generic_adder_test(alpha_div_result, MODULE_NAME)
+
+    def test_get_alpha_div(self):
+        """Ensure getting a single Alpha Diversity behaves correctly."""
+        alpha_diversity = AlphaDivFactory().save()
+        self.generic_getter_test(alpha_diversity, MODULE_NAME)
+
+    def test_run_alpha_div_sample_group(self):  # pylint: disable=invalid-name
+        """Ensure Alpha Diversity run_sample_group produces correct results."""
+        pass
