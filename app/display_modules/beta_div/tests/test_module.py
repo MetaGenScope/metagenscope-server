@@ -20,8 +20,7 @@ class TestBetaDivModule(BaseDisplayModuleTest):
     def test_get_beta_div(self):
         """Ensure getting a single Beta Diversity behaves correctly."""
         ranks = create_ranks()
-        beta_div_result = BetaDiversityResult(data=ranks)
-        # beta_div_result = BetaDiversityFactory().save()
+        beta_div_result = BetaDiversityFactory()
         self.generic_getter_test(beta_div_result, MODULE_NAME,
                                  verify_fields=('data',))
 

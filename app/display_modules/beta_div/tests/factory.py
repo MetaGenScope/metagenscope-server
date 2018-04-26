@@ -4,7 +4,7 @@
 
 import factory
 
-from app.display_modules.beta_div import BetaDiversityResult
+from app.display_modules.beta_div.models import BetaDiversityResult
 from app.tool_results.beta_diversity.tests.factory import create_ranks
 
 
