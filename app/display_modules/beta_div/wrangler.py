@@ -1,6 +1,11 @@
 """Wrangler for Beta Diversity display module."""
 
 from app.display_modules.display_wrangler import DisplayModuleWrangler
+from app.display_modules.utils import jsonify
+from app.tool_results.beta_diversity.models import BetaDiversityToolResult
+
+from .constants import MODULE_NAME
+from .tasks import persist_result
 
 
 class BetaDiversityWrangler(DisplayModuleWrangler):
@@ -9,4 +14,10 @@ class BetaDiversityWrangler(DisplayModuleWrangler):
     @classmethod
     def run_sample_group(cls, sample_group, samples):
         """Process a beta diversity result."""
-        pass
+        analysis_result_uuid = sample_group.analysis_result_uuid
+        tool_result = BetaDiversityToolResult.objects.get(sample_group_uuid=sample_group.id)
+        result_data = {'data': jsonify(tool_result)['data']}
+        persist_task = persist_result.s(result_data, analysis_result_uuid, MODULE_NAME)
+
+        result = persist_task.delay()
+        return result
