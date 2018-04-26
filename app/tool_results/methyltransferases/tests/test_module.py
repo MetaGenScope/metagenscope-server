@@ -17,5 +17,5 @@ class TestMethylsModel(BaseToolResultTest):
     def test_upload_methyls(self):
         """Ensure a raw Methyl tool result can be uploaded."""
 
-        self.generic_test_upload(create_values(),
-                                 'align_to_methyltransferases')
+        payload = create_values()
+        self.generic_test_upload_sample(payload, 'align_to_methyltransferases')
