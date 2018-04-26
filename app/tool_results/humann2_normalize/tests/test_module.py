@@ -14,7 +14,7 @@ class TestHumann2NormalizeModel(BaseToolResultTest):
         """Ensure Humann2 Normalize tool result model is created correctly."""
 
         hum_norm = Humann2NormalizeToolResult(**create_values())
-        self.generic_add_test(hum_norm, MODULE_NAME)
+        self.generic_add_sample_tool_test(hum_norm, MODULE_NAME)
 
     def test_upload_humann2_normalize(self):
         """Ensure a raw Humann2 Normalize tool result can be uploaded."""

@@ -5,17 +5,26 @@ import json
 from app.samples.sample_models import Sample
 
 from tests.base import BaseTestCase
-from tests.utils import add_sample, get_test_user
+from tests.utils import add_sample, add_sample_group, get_test_user
 
 
 class BaseToolResultTest(BaseTestCase):
     """Test suite for VFDB tool result model."""
 
-    def generic_add_test(self, result, tool_result_name):
+    def generic_add_sample_tool_test(self, result, tool_result_name):  # pylint: disable=invalid-name
         """Ensure tool result model is created correctly."""
         sample = Sample(name='SMPL_01',
                         **{tool_result_name: result}).save()
         self.assertTrue(getattr(sample, tool_result_name))
+
+    def generic_add_group_tool_test(self, result, model_cls):  # pylint: disable=invalid-name
+        """Ensure tool result model is created correctly."""
+        sample_group = add_sample_group(name='SMPL_01')
+        result.sample_group_uuid = sample_group.id
+        result.save()
+
+        fetch_result = model_cls.objects.get(sample_group_uuid=sample_group.id)
+        self.assertTrue(fetch_result is not None)
 
     def generic_test_upload(self, vals, tool_result_name):
         """Ensure a raw tool result can be uploaded."""
