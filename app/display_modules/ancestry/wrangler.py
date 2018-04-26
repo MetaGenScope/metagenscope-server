@@ -1,23 +1,13 @@
 """Wrangler for Ancestry results."""
 
 from celery import chain
-from pandas import DataFrame
 
 from app.display_modules.display_wrangler import DisplayModuleWrangler
 from app.display_modules.utils import collate_samples
-from app.extensions import celery
 from app.tool_results.ancestry import AncestryToolResult
 
 from .constants import MODULE_NAME, TOOL_MODULE_NAME
-from .tasks import persist_result
-
-
-@celery.task()
-def ancestry_reducer(samples):
-    """Wrap collated samples as actual Result type."""
-    framed_samples = DataFrame(samples).fillna(0).to_dict()
-    result_data = {'samples': framed_samples}
-    return result_data
+from .tasks import ancestry_reducer, persist_result
 
 
 class AncestryWrangler(DisplayModuleWrangler):
