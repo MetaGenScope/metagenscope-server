@@ -8,6 +8,7 @@ from app.extensions import mongoDB as mdb
 # Define alias
 EmDoc = mdb.EmbeddedDocumentField  # pylint: disable=invalid-name
 
+
 class PopulationEntry(mdb.EmbeddedDocument):
     """Ancestry population entry."""
 
