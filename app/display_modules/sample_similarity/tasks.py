@@ -128,7 +128,7 @@ def taxa_tool_tsne(samples, tool_name):
     return (tool, tsne_labeled)
 
 
-def update_data_records(samples, data_records,
+def update_data_records(samples, categories,
                         kraken_labeled, krakenhll_labeled, metaphlan_labeled):
     """Update data records."""
     data_records = []
@@ -155,7 +155,7 @@ def sample_similarity_reducer(args, samples):
 
     data_records = update_data_records(
         samples,
-        data_records,
+        categories,
         kraken_labeled,
         krakenhll_labeled,
         metaphlan_labeled

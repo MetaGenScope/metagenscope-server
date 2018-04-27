@@ -18,7 +18,7 @@ class TestKrakenHLLModel(BaseTestCase):
         sample = Sample(**sample_data).save()
         self.assertTrue(hasattr(sample, KRAKENHLL_NAME))
         my_tool_result = getattr(sample, KRAKENHLL_NAME)
-        self.assertEqual(len(tool_result.taxa), 6)
+        self.assertEqual(len(my_tool_result.taxa), 6)
         self.assertEqual(my_tool_result.taxa['d__Viruses'], 1733)
         self.assertEqual(my_tool_result.taxa['d__Bacteria'], 7396285)
         self.assertEqual(my_tool_result.taxa['d__Archaea'], 12)
