@@ -9,7 +9,7 @@ from tests.base import BaseTestCase
 from tests.utils import with_user
 
 
-KRAKENHLL_NAME = KrakenResultModule.name()
+KRAKENHLL_NAME = KrakenHLLResultModule.name()
 
 
 class TestKrakenHLLUploads(BaseTestCase):
@@ -29,12 +29,12 @@ class TestKrakenHLLUploads(BaseTestCase):
                 )),
                 content_type='application/json',
             )
-            data = json.loads(response.data.decode())
+            rdata = json.loads(response.data.decode())
             self.assertEqual(response.status_code, 201)
-            self.assertIn('taxa', data['data'])
-            self.assertEqual(data['data']['taxa']['d__Viruses'], 1733)
-            self.assertIn('success', data['status'])
+            self.assertIn('taxa', rdata['data'])
+            self.assertEqual(rdata['data']['taxa']['d__Viruses'], 1733)
+            self.assertIn('success', rdata['status'])
 
         # Reload object to ensure kraken result was stored properly
-        sample = Sample.objects.get(uuid=sample_uuid)
-        self.assertTrue(hasattr(sample, KRAKEN_NAME))
+        mysample = Sample.objects.get(uuid=sample_uuid)
+        self.assertTrue(hasattr(mysample, KRAKENHLL_NAME))

@@ -128,6 +128,23 @@ def taxa_tool_tsne(samples, tool_name):
     return (tool, tsne_labeled)
 
 
+def update_data_records(samples, data_records,
+                        kraken_labeled, krakenhll_labeled, metaphlan_labeled):
+    """Update data records."""
+    data_records = []
+    for sample in samples:
+        sample_id = sample['name']
+        data_record = {'SampleID': sample_id}
+        data_record.update(kraken_labeled[sample_id])
+        data_record.update(krakenhll_labeled[sample_id])
+        data_record.update(metaphlan_labeled[sample_id])
+        for category_name in categories.keys():
+            category_value = sample['metadata'].get(category_name, 'None')
+            data_record[category_name] = category_value
+        data_records.append(data_record)
+    return data_records
+
+
 @celery.task()
 def sample_similarity_reducer(args, samples):
     """Combine Sample Similarity components."""
@@ -136,16 +153,13 @@ def sample_similarity_reducer(args, samples):
     krakenhll_tool, krakenhll_labeled = args[2]
     metaphlan_tool, metaphlan_labeled = args[3]
 
-    data_records = []
-    for sample in samples:
-        sample_id = sample['name']
-        data_record = {'SampleID': sample_id}
-        data_record.update(kraken_labeled[sample_id])
-        data_record.update(metaphlan_labeled[sample_id])
-        for category_name in categories.keys():
-            category_value = sample['metadata'].get(category_name, 'None')
-            data_record[category_name] = category_value
-        data_records.append(data_record)
+    data_records = update_data_records(
+        samples,
+        data_records,
+        kraken_labeled,
+        krakenhll_labeled,
+        metaphlan_labeled
+    )
 
     tools = {
         KrakenResultModule.name(): kraken_tool,
