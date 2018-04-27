@@ -6,6 +6,7 @@ from sklearn.manifold import TSNE
 from app.extensions import celery
 from app.display_modules.utils import persist_result_helper
 from app.tool_results.kraken import KrakenResultModule
+from app.tool_results.krakenhll import KrakenHLLResultModule
 from app.tool_results.metaphlan2 import Metaphlan2ResultModule
 
 from .models import SampleSimilarityResult
@@ -131,8 +132,9 @@ def taxa_tool_tsne(samples, tool_name):
 def sample_similarity_reducer(args, samples):
     """Combine Sample Similarity components."""
     categories = args[0]
-    kralen_tool, kraken_labeled = args[1]
-    metaphlan_tool, metaphlan_labeled = args[2]
+    kraken_tool, kraken_labeled = args[1]
+    krakenhll_tool, krakenhll_labeled = args[2]
+    metaphlan_tool, metaphlan_labeled = args[3]
 
     data_records = []
     for sample in samples:
@@ -146,7 +148,8 @@ def sample_similarity_reducer(args, samples):
         data_records.append(data_record)
 
     tools = {
-        KrakenResultModule.name(): kralen_tool,
+        KrakenResultModule.name(): kraken_tool,
+        KrakenHLLResultModule.name(): krakenhll_tool,
         Metaphlan2ResultModule.name(): metaphlan_tool,
     }
 
