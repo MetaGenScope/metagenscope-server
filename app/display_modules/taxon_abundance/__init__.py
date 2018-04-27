@@ -28,7 +28,7 @@ class TaxonAbundanceDisplayModule(DisplayModule):
         taxa_modules = [
             Metaphlan2ResultModule,
             KrakenHLLResultModule,
-            KrakenResultModule
+            KrakenResultModule,
         ]
         return taxa_modules
 

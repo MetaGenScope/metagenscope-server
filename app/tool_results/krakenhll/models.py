@@ -1,10 +1,12 @@
+# pylint: disable=too-few-public-methods
+
 """Models for Kraken tool module."""
 
 from app.extensions import mongoDB
 from app.tool_results.models import ToolResult
 
 
-class KrakenHLLResult(ToolResult):     # pylint: disable=too-few-public-methods
+class KrakenHLLResult(ToolResult):
     """Kraken tool's result type."""
 
     # Taxa is of the form: {<taxon_name>: <abundance_value>}
