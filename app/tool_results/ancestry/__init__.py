@@ -12,6 +12,7 @@ from .constants import MODULE_NAME, KNOWN_LOCATIONS
 class AncestryToolResult(ToolResult):  # pylint: disable=too-few-public-methods
     """Ancestry result type."""
 
+    # Dict of form: {<location_id: string>: <percentage: float>}
     populations = mongoDB.MapField(field=mongoDB.FloatField(), required=True)
 
     def clean(self):

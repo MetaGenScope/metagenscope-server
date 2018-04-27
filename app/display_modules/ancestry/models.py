@@ -1,9 +1,22 @@
+# pylint: disable=too-few-public-methods
+
 """Microbe Directory display models."""
 
 from app.extensions import mongoDB as mdb
 
 
-class AncestryResult(mdb.EmbeddedDocument):  # pylint: disable=too-few-public-methods
-    """Set of microbe directory results."""
+# Define alias
+EmDoc = mdb.EmbeddedDocumentField  # pylint: disable=invalid-name
 
-    samples = mdb.DictField(required=True)
+class PopulationEntry(mdb.EmbeddedDocument):
+    """Ancestry population entry."""
+
+    # Dict of form: {<location_id: string>: <percentage: float>}
+    populations = mdb.MapField(field=mdb.FloatField(), required=True)
+
+
+class AncestryResult(mdb.EmbeddedDocument):
+    """Set of Ancestry results."""
+
+    # Dict of form: {<sample_id>: <PopulationEntry>}
+    samples = mdb.MapField(field=EmDoc(PopulationEntry), required=True)

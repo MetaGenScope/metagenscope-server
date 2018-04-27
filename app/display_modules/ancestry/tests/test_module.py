@@ -29,6 +29,13 @@ class TestAncestryModule(BaseDisplayModuleTest):
         ancestry_result = AncestryResult(samples=samples)
         self.generic_adder_test(ancestry_result, MODULE_NAME)
 
+    def test_run_ancestry_sample(self):  # pylint: disable=invalid-name
+        """Ensure TaxaTree run_sample produces correct results."""
+        kwargs = {
+            TOOL_MODULE_NAME: create_ancestry(),
+        }
+        self.generic_run_sample_test(kwargs, AncestryWrangler, MODULE_NAME)
+
     def test_run_ancestry_sample_group(self):  # pylint: disable=invalid-name
         """Ensure Ancestry run_sample_group produces correct results."""
 
