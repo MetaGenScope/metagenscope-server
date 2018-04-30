@@ -3,7 +3,9 @@
 import json
 from uuid import UUID, uuid4
 
-from app.sample_groups.sample_group_models import SampleGroup
+from app import db
+from app.samples.sample_models import Sample
+from app.display_modules.ancestry.constants import TOOL_MODULE_NAME
 from app.tool_results.ancestry.tests.factory import create_ancestry
 
 from tests.base import BaseTestCase
@@ -94,8 +96,8 @@ class TestSampleModule(BaseTestCase):
         """Prepare database forsample  middleware test."""
         data = create_ancestry()
         args = {
-            'name': f'AncestrySample{i}',
-            'metadata': {'foobar': f'baz{i}'},
+            'name': 'AncestrySample'
+            'metadata': {'foobar': 'baz'},
             TOOL_MODULE_NAME: data,
         }
         sample = Sample(**args).save()
