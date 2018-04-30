@@ -11,19 +11,24 @@ from app.sample_groups.sample_group_models import SampleGroup
 class DisplayModuleConductor:
     """The Conductor module orchestrates Display module generation based on ToolResult changes."""
 
-    def __init__(self, tool_result_cls):
+    def __init__(self, display_modules):
         """
         Initialize the Conductor.
 
         Parameters
         ----------
-        tool_result_cls: ToolResultModule
-            The class of the ToolResult that was changed.
+        display_modules: [DisplayModule]
+            The list of DisplayModules to kick off middleware for.
 
         """
-        self.tool_result_cls = tool_result_cls
-        self.downstream_modules = [module for module in all_display_modules
-                                   if module.is_dependent_on_tool(self.tool_result_cls)]
+        self.display_modules = display_modules
+
+    @staticmethod
+    def downstream_modules(tool_result_cls):
+        """Calculate display modules dependent on the provided tool result class."""
+        downstream_modules = [module for module in all_display_modules
+                              if module.is_dependent_on_tool(tool_result_cls)]
+        return downstream_modules
 
     def get_valid_modules(self, tools_present):
         """
@@ -41,7 +46,7 @@ class DisplayModuleConductor:
 
         """
         valid_modules = []
-        for module in self.downstream_modules:
+        for module in self.display_modules:
             dependencies = set([tool.name() for tool in module.required_tool_results()])
             if dependencies <= tools_present:
                 valid_modules.append(module)
@@ -80,7 +85,7 @@ class DisplayModuleConductor:
 class SampleConductor(DisplayModuleConductor):
     """Orchestrates Display Module generation based on SampleToolResult changes."""
 
-    def __init__(self, sample_id, tool_result_cls):
+    def __init__(self, sample_id, display_modules):
         """
         Initialize the Conductor.
 
@@ -88,11 +93,11 @@ class SampleConductor(DisplayModuleConductor):
         ----------
         sample_id : str
             The ID of the Sample that had a ToolResult change event.
-        tool_result_cls: ToolResultModule
-            The class of the ToolResult that was changed.
+        display_modules: [DisplayModule]
+            The list of DisplayModules to kick off middleware for.
 
         """
-        super(SampleConductor, self).__init__(tool_result_cls)
+        super(SampleConductor, self).__init__(display_modules)
 
         self.sample_id = sample_id
 
@@ -113,7 +118,7 @@ class SampleConductor(DisplayModuleConductor):
 class GroupConductor(DisplayModuleConductor):
     """Orchestrates Display Module generation based on GroupToolResult changes."""
 
-    def __init__(self, sample_group_uuid, tool_result_cls):
+    def __init__(self, sample_group_uuid, display_modules):
         """
         Initialize the Conductor.
 
@@ -121,11 +126,11 @@ class GroupConductor(DisplayModuleConductor):
         ----------
         sample_group_uuid : str
             The ID of the SampleGroup that had a ToolResult change event.
-        tool_result_cls: ToolResultModule
-            The class of the ToolResult that was changed.
+        display_modules: [DisplayModule]
+            The list of DisplayModules to kick off middleware for.
 
         """
-        super(GroupConductor, self).__init__(tool_result_cls)
+        super(GroupConductor, self).__init__(display_modules)
 
         self.sample_group_uuid = sample_group_uuid
 
