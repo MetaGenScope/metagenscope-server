@@ -99,12 +99,12 @@ class TestSampleModule(BaseTestCase):
                 content_type='application/json',
             )
             self.assertEqual(response.status_code, 500)
-            data = json.loads(response.data.decode())
-            self.assertIn('error', data['status'])
-            self.assertIn('success', data['data'])
-            self.assertIn('failure', data['data'])
-            self.assertEqual(len(data['data']['success']), 1)
-            self.assertTrue(len(data['data']['failure']) > 0)
+            data_load = json.loads(response.data.decode())
+            self.assertIn('failure', data_load['data'])
+            self.assertIn('success', data_load['data'])
+            self.assertIn('error', data_load['status'])
+            self.assertEqual(len(data_load['data']['success']), 1)
+            self.assertTrue(len(data_load['data']['failure']) > 0)
 
     @with_user
     def test_kick_off_single_middleware(self, auth_headers, *_):  # pylint: disable=invalid-name
@@ -123,7 +123,10 @@ class TestSampleModule(BaseTestCase):
             data = json.loads(response.data.decode())
             self.assertEqual(response.status_code, 201)
             self.assertIn('success', data['status'])
-            self.assertIn('success', data['data'])
             self.assertIn('failure', data['data'])
+            self.assertIn('success', data['data'])
             self.assertEqual(len(data['data']['success']), 1)
             self.assertEqual(len(data['data']['failure']), 0)
+            
+            
+
