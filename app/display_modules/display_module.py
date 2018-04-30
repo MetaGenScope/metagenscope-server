@@ -11,6 +11,9 @@ from app.api.exceptions import InvalidRequest
 from .utils import jsonify
 
 
+DEFAULT_MINIMUM_SAMPLE_COUNT = 2
+
+
 class DisplayModule:
     """Base display module type."""
 
@@ -80,7 +83,10 @@ class DisplayModule:
 class SampleToolDisplayModule(DisplayModule):  # pylint: disable=abstract-method
     """Display Module dependent on single-sample tool results."""
 
-    pass
+    @classmethod
+    def minimum_samples(cls):
+        """Return middleware wrangler for display module type."""
+        return DEFAULT_MINIMUM_SAMPLE_COUNT
 
 
 class GroupToolDisplayModule(DisplayModule):  # pylint: disable=abstract-method
