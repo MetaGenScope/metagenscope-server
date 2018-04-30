@@ -36,4 +36,4 @@ class TestReadsClassifiedUploads(BaseTestCase):
 
         # Reload object to ensure HMP Sites result was stored properly
         sample = Sample.objects.get(uuid=sample_uuid)
-        self.assertTrue(hasattr(sample, reads_classified))
+        self.assertTrue(hasattr(sample, MODULE_NAME))
