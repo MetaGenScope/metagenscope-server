@@ -13,16 +13,14 @@ def kick_off_middleware(uuid, request, valid_tools, conductor_cls):
     except KeyError:
         module_names = []
     except Exception as exc:  # pylint: disable=broad-except
-        print(exc)
+        print(type(exc))
         raise
 
     tool_results = valid_tools
     if module_names:
         tool_results = [tool_cls for tool_cls in valid_tools
                         if tool_cls.name() in module_names]
-    print(module_names)
-    print(valid_tools)
-    print(tool_results)
+
     good_tools, bad_tools = [], []
     for cls in tool_results:
         tool_name = cls.name()

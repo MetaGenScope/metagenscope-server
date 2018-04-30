@@ -122,7 +122,6 @@ def run_sample_group_display_modules(uuid):    # pylint: disable=invalid-name
     except NoResultFound:
         raise NotFound('Sample Group does not exist.')
 
-    valid_tools = [tool for tool in all_tool_results
-                   if issubclass(tool, GroupToolResultModule)]
+    valid_tools = all_tool_results
 
     return kick_off_middleware(safe_uuid, request, valid_tools, GroupConductor)
