@@ -18,20 +18,23 @@ class TestDisplayModuleConductor(BaseTestCase):
 
     def test_downstream_modules(self):
         """Ensure downstream_modules is computed correctly."""
-        conductor = DisplayModuleConductor(KrakenResultModule)
+        downstream_modules = DisplayModuleConductor.downstream_modules(KrakenResultModule)
+        conductor = DisplayModuleConductor(downstream_modules)
         self.assertIn(SampleSimilarityDisplayModule, conductor.downstream_modules)
 
     def test_get_valid_modules(self):
         """Ensure valid_modules is computed correctly."""
         tools_present = set([KRAKEN_NAME, KRAKENHLL_NAME, METAPHLAN2_NAME])
-        conductor = DisplayModuleConductor(KrakenResultModule)
+        downstream_modules = DisplayModuleConductor.downstream_modules(KrakenResultModule)
+        conductor = DisplayModuleConductor(downstream_modules)
         valid_modules = conductor.get_valid_modules(tools_present)
         self.assertIn(SampleSimilarityDisplayModule, valid_modules)
 
     def test_partial_valid_modules(self):
         """Ensure valid_modules is computed correctly if tools are missing."""
         tools_present = set([KRAKEN_NAME])
-        conductor = DisplayModuleConductor(KrakenResultModule)
+        downstream_modules = DisplayModuleConductor.downstream_modules(KrakenResultModule)
+        conductor = DisplayModuleConductor(downstream_modules)
         valid_modules = conductor.get_valid_modules(tools_present)
         self.assertTrue(SampleSimilarityDisplayModule not in valid_modules)
 
