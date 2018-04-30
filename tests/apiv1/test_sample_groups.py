@@ -134,7 +134,7 @@ class TestSampleGroupModule(BaseTestCase):
             self.assertIn('success', data['status'])
             self.assertEqual(sample_group_uuid, data['data']['sample_group_uuid'])
             self.assertEqual(sample_group_name, data['data']['sample_group_name'])
-      
+
     def prepare_middleware_test(self):  # pylint: disable=no-self-use
         """Prepare database for middleware test."""
         def create_sample(i):

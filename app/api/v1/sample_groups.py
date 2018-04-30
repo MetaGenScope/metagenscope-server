@@ -125,7 +125,7 @@ def get_sample_group_uuid(sample_group_name):
     }
     return result, 200
 
-  
+
 @sample_groups_blueprint.route('/sample_groups/<uuid>/middleware', methods=['POST'])
 def run_sample_group_display_modules(uuid):    # pylint: disable=invalid-name
     """Run display modules for sample group."""
