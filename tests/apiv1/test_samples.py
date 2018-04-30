@@ -141,5 +141,5 @@ class TestSampleModule(BaseTestCase):
             self.assertIn('success', data['status'])
             self.assertIn('failure', data['data'])
             self.assertIn('success', data['data'])
-            self.assertEqual(len(data['data']['success']), 1)
+            self.assertTrue(len(data['data']['success']) >= 1)
             self.assertEqual(len(data['data']['failure']), 0)
