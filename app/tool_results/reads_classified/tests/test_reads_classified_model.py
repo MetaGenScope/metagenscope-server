@@ -18,7 +18,7 @@ class TestReadsClassifiedModel(BaseTestCase):
             MODULE_NAME: reads_classified,
         }
         sample = Sample(**packed_data).save()
-        self.assertTrue(sample.reads_classified)
+        self.assertTrue(hasattr(sample.reads_classified))
         tool_result = getattr(sample, MODULE_NAME)
         self.assertEqual(len(tool_result), 9)
         self.assertEqual(tool_result['viral'], 100)
