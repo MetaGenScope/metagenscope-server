@@ -3,6 +3,7 @@
 from flask import current_app
 from werkzeug.exceptions import BadRequest
 
+
 def kick_off_middleware(uuid, request, valid_tools, conductor_cls):
     """Use supplied conductor to kick off middleware for all available modules."""
     try:
