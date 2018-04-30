@@ -43,11 +43,12 @@ def receive_sample_tool_upload(cls, resp, uuid):
         raise ParseError(str(validation_error))
 
     # Kick off middleware tasks
+    dryrun = request.args.get('dryrun', False)
     if not dryrun:
-    try:
-        SampleConductor(safe_uuid, cls).shake_that_baton()
-    except Exception:  # pylint: disable=broad-except
-        current_app.logger.exception('Exception while coordinating display modules.')
+        try:
+            SampleConductor(safe_uuid, cls).shake_that_baton()
+        except Exception:  # pylint: disable=broad-except
+            current_app.logger.exception('Exception while coordinating display modules.')
 
     # Return payload here to avoid per-class JSON serialization
     return payload, 201
