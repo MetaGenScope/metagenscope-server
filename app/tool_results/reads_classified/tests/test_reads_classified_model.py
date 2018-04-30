@@ -18,8 +18,8 @@ class TestReadsClassifiedModel(BaseTestCase):
         tool_result = sample.reads_classified
         self.assertEqual(len(tool_result), 5)
         self.assertEqual(tool_result['viral'], 100)
-        self.assertEqual(tool_result['archaea'], 200)
-        self.assertEqual(tool_result['bacteria'], 600)
+        self.assertEqual(tool_result['archaeal'], 200)
+        self.assertEqual(tool_result['bacterial'], 600)
         self.assertEqual(tool_result['host'], 50)
         self.assertEqual(tool_result['unknown'], 50)
 
@@ -34,7 +34,7 @@ class TestReadsClassifiedModel(BaseTestCase):
         tool_result = sample.reads_classified
         self.assertEqual(len(tool_result), 5)
         self.assertEqual(tool_result['viral'], 100)
-        self.assertEqual(tool_result['archaea'], 200)
-        self.assertEqual(tool_result['bacteria'], 600)
+        self.assertEqual(tool_result['archaeal'], 200)
+        self.assertEqual(tool_result['bacterial'], 600)
         self.assertEqual(tool_result['host'], 0)
         self.assertEqual(tool_result['unknown'], 100)
