@@ -19,7 +19,7 @@ class TestReadsClassifiedModel(BaseTestCase):
         }
         sample = Sample(**packed_data).save()
         self.assertTrue(sample.reads_classified)
-        tool_result = getAttr(sample, MODULE_NAME)
+        tool_result = getattr(sample, MODULE_NAME)
         self.assertEqual(len(tool_result), 9)
         self.assertEqual(tool_result['viral'], 100)
         self.assertEqual(tool_result['archaeal'], 200)
@@ -43,7 +43,7 @@ class TestReadsClassifiedModel(BaseTestCase):
         }
         sample = Sample(**packed_data).save()
         self.assertTrue(hasattr(sample, MODULE_NAME))
-        tool_result = getAttr(sample, MODULE_NAME)
+        tool_result = getattr(sample, MODULE_NAME)
         self.assertEqual(len(tool_result), 9)
         self.assertEqual(tool_result['viral'], 100)
         self.assertEqual(tool_result['archaeal'], 200)
