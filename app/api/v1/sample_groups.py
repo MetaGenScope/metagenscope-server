@@ -9,6 +9,7 @@ from sqlalchemy.orm.exc import NoResultFound
 
 from app.analysis_results.analysis_result_models import AnalysisResultMeta
 from app.api.exceptions import InvalidRequest, InternalError
+from app.display_modules.conductor import GroupConductor
 from app.extensions import db
 from app.sample_groups.sample_group_models import SampleGroup, sample_group_schema
 from app.samples.sample_models import Sample, sample_schema
@@ -104,3 +105,34 @@ def add_samples_to_group(resp, group_uuid):  # pylint: disable=unused-argument
         current_app.logger.exception('Samples could not be added to Sample Group.')
         db.session.rollback()
         raise InternalError(str(integrity_error))
+
+
+@samples_groups_blueprint.route('/sample_groups/runconductor/<sample_uuid>', methods=['GET'])
+def run_sample_group_display_modules(uuid):
+    """Run display modules for sample group."""
+    try:
+        safe_uuid = UUID(uuid)
+        sample_group = SampleGroup.query.filter_by(id=safe_uuid).first()
+    except ValueError:
+        raise ParseError('Invalid UUID provided.')
+    except NoResultFound:
+        raise NotFound('Sample Group does not exist.')
+
+    # Kick off middleware tasks
+    good_tools, bad_tools = [], []
+    for cls in all_tool_results:
+        try:
+            GroupConductor(safe_uuid, cls).shake_that_baton()
+            good_tools.append(cls.name())
+        except Exception:  # pylint: disable=broad-except
+            current_app.logger.exception('Exception while coordinating display modules.')
+            bad_tools.append(cls.name())
+
+    payload = {
+        'success': good_tools,
+        'failure': bad_tools,
+    }
+    status = 201
+    if len(bad_tools):
+        status = 500
+    return payload, status

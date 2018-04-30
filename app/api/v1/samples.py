@@ -10,6 +10,7 @@ from sqlalchemy.orm.exc import NoResultFound
 
 from app.analysis_results.analysis_result_models import AnalysisResultMeta
 from app.api.exceptions import InvalidRequest, InternalError
+from app.display_modules.conductor import SampleConductor
 from app.extensions import db
 from app.samples.sample_models import Sample, sample_schema
 from app.sample_groups.sample_group_models import SampleGroup
@@ -119,8 +120,8 @@ def get_sample_uuid(sample_name):
 
 
 @samples_blueprint.route('/samples/runconductor/<sample_uuid>', methods=['GET'])
-def receive_sample_tool_upload(uuid):
-    """Define handler for receiving uploads of analysis tool results."""
+def run_sample_display_modules(uuid):
+    """Run display modules for samples."""
     try:
         safe_uuid = UUID(uuid)
         sample = Sample.objects.get(uuid=safe_uuid)
