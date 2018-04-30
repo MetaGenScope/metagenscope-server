@@ -16,6 +16,8 @@ from app.samples.sample_models import Sample, sample_schema
 from app.tool_results import all_tool_results
 from app.users.user_helpers import authenticate
 
+from .utils import kick_off_middleware
+
 
 sample_groups_blueprint = Blueprint('sample_groups', __name__)  # pylint: disable=invalid-name
 
@@ -108,32 +110,15 @@ def add_samples_to_group(resp, group_uuid):  # pylint: disable=unused-argument
         raise InternalError(str(integrity_error))
 
 
-@samples_groups_blueprint.route('/sample_groups/runconductor/<sample_uuid>', methods=['GET'])
-def run_sample_group_display_modules(uuid):
+@sample_groups_blueprint.route('/sample_groups/<sample_uuid>/middleware', methods=['POST'])
+def run_sample_group_display_modules(uuid):    # pylint: disable=invalid-name
     """Run display modules for sample group."""
     try:
         safe_uuid = UUID(uuid)
-        sample_group = SampleGroup.query.filter_by(id=safe_uuid).first()
+        _ = SampleGroup.query.filter_by(id=safe_uuid).first()
     except ValueError:
         raise ParseError('Invalid UUID provided.')
     except NoResultFound:
         raise NotFound('Sample Group does not exist.')
 
-    # Kick off middleware tasks
-    good_tools, bad_tools = [], []
-    for cls in all_tool_results:
-        try:
-            GroupConductor(safe_uuid, cls).shake_that_baton()
-            good_tools.append(cls.name())
-        except Exception:  # pylint: disable=broad-except
-            current_app.logger.exception('Exception while coordinating display modules.')
-            bad_tools.append(cls.name())
-
-    payload = {
-        'success': good_tools,
-        'failure': bad_tools,
-    }
-    status = 201
-    if len(bad_tools):
-        status = 500
-    return payload, status
+    return kick_off_middleware(safe_uuid, GroupConductor)
