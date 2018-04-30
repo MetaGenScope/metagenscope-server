@@ -134,7 +134,7 @@ class TestSampleGroupModule(BaseTestCase):
 
     @with_user
     def test_kick_off_all_middleware(self, auth_headers, *_):  # pylint: disable=invalid-name
-        """Ensure all middleware can be kicked off."""
+        """Ensure all middleware can be kicked off for group."""
         sample_group = self.prepare_middleware_test()
 
         with self.client:
@@ -153,7 +153,7 @@ class TestSampleGroupModule(BaseTestCase):
 
     @with_user
     def test_kick_off_single_middleware(self, auth_headers, *_):  # pylint: disable=invalid-name
-        """Ensure single middleware can be kicked off."""
+        """Ensure single middleware can be kicked off for group."""
         sample_group = self.prepare_middleware_test()
 
         with self.client:
