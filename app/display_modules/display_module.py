@@ -75,3 +75,15 @@ class DisplayModule:
                             endpoint_name,
                             view_function,
                             methods=['GET'])
+
+
+class SampleToolDisplayModule(DisplayModule):
+    """Display Module dependent on single-sample tool results."""
+
+    pass
+
+
+class GroupToolDisplayModule(DisplayModule):
+    """Display Module dependent on a sample group tool result (ex. ancestry, beta diversity)."""
+
+    pass
