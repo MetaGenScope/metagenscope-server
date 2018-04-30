@@ -116,9 +116,9 @@ class TestSampleModule(BaseTestCase):
                 f'/api/v1/samples/{str(sample_group.id)}/middleware',
                 headers=auth_headers,
                 content_type='application/json',
-                data=json.dumps(dict(
-                    tools=['ancestry_summary'],
-                )),
+                data=json.dumps({
+                    'tools': ['ancestry_summary'],
+                }),
             )
             data = json.loads(response.data.decode())
             self.assertEqual(response.status_code, 201)
