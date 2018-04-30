@@ -77,13 +77,13 @@ class DisplayModule:
                             methods=['GET'])
 
 
-class SampleToolDisplayModule(DisplayModule):
+class SampleToolDisplayModule(DisplayModule):  # pylint: disable=abstract-method
     """Display Module dependent on single-sample tool results."""
 
     pass
 
 
-class GroupToolDisplayModule(DisplayModule):
+class GroupToolDisplayModule(DisplayModule):  # pylint: disable=abstract-method
     """Display Module dependent on a sample group tool result (ex. ancestry, beta diversity)."""
 
     pass
