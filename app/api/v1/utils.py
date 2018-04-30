@@ -1,7 +1,7 @@
 """Utilities for API v1."""
 
 from flask import current_app
-
+from werkzeug.exceptions import BadRequest
 
 def kick_off_middleware(uuid, request, valid_tools, conductor_cls):
     """Use supplied conductor to kick off middleware for all available modules."""
@@ -12,9 +12,8 @@ def kick_off_middleware(uuid, request, valid_tools, conductor_cls):
         module_names = []
     except KeyError:
         module_names = []
-    except Exception as exc:  # pylint: disable=broad-except
-        print(type(exc))
-        raise
+    except BadRequest:
+        module_names = []
 
     tool_results = valid_tools
     if module_names:
