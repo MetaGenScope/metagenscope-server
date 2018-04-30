@@ -7,7 +7,7 @@ def kick_off_middleware(uuid, request, valid_tools, conductor_cls):
     """Use supplied conductor to kick off middleware for all available modules."""
     try:
         post_data = request.get_json()
-        module_names = post_data['modules']
+        module_names = post_data['tools']
     except TypeError:
         module_names = []
     except KeyError:
