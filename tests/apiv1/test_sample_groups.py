@@ -113,7 +113,7 @@ class TestSampleGroupModule(BaseTestCase):
     def test_get_sample_group_uuid_from_name(self):
         """Ensure get sample uuid behaves correctly."""
         sample_group_name = 'Sample Group One'
-        group = add_sample_group(name=)
+        group = add_sample_group(name=sample_group_name)
         sample_group_uuid = group.id
         sample00 = add_sample(name='SMPL_00')
         sample01 = add_sample(name='SMPL_01')
