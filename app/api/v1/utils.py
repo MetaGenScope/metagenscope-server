@@ -27,9 +27,12 @@ def kick_off_middleware(uuid, request, valid_tools, conductor_cls):
         try:
             conductor_cls(uuid, cls).shake_that_baton()
             good_tools.append(tool_name)
-        except Exception:  # pylint: disable=broad-except
+        except Exception as exc:  # pylint: disable=broad-except
             current_app.logger.exception('Exception while coordinating display modules.')
-            bad_tools.append(tool_name)
+            bad_tools.append({
+                'tool_result': tool_name,
+                'exception': str(exc),
+            })
 
     payload = {
         'success': good_tools,
