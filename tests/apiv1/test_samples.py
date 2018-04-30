@@ -139,7 +139,4 @@ class TestSampleModule(BaseTestCase):
             data = json.loads(response.data.decode())
             self.assertEqual(response.status_code, 202)
             self.assertIn('success', data['status'])
-            self.assertIn('failure', data['data'])
-            self.assertIn('success', data['data'])
-            self.assertTrue(len(data['data']['success']) >= 1)
-            self.assertEqual(len(data['data']['failure']), 0)
+            self.assertEqual(data['data'], 'Started middleware')
