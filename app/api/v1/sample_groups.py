@@ -13,6 +13,7 @@ from app.display_modules.conductor import GroupConductor
 from app.extensions import db
 from app.sample_groups.sample_group_models import SampleGroup, sample_group_schema
 from app.samples.sample_models import Sample, sample_schema
+from app.tool_results import all_tool_results
 from app.users.user_helpers import authenticate
 
 
