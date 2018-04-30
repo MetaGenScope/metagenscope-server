@@ -105,6 +105,7 @@ def add_samples_to_group(resp, group_uuid):  # pylint: disable=unused-argument
         db.session.rollback()
         raise InternalError(str(integrity_error))
 
+
 @sample_groups_blueprint.route('/sample_groups/getid/<sample_group_name>', methods=['GET'])
 def get_sample_group_uuid(sample_group_name):
     """Return the UUID associated with a single sample."""
