@@ -111,7 +111,7 @@ def add_samples_to_group(resp, group_uuid):  # pylint: disable=unused-argument
         raise InternalError(str(integrity_error))
 
 
-@sample_groups_blueprint.route('/sample_groups/<sample_uuid>/middleware', methods=['POST'])
+@sample_groups_blueprint.route('/sample_groups/<uuid>/middleware', methods=['POST'])
 def run_sample_group_display_modules(uuid):    # pylint: disable=invalid-name
     """Run display modules for sample group."""
     try:

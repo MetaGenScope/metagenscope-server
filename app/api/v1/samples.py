@@ -122,7 +122,7 @@ def get_sample_uuid(sample_name):
     return result, 200
 
 
-@samples_blueprint.route('/samples/<sample_uuid>/middleware', methods=['POST'])
+@samples_blueprint.route('/samples/<uuid>/middleware', methods=['POST'])
 def run_sample_display_modules(uuid):
     """Run display modules for samples."""
     try:
