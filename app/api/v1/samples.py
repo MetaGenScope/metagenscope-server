@@ -13,6 +13,7 @@ from app.api.exceptions import InvalidRequest, InternalError
 from app.extensions import db
 from app.samples.sample_models import Sample, sample_schema
 from app.sample_groups.sample_group_models import SampleGroup
+from app.tool_results import all_tool_results
 from app.users.user_helpers import authenticate
 
 
@@ -115,3 +116,34 @@ def get_sample_uuid(sample_name):
         'sample_uuid': sample_uuid,
     }
     return result, 200
+
+
+@samples_blueprint.route('/samples/runconductor/<sample_uuid>', methods=['GET'])
+def receive_sample_tool_upload(uuid):
+    """Define handler for receiving uploads of analysis tool results."""
+    try:
+        safe_uuid = UUID(uuid)
+        sample = Sample.objects.get(uuid=safe_uuid)
+    except ValueError:
+        raise ParseError('Invalid UUID provided.')
+    except DoesNotExist:
+        raise NotFound('Sample does not exist.')
+
+    # Kick off middleware tasks
+    good_tools, bad_tools = [], []
+    for cls in all_tool_results:
+        try:
+            SampleConductor(safe_uuid, cls).shake_that_baton()
+            good_tools.append(cls.name())
+        except Exception:  # pylint: disable=broad-except
+            current_app.logger.exception('Exception while coordinating display modules.')
+            bad_tools.append(cls.name())
+
+    payload = {
+        'success': good_tools,
+        'failure': bad_tools,
+    }
+    status = 201
+    if len(bad_tools):
+        status = 500
+    return payload, status
