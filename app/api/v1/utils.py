@@ -35,4 +35,6 @@ def kick_off_middleware(uuid, request, valid_tools, conductor_cls):
         'success': good_tools,
         'failure': bad_tools,
     }
+    print('FOOBAR')
+    print(payload)
     return payload, 202
