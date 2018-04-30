@@ -145,4 +145,4 @@ class TestSampleGroupModule(BaseTestCase):
             )
             self.assertEqual(response.status_code, 202)
             data = json.loads(response.data.decode())
-            self.assertEqual(data['data'], 'Started middleware')
+            self.assertEqual(data['data']['message'], 'Started middleware')

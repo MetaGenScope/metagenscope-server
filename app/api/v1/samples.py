@@ -136,4 +136,6 @@ def run_sample_display_modules(uuid):
         except Exception:  # pylint: disable=broad-except
             current_app.logger.exception('Exception while coordinating display modules.')
 
-    return 'Started middleware', 202
+    result = {'message': 'Started middleware'}
+
+    return result, 202
