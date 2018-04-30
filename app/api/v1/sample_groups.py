@@ -104,3 +104,18 @@ def add_samples_to_group(resp, group_uuid):  # pylint: disable=unused-argument
         current_app.logger.exception('Samples could not be added to Sample Group.')
         db.session.rollback()
         raise InternalError(str(integrity_error))
+
+@samples_blueprint.route('/sample_groups/getid/<sample_group_name>', methods=['GET'])
+def get_sample_group_uuid(sample_group_name):
+    """Return the UUID associated with a single sample."""
+    try:
+        sample_group = SampleGroup.query.filter_by(name=sample_group_name).one()
+    except NoResultFound:
+        raise NotFound('Sample Group does not exist')
+
+    sample_group_uuid = sample_group.id
+    result = {
+        'sample_group_name': sample_group_name,  # recapitulate for convenience
+        'sample_group_uuid': sample_group_uuid,
+    }
+    return result, 200
