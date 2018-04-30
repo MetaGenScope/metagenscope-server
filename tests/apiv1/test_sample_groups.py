@@ -149,25 +149,3 @@ class TestSampleGroupModule(BaseTestCase):
             self.assertIn('failure', data['data'])
             self.assertEqual(len(data['data']['success']), 1)
             self.assertTrue(len(data['data']['failure']) > 0)
-
-    @with_user
-    def test_kick_off_single_middleware(self, auth_headers, *_):  # pylint: disable=invalid-name
-        """Ensure single middleware can be kicked off for group."""
-        sample_group = self.prepare_middleware_test()
-
-        with self.client:
-            response = self.client.post(
-                f'/api/v1/sample_groups/{str(sample_group.id)}/middleware',
-                headers=auth_headers,
-                content_type='application/json',
-                data=json.dumps(dict(
-                    tools=['ancestry_summary'],
-                )),
-            )
-            data = json.loads(response.data.decode())
-            self.assertEqual(response.status_code, 202)
-            self.assertIn('success', data['status'])
-            self.assertIn('success', data['data'])
-            self.assertIn('failure', data['data'])
-            self.assertEqual(len(data['data']['success']), 1)
-            self.assertEqual(len(data['data']['failure']), 0)

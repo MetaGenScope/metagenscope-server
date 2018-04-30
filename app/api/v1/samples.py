@@ -10,15 +10,16 @@ from sqlalchemy.orm.exc import NoResultFound
 
 from app.analysis_results.analysis_result_models import AnalysisResultMeta
 from app.api.exceptions import InvalidRequest, InternalError
+from app.display_modules import sample_display_modules
 from app.display_modules.conductor import SampleConductor
 from app.extensions import db
 from app.samples.sample_models import Sample, sample_schema
 from app.sample_groups.sample_group_models import SampleGroup
-from app.tool_results import all_tool_results
-from app.tool_results.modules import SampleToolResultModule
+# from app.tool_results import all_tool_results
+# from app.tool_results.modules import SampleToolResultModule
 from app.users.user_helpers import authenticate
 
-from .utils import kick_off_middleware
+# from .utils import kick_off_middleware
 
 
 samples_blueprint = Blueprint('samples', __name__)    # pylint: disable=invalid-name
@@ -133,7 +134,22 @@ def run_sample_display_modules(uuid):
     except DoesNotExist:
         raise NotFound('Sample does not exist.')
 
-    valid_tools = [tool for tool in all_tool_results
-                   if issubclass(tool, SampleToolResultModule)]
+    good_tools, bad_tools = [], []
+    for module in sample_display_modules:
+        module_name = module.name()
+        try:
+            SampleConductor(safe_uuid, display_modules=[module], downstream_groups=False)
+            good_tools.append(module_name)
+        except Exception as exc:  # pylint: disable=broad-except
+            current_app.logger.exception('Exception while coordinating display modules.')
+            bad_tools.append({
+                'tool_result': f'{module_name}_sample',
+                'exception': str(exc),
+            })
 
-    return kick_off_middleware(safe_uuid, request, valid_tools, SampleConductor)
+    sample_payload = {
+        'success': good_tools,
+        'failure': bad_tools,
+    }
+
+    return sample_payload, 202

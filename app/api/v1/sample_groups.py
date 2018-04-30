@@ -9,14 +9,14 @@ from sqlalchemy.orm.exc import NoResultFound
 
 from app.analysis_results.analysis_result_models import AnalysisResultMeta
 from app.api.exceptions import InvalidRequest, InternalError
+from app.display_modules import all_display_modules
 from app.display_modules.conductor import GroupConductor
 from app.extensions import db
 from app.sample_groups.sample_group_models import SampleGroup, sample_group_schema
 from app.samples.sample_models import Sample, sample_schema
-from app.tool_results import all_tool_results
 from app.users.user_helpers import authenticate
 
-from .utils import kick_off_middleware
+# from .utils import kick_off_middleware
 
 
 sample_groups_blueprint = Blueprint('sample_groups', __name__)  # pylint: disable=invalid-name
@@ -121,6 +121,33 @@ def run_sample_group_display_modules(uuid):    # pylint: disable=invalid-name
     except NoResultFound:
         raise NotFound('Sample Group does not exist.')
 
-    valid_tools = all_tool_results
+    good_tools, bad_tools = [], []
+    # for module in sample_display_modules:
+    #     module_name = module.name()
+    #     try:
+    #         SampleConductor(sample_id, display_modules=[module], downstream_groups=False)
+    #         good_tools.append(module_name)
+    #     except Exception as exc:  # pylint: disable=broad-except
+    #         current_app.logger.exception('Exception while coordinating display modules.')
+    #         bad_tools.append({
+    #             'tool_result': f'{module_name}_sample',
+    #             'exception': str(exc),
+    #         })
+    for module in all_display_modules:
+        module_name = module.name()
+        try:
+            GroupConductor(safe_uuid, display_modules=[module])
+            good_tools.append(module_name)
+        except Exception as exc:  # pylint: disable=broad-except
+            current_app.logger.exception('Exception while coordinating display modules.')
+            bad_tools.append({
+                'tool_result': f'{module_name}_group',
+                'exception': str(exc),
+            })
 
-    return kick_off_middleware(safe_uuid, request, valid_tools, GroupConductor)
+    payload = {
+        'success': good_tools,
+        'failure': bad_tools,
+    }
+
+    return payload, 202
