@@ -68,7 +68,7 @@ class TestSampleModule(BaseTestCase):
                 content_type='application/json',
             )
             data = json.loads(response.data.decode())
-            self.assertEqual(response.status_code, 200)
+            self.assertEqual(response.status_code, 202)
             self.assertIn('success', data['status'])
             sample = data['data']['sample']
             self.assertIn('SMPL_01', sample['name'])
@@ -87,7 +87,7 @@ class TestSampleModule(BaseTestCase):
                 content_type='application/json',
             )
             data = json.loads(response.data.decode())
-            self.assertEqual(response.status_code, 200)
+            self.assertEqual(response.status_code, 202)
             self.assertIn('success', data['status'])
             self.assertEqual(sample_uuid, data['data']['sample_uuid'])
             self.assertEqual(sample_name, data['data']['sample_name'])
@@ -116,7 +116,7 @@ class TestSampleModule(BaseTestCase):
                 headers=auth_headers,
                 content_type='application/json',
             )
-            self.assertEqual(response.status_code, 500)
+            self.assertEqual(response.status_code, 202)
             data_load = json.loads(response.data.decode())
             self.assertIn('failure', data_load['data'])
             self.assertIn('success', data_load['data'])
@@ -139,7 +139,7 @@ class TestSampleModule(BaseTestCase):
                 }),
             )
             data = json.loads(response.data.decode())
-            self.assertEqual(response.status_code, 201)
+            self.assertEqual(response.status_code, 202)
             self.assertIn('success', data['status'])
             self.assertIn('failure', data['data'])
             self.assertIn('success', data['data'])

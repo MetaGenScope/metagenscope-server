@@ -35,9 +35,4 @@ def kick_off_middleware(uuid, request, valid_tools, conductor_cls):
         'success': good_tools,
         'failure': bad_tools,
     }
-
-    status = 201
-    if bad_tools:
-        status = 500
-
-    return payload, status
+    return payload, 202
