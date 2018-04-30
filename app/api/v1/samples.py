@@ -8,18 +8,14 @@ from mongoengine.errors import ValidationError, DoesNotExist
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm.exc import NoResultFound
 
+from app.extensions import db
 from app.analysis_results.analysis_result_models import AnalysisResultMeta
 from app.api.exceptions import InvalidRequest, InternalError
 from app.display_modules import sample_display_modules
 from app.display_modules.conductor import SampleConductor
-from app.extensions import db
 from app.samples.sample_models import Sample, sample_schema
 from app.sample_groups.sample_group_models import SampleGroup
-# from app.tool_results import all_tool_results
-# from app.tool_results.modules import SampleToolResultModule
 from app.users.user_helpers import authenticate
-
-# from .utils import kick_off_middleware
 
 
 samples_blueprint = Blueprint('samples', __name__)    # pylint: disable=invalid-name

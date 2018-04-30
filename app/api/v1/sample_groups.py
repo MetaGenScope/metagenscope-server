@@ -122,17 +122,6 @@ def run_sample_group_display_modules(uuid):    # pylint: disable=invalid-name
         raise NotFound('Sample Group does not exist.')
 
     good_tools, bad_tools = [], []
-    # for module in sample_display_modules:
-    #     module_name = module.name()
-    #     try:
-    #         SampleConductor(sample_id, display_modules=[module], downstream_groups=False)
-    #         good_tools.append(module_name)
-    #     except Exception as exc:  # pylint: disable=broad-except
-    #         current_app.logger.exception('Exception while coordinating display modules.')
-    #         bad_tools.append({
-    #             'tool_result': f'{module_name}_sample',
-    #             'exception': str(exc),
-    #         })
     for module in all_display_modules:
         module_name = module.name()
         try:

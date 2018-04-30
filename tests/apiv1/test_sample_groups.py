@@ -147,5 +147,5 @@ class TestSampleGroupModule(BaseTestCase):
             data = json.loads(response.data.decode())
             self.assertIn('success', data['data'])
             self.assertIn('failure', data['data'])
-            self.assertEqual(len(data['data']['success']), 1)
-            self.assertTrue(len(data['data']['failure']) > 0)
+            self.assertTrue(len(data['data']['success']), >= 1)
+            self.assertEqual(len(data['data']['failure']), 0)
