@@ -19,8 +19,7 @@ class TestDisplayModuleConductor(BaseTestCase):
     def test_downstream_modules(self):
         """Ensure downstream_modules is computed correctly."""
         downstream_modules = DisplayModuleConductor.downstream_modules(KrakenResultModule)
-        conductor = DisplayModuleConductor(downstream_modules)
-        self.assertIn(SampleSimilarityDisplayModule, conductor.downstream_modules)
+        self.assertIn(SampleSimilarityDisplayModule, downstream_modules)
 
     def test_get_valid_modules(self):
         """Ensure valid_modules is computed correctly."""
