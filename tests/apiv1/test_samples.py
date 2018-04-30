@@ -96,7 +96,7 @@ class TestSampleModule(BaseTestCase):
         """Prepare database forsample  middleware test."""
         data = create_ancestry()
         args = {
-            'name': 'AncestrySample'
+            'name': 'AncestrySample',
             'metadata': {'foobar': 'baz'},
             TOOL_MODULE_NAME: data,
         }
