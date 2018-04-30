@@ -130,7 +130,7 @@ class TestSampleGroupModule(BaseTestCase):
         sample_group.samples = [create_sample(i) for i in range(6)]
         db.session.commit()
 
-        return sample_group.id
+        return sample_group
 
     @with_user
     def test_kick_off_all_middleware(self, auth_headers, *_):  # pylint: disable=invalid-name
