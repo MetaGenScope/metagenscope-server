@@ -17,7 +17,7 @@ def kick_off_middleware(uuid, request, valid_tools, conductor_cls):
     if module_names:
         tool_results = [tool_cls for tool_cls in valid_tools
                         if tool_cls.name() in module_names]
-
+    print(tool_results)
     good_tools, bad_tools = [], []
     for cls in tool_results:
         tool_name = cls.name()

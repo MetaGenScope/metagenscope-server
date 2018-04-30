@@ -143,8 +143,8 @@ class TestSampleGroupModule(BaseTestCase):
                 headers=auth_headers,
                 content_type='application/json',
             )
-            data = json.loads(response.data.decode())
             self.assertEqual(response.status_code, 500)
+            data = json.loads(response.data.decode())
             self.assertIn('error', data['status'])
             self.assertIn('success', data['data'])
             self.assertIn('failure', data['data'])

@@ -86,3 +86,44 @@ class TestSampleModule(BaseTestCase):
             self.assertIn('success', data['status'])
             self.assertEqual(sample_uuid, data['data']['sample_uuid'])
             self.assertEqual(sample_name, data['data']['sample_name'])
+
+    @with_user
+    def test_kick_off_all_middleware(self, auth_headers, *_):  # pylint: disable=invalid-name
+        """Ensure all middleware can be kicked off."""
+        sample_group = self.prepare_middleware_test()
+
+        with self.client:
+            response = self.client.post(
+                f'/api/v1/samples/{str(sample_group.id)}/middleware',
+                headers=auth_headers,
+                content_type='application/json',
+            )
+            self.assertEqual(response.status_code, 500)
+            data = json.loads(response.data.decode())
+            self.assertIn('error', data['status'])
+            self.assertIn('success', data['data'])
+            self.assertIn('failure', data['data'])
+            self.assertEqual(len(data['data']['success']), 1)
+            self.assertTrue(len(data['data']['failure']) > 0)
+
+    @with_user
+    def test_kick_off_single_middleware(self, auth_headers, *_):  # pylint: disable=invalid-name
+        """Ensure single middleware can be kicked off."""
+        sample_group = self.prepare_middleware_test()
+
+        with self.client:
+            response = self.client.post(
+                f'/api/v1/samples/{str(sample_group.id)}/middleware',
+                headers=auth_headers,
+                content_type='application/json',
+                data=json.dumps(dict(
+                    tools=['ancestry_summary'],
+                )),
+            )
+            data = json.loads(response.data.decode())
+            self.assertEqual(response.status_code, 201)
+            self.assertIn('success', data['status'])
+            self.assertIn('success', data['data'])
+            self.assertIn('failure', data['data'])
+            self.assertEqual(len(data['data']['success']), 1)
+            self.assertEqual(len(data['data']['failure']), 0)
