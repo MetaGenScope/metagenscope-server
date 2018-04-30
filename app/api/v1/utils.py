@@ -2,13 +2,24 @@
 
 from flask import current_app
 
-from app.tool_results import all_tool_results
 
-
-def kick_off_middleware(uuid, conductor_cls):
+def kick_off_middleware(uuid, request, valid_tools, conductor_cls):
     """Use supplied conductor to kick off middleware for all available modules."""
+    try:
+        post_data = request.get_json()
+        module_names = post_data['modules']
+    except TypeError:
+        module_names = []
+    except KeyError:
+        module_names = []
+
+    tool_results = valid_tools
+    if module_names:
+        tool_results = [tool_cls for tool_cls in valid_tools
+                        if tool_cls.name() in module_names]
+
     good_tools, bad_tools = [], []
-    for cls in all_tool_results:
+    for cls in tool_results:
         tool_name = cls.name()
         try:
             conductor_cls(uuid, cls).shake_that_baton()

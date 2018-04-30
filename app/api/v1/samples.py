@@ -14,6 +14,8 @@ from app.display_modules.conductor import SampleConductor
 from app.extensions import db
 from app.samples.sample_models import Sample, sample_schema
 from app.sample_groups.sample_group_models import SampleGroup
+from app.tool_results import all_tool_results
+from app.tool_results.modules import SampleToolResultModule
 from app.users.user_helpers import authenticate
 
 from .utils import kick_off_middleware
@@ -131,4 +133,7 @@ def run_sample_display_modules(uuid):
     except DoesNotExist:
         raise NotFound('Sample does not exist.')
 
-    return kick_off_middleware(safe_uuid, SampleConductor)
+    valid_tools = [tool for tool in all_tool_results
+                   if issubclass(tool, SampleToolResultModule)]
+
+    return kick_off_middleware(safe_uuid, request, valid_tools, SampleConductor)

@@ -14,6 +14,7 @@ from app.extensions import db
 from app.sample_groups.sample_group_models import SampleGroup, sample_group_schema
 from app.samples.sample_models import Sample, sample_schema
 from app.tool_results import all_tool_results
+from app.tool_results.modules import GroupToolResultModule
 from app.users.user_helpers import authenticate
 
 from .utils import kick_off_middleware
@@ -121,4 +122,7 @@ def run_sample_group_display_modules(uuid):    # pylint: disable=invalid-name
     except NoResultFound:
         raise NotFound('Sample Group does not exist.')
 
-    return kick_off_middleware(safe_uuid, GroupConductor)
+    valid_tools = [tool for tool in all_tool_results
+                   if issubclass(tool, GroupToolResultModule)]
+
+    return kick_off_middleware(safe_uuid, request, valid_tools, GroupConductor)
