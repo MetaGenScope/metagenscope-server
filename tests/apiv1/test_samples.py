@@ -117,10 +117,8 @@ class TestSampleModule(BaseTestCase):
                 content_type='application/json',
             )
             self.assertEqual(response.status_code, 202)
-            data_load = json.loads(response.data.decode())
-            self.assertIn('failure', data_load['data'])
-            self.assertIn('success', data_load['data'])
-            self.assertTrue(len(data_load['data']['success']) >= 1)
+            data = json.loads(response.data.decode())
+            self.assertEqual(data['data']['message'], 'Started middleware')
 
     @with_user
     def test_kick_off_single_middleware(self, auth_headers, *_):  # pylint: disable=invalid-name
