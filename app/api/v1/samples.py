@@ -110,5 +110,8 @@ def get_sample_uuid(sample_name):
         raise NotFound('Sample does not exist.')
 
     sample_uuid = sample.uuid
-    result = {'sample_uuid': sample_uuid}
+    result = {
+        'sample_name': sample_name,  # recapitulate for convenience
+        'sample_uuid': sample_uuid,
+    }
     return result, 200
