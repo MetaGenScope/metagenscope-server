@@ -131,10 +131,9 @@ def run_sample_display_modules(uuid):
         raise NotFound('Sample does not exist.')
 
     for module in sample_display_modules:
-        module_name = module.name()
         try:
             SampleConductor(safe_uuid, display_modules=[module], downstream_groups=False)
-        except Exception as exc:  # pylint: disable=broad-except
+        except Exception:  # pylint: disable=broad-except
             current_app.logger.exception('Exception while coordinating display modules.')
 
     return 'Started middleware', 202

@@ -122,10 +122,9 @@ def run_sample_group_display_modules(uuid):    # pylint: disable=invalid-name
         raise NotFound('Sample Group does not exist.')
 
     for module in all_display_modules:
-        module_name = module.name()
         try:
             GroupConductor(safe_uuid, display_modules=[module])
-        except Exception as exc:  # pylint: disable=broad-except
+        except Exception:  # pylint: disable=broad-except
             current_app.logger.exception('Exception while coordinating display modules.')
 
     return 'Started middleware', 202
