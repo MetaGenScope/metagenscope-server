@@ -110,7 +110,7 @@ class TestSampleGroupModule(BaseTestCase):
             self.assertTrue(any(s['name'] == 'SMPL_00' for s in data['data']['samples']))
             self.assertTrue(any(s['name'] == 'SMPL_01' for s in data['data']['samples']))
 
-    def test_get_sample_group_uuid_from_name(self):
+    def test_get_group_uuid_from_name(self):
         """Ensure get sample uuid behaves correctly."""
         sample_group_name = 'Sample Group One'
         group = add_sample_group(name=sample_group_name)
