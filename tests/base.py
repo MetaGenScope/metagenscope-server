@@ -7,6 +7,7 @@ from flask_testing import TestCase
 from app import create_app, db, celery, update_celery_settings
 from app.config import app_config
 from app.analysis_results.analysis_result_models import AnalysisResultMeta
+# from app.tool_results.models import ToolResult, GroupToolResult
 from app.samples.sample_models import Sample
 
 
@@ -40,6 +41,8 @@ class BaseTestCase(TestCase):
         # Mongo
         AnalysisResultMeta.drop_collection()
         Sample.drop_collection()
+        # ToolResult.drop_collection()
+        # GroupToolResult.drop_collection()
 
         # Enable logging
         logging.disable(logging.NOTSET)

@@ -16,7 +16,8 @@ class AncestryWrangler(SharedWrangler):
     @classmethod
     def run_common(cls, samples, analysis_result_uuid):
         """Execute common run instructions."""
-        collate_fields = list(AncestryToolResult._fields.keys())
+        collate_fields = [key for key in list(AncestryToolResult._fields.keys())
+                          if not key == 'id']
         collate_task = collate_samples.s(TOOL_MODULE_NAME, collate_fields, samples)
         reducer_task = ancestry_reducer.s()
         persist_task = persist_result.s(analysis_result_uuid, MODULE_NAME)

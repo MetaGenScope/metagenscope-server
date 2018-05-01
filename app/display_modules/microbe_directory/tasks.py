@@ -17,6 +17,7 @@ def collate_microbe_directory(samples):
     """Collate a group of microbe directory results and fill in blanks."""
     tool_name = MicrobeDirectoryResultModule.name()
     fields = list(MicrobeDirectoryToolResult._fields.keys())
+    fields = [field for field in fields if not field == 'id']
     field_dict = {}
     for field in fields:
         field_dict[field] = {}
