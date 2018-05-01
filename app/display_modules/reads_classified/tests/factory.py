@@ -8,6 +8,7 @@ from app.tool_results.reads_classified.tests.factory import create_values
 
 
 def create_vals_no_total():
+    """Create a reads classified proportion without total."""
     return {key: val for key, val in create_values() if key != 'totals'}
 
 
