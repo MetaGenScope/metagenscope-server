@@ -90,10 +90,12 @@ def categories_from_metadata(samples, min_size=2):
             if prop not in categories:
                 categories[prop] = set([])
             category_val = metadata[prop]
-            if type(category_val) != str:
-                category_val = str(val)
+            if not isinstance(category_val, str):
+                category_val = str(category_val)
                 if category_val.lower() == 'nan':
                     category_val = 'undefined'
+            if not category_val:
+                category_val = 'undefined'
             categories[prop].add(category_val)
 
     # Filter for minimum number of values
