@@ -21,7 +21,7 @@ def get_ranks(*tkns):
         rank = tkn.strip()[0].lower()
         if rank == 'd':
             rank = 'k'
-        assert rank in TAXA_RANKS, rank + ' ' + tkn.strip()
+        assert rank in TAXA_RANKS, rank + ' ' + ' '.join(tkns).strip()
         out.append(rank)
     return out
 
@@ -98,7 +98,7 @@ def make_taxa_table(samples, tool_name):
         except KeyError:
             pass
 
-    taxa_tbl = pd.DataFrame.from_dict(taxa_tbl, orient='columns')
+    taxa_tbl = pd.DataFrame.from_dict(taxa_tbl, orient='index')
     taxa_tbl = taxa_tbl.apply(lambda col: col / col.sum(), axis=0)
 
     return taxa_tbl
