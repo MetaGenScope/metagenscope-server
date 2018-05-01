@@ -11,7 +11,7 @@ def create_vals_no_total():
     """Create a reads classified proportion without total."""
     return {key: val
             for key, val in create_values().items()
-            if key != 'totals'}
+            if key != 'total'}
 
 
 class ReadsClassifiedFactory(factory.mongoengine.MongoEngineFactory):
