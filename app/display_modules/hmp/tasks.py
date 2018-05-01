@@ -36,7 +36,7 @@ def make_distributions(categories, samples):
             sample_cat_val = scrub_category_val(sample_cat_val)
             table[sample_cat_val].append(hmp_result)
         distributions[category_name] = [
-            {'name': category_value,
+            {'name': scrub_category_val(category_value),
              'data': make_dist_table(hmp_results, site_names)}
             for category_value, hmp_results in table.items()]
 
