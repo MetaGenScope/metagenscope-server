@@ -14,6 +14,7 @@ from multiprocessing import Lock
 
 
 sample_upload_lock = Lock()
+persist_result_lock = Lock()
 mongoDB = MongoEngine()
 db = SQLAlchemy()
 migrate = Migrate()

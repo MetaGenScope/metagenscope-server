@@ -1,10 +1,17 @@
 """Utilities for the entire app."""
 
+from functools import wraps
 
-def lock_function(lock, func, *args, **kwargs):
+
+def lock_function(lock):
     """Lock a function but always release that lock."""
-    try:
-        lock.acquire()
-        return func(*args, **kwargs)
-    except Exception:    # pylint: disable=broad-except
-        lock.release()
+    def decorator(func):
+        @wraps(func)
+        def wrapper(*args, **kwargs):
+            try:
+                lock.acquire()
+                return func(*args, **kwargs)
+            finally:
+                lock.release()
+        return wrapper
+    return decorator
