@@ -15,8 +15,9 @@ def make_dist_table(hmp_results, site_names):
     for site_name in site_names:
         sites.append([])
         for hmp_result in hmp_results:
-            if hmp_result[site_name] > 0:
-                sites[-1] += hmp_result[site_name]
+            for measure in hmp_result[site_name]:
+                if measure > 0:
+                    sites[-1].append(measure)
     dists = [percentile(measurements, [0, 25, 50, 75, 100]).tolist()
              for measurements in sites]
     return dists
