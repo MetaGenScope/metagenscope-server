@@ -36,15 +36,7 @@ def jsonify(mongo_doc):
 def persist_result_helper(result, analysis_result_id, result_name):
     """Persist results to an Analysis Result model."""
     analysis_result = AnalysisResultMeta.objects.get(uuid=analysis_result_id)
-    if result_name == 'taxa_tree':
-        print('\n\n\n\n')
-        print('analysis_result')
-        print(analysis_result)
     wrapper = getattr(analysis_result, result_name)
-    if result_name == 'taxa_tree':
-        print('wrapper')
-        print(wrapper)
-        print('\n\n\n\n')
     try:
         wrapper.data = result
         wrapper.status = 'S'
