@@ -98,7 +98,7 @@ def make_taxa_table(samples, tool_name):
         except KeyError:
             pass
 
-    taxa_tbl = pd.DataFrame.from_dict(taxa_tbl, orient='index')
+    taxa_tbl = pd.DataFrame.from_dict(taxa_tbl, orient='columns')
     taxa_tbl = taxa_tbl.apply(lambda col: col / col.sum(), axis=0)
 
     return taxa_tbl
