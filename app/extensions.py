@@ -10,7 +10,10 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_bcrypt import Bcrypt
 
+from multiprocessing import Lock
 
+
+sample_upload_lock = Lock()
 mongoDB = MongoEngine()
 db = SQLAlchemy()
 migrate = Migrate()
