@@ -23,7 +23,9 @@ def get_abund_tbl(sample_dict):
     for sname, path_tbl in sample_dict.items():
         abund_dict[sname] = {}
         for path_name, vals in path_tbl.items():
-            abund_dict[sname][path_name] = np.log10(vals['abundance'] + 1)
+            if 'unintegrated' in path_name.lower():
+                continue
+            abund_dict[sname][path_name] = vals['abundance']
 
     # Columns are samples, rows are pathways, vals are abundances
     abund_tbl = pd.DataFrame(abund_dict).fillna(0)
@@ -64,7 +66,7 @@ def filter_humann2_pathways(samples):
             path_abunds[path_name] = abund
             path_covs[path_name] = cov
 
-        out[sname] = {'pathway_abundances': path_abunds,
+        out[sname] = {'pathway_abundances': np.log10(path_abunds + 1),
                       'pathway_coverages': path_covs}
 
     result_data = {'samples': out}
