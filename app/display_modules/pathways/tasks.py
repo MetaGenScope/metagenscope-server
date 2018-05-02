@@ -63,10 +63,10 @@ def filter_humann2_pathways(samples):
             except KeyError:
                 abund = 0
                 cov = 0
-            path_abunds[path_name] = abund
+            path_abunds[path_name] = np.log10(abund + 1)
             path_covs[path_name] = cov
 
-        out[sname] = {'pathway_abundances': np.log10(path_abunds + 1),
+        out[sname] = {'pathway_abundances': path_abunds,
                       'pathway_coverages': path_covs}
 
     result_data = {'samples': out}
