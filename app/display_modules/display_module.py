@@ -53,16 +53,16 @@ class DisplayModule:
         """Define handler for API requests that defers to display module type."""
         try:
             uuid = UUID(result_uuid)
-            query_result = AnalysisResultMeta.objects.get(uuid=uuid)
+            analysis_result = AnalysisResultMeta.objects.get(uuid=uuid)
         except ValueError:
             raise ParseError('Invalid UUID provided.')
         except DoesNotExist:
             raise NotFound('Analysis Result does not exist.')
 
-        if cls.name() not in query_result:
+        if cls.name() not in analysis_result:
             raise InvalidRequest(f'{cls.name()} is not in this AnalysisResult.')
 
-        module_results = getattr(query_result, cls.name())
+        module_results = getattr(analysis_result, cls.name()).fetch()
         result = cls.get_data(module_results)
         # Conversion to dict is necessary to avoid object not callable TypeError
         result_dict = jsonify(result)
