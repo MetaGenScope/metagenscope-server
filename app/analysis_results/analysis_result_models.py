@@ -4,10 +4,12 @@ import datetime
 from uuid import uuid4
 
 from marshmallow import fields
+from mongoengine import LazyReferenceField
 
 from app.base import BaseSchema
 from app.extensions import mongoDB
-from app.display_modules import all_display_modules
+
+from .constants import ALL_MODULE_NAMES
 
 
 ANALYSIS_RESULT_STATUS = (('E', 'ERROR'),
@@ -59,8 +61,8 @@ class AnalysisResultMetaBase(mongoDB.Document):
 
 # Create actual AnalysisResultMeta class based on modules present at runtime
 AnalysisResultMeta = type('AnalysisResultMeta', (AnalysisResultMetaBase,), {
-    module.name(): LazyReferenceField(AnalysisResultWrapper)
-    for module in all_display_modules})
+    module_name: LazyReferenceField(AnalysisResultWrapper)
+    for module_name in ALL_MODULE_NAMES})
 
 
 class AnalysisResultMetaSchema(BaseSchema):
