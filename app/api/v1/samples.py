@@ -67,7 +67,8 @@ def get_single_sample(sample_uuid):
     try:
         uuid = UUID(sample_uuid)
         sample = Sample.objects.get(uuid=uuid)
-        result = SampleSchema(only=('uuid', 'name')).dump(sample).data
+        fields = ('uuid', 'name', 'analysis_result_uuid', 'created_at')
+        result = SampleSchema(only=fields).dump(sample).data
         return result, 200
     except ValueError:
         raise ParseError('Invalid UUID provided.')
