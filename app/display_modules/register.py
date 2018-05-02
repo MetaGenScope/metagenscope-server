@@ -36,9 +36,9 @@ def register_display_module(cls, router):
     endpoint_url = f'/analysis_results/<result_uuid>/{cls.name()}'
     endpoint_name = f'get_{cls.name()}'
 
-    def view_function(uuid):
+    def view_function(result_uuid):
         """Wrap get_result to provide class."""
-        return get_result(cls, uuid)
+        return get_result(cls, result_uuid)
 
     router.add_url_rule(endpoint_url,
                         endpoint_name,
