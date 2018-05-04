@@ -26,6 +26,11 @@ class BaseToolResultModule:
         result_model = result_model_cls(**payload)
         return result_model
 
+    @classmethod
+    def upload_hooks(cls):
+        """Return a list of functions to be called on uploaded json."""
+        return []
+
 
 class SampleToolResultModule(BaseToolResultModule):
     """Base module for Sample Tool Results."""

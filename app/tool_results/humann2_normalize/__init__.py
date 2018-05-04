@@ -18,3 +18,8 @@ class Humann2NormalizeResultModule(SampleToolResultModule):
     def result_model(cls):
         """Return Humann2 Normalize module's model class."""
         return Humann2NormalizeToolResult
+
+    @classmethod
+    def upload_hooks(cls):
+        """Return hook for top level key, genes."""
+        return [lambda payload: {'genes': payload}]

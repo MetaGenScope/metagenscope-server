@@ -17,3 +17,8 @@ class Metaphlan2ResultModule(SampleToolResultModule):
     def result_model(cls):
         """Return Metaphlan2 module's model class."""
         return Metaphlan2Result
+
+    @classmethod
+    def upload_hooks(cls):
+        """Return hook for top level key, genes."""
+        return [lambda payload: {'taxa': payload}]

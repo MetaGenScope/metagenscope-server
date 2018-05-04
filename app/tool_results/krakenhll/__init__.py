@@ -17,3 +17,8 @@ class KrakenHLLResultModule(SampleToolResultModule):
     def result_model(cls):
         """Return Kraken module's model class."""
         return KrakenHLLResult
+
+    @classmethod
+    def upload_hooks(cls):
+        """Return hook for top level key, taxa."""
+        return [lambda payload: {'taxa': payload}]
