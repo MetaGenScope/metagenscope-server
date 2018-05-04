@@ -1,6 +1,6 @@
 """Test suite for Kraken tool result model."""
 
-from app.tool_results.macrobes.constants import MODULE_NAME
+from app.tool_results.kraken.constants import MODULE_NAME
 from app.tool_results.tool_result_test_utils.tool_result_base_test import BaseToolResultTest
 
 from .factory import create_values, create_kraken

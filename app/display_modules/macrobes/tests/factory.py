@@ -12,7 +12,7 @@ def create_one_sample():
     """Create one sample for a macrobe."""
     return {
         macrobe: vals['rpkm']
-        for macrobe, vals in create_values()['macrobes'].items()
+        for macrobe, vals in create_values().items()
     }
 
 

@@ -23,8 +23,8 @@ class TestAncestryModule(BaseDisplayModuleTest):
     def test_add_ancestry(self):
         """Ensure Ancestry model is created correctly."""
         samples = {
-            'sample_1': create_values(),
-            'sample_2': create_values(),
+            'sample_1': AncestryDisplayModule.run_upload_hooks(create_values()),
+            'sample_2': AncestryDisplayModule.run_upload_hooks(create_values()),
         }
         ancestry_result = AncestryResult(samples=samples)
         self.generic_adder_test(ancestry_result, MODULE_NAME)
