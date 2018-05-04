@@ -18,3 +18,8 @@ class MacrobeResultModule(SampleToolResultModule):
     def result_model(cls):
         """Return Macrobe module's model class."""
         return MacrobeToolResult
+
+    @classmethod
+    def upload_hooks(cls):
+        """Return hook for top level key, macrobes."""
+        return [lambda payload: {'macrobes': payload}]

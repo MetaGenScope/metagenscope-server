@@ -17,3 +17,8 @@ class MethylResultModule(SampleToolResultModule):
     def result_model(cls):
         """Return Methyltransferase module's model class."""
         return MethylToolResult
+
+    @classmethod
+    def upload_hooks(cls):
+        """Return hook for top level key, genes."""
+        return [lambda payload: {'genes': payload}]

@@ -23,7 +23,7 @@ class AncestryFactory(factory.mongoengine.MongoEngineFactory):
         """Generate random samples."""
         samples = {}
         for i in range(10):
-            samples[f'Sample{i}'] = create_values()
+            samples[f'Sample{i}'] = {'populations': create_values()}
 
         samples = DataFrame(samples).fillna(0).to_dict()
         return samples

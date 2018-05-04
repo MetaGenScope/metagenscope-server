@@ -36,3 +36,8 @@ class AncestryResultModule(SampleToolResultModule):
     def result_model(cls):
         """Return Ancestry module's model class."""
         return AncestryToolResult
+
+    @classmethod
+    def upload_hooks(cls):
+        """Return hook for top level key."""
+        return [lambda payload: {'populations': payload}]

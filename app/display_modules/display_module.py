@@ -38,6 +38,11 @@ class DisplayModule:
         raise NotImplementedError()
 
     @classmethod
+    def transmission_hooks(cls):
+        """Return a list of hooks to run before transmission to the client."""
+        return []
+
+    @classmethod
     def is_dependent_on_tool(cls, tool_result_cls):
         """Return True if this display module is dependent on a given Tool Result type."""
         required_tools = cls.required_tool_results()
@@ -64,6 +69,9 @@ class DisplayModule:
 
         module_results = getattr(query_result, cls.name())
         result = cls.get_data(module_results)
+        for transmission_hook in cls.transmission_hooks():
+            result = transmission_hook(result)
+
         # Conversion to dict is necessary to avoid object not callable TypeError
         result_dict = jsonify(result)
         return result_dict, 200

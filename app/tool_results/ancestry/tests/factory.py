@@ -15,12 +15,10 @@ def create_values(dropout=0.25):
             val = random()
             result[loc] = val
             tot += val
-    return {
-        'populations': {loc: val / tot for loc, val in result.items()}
-    }
+    return {loc: val / tot for loc, val in result.items()}
 
 
 def create_ancestry():
     """Create AncestryToolResult with randomized field data."""
-    packed_data = create_values()
+    packed_data = {'populations': create_values()}
     return AncestryToolResult(**packed_data).save()

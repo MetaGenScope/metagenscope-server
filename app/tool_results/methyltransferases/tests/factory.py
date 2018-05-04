@@ -17,14 +17,11 @@ def simulate_gene():
 def create_values():
     """Create methyl values."""
     genes = [simulate_gene() for _ in range(randint(3, 10))]
-    result = {
-        'genes': {gene_name: row for gene_name, row in genes}
-
-    }
+    result = {gene_name: row for gene_name, row in genes}
     return result
 
 
 def create_methyls():
     """Create MethylToolResult with randomized field data."""
     packed_data = create_values()
-    return MethylToolResult(**packed_data).save()
+    return MethylToolResult(genes=packed_data).save()

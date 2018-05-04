@@ -17,3 +17,8 @@ class VFDBResultModule(SampleToolResultModule):
     def result_model(cls):
         """Return Virulence Factor module's model class."""
         return VFDBToolResult
+
+    @classmethod
+    def upload_hooks(cls):
+        """Return hook for top level key, genes."""
+        return [lambda payload: {'genes': payload}]

@@ -18,3 +18,8 @@ class CARDAMRResultModule(SampleToolResultModule):
     def result_model(cls):
         """Return CARD AMR Alignment module's model class."""
         return CARDAMRToolResult
+
+    @classmethod
+    def upload_hooks(cls):
+        """Return hook for top level key, genes."""
+        return [lambda payload: {'genes': payload}]

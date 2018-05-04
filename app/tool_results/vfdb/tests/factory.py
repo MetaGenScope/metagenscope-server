@@ -17,13 +17,11 @@ def simulate_gene():
 def create_values():
     """Create methyl values."""
     genes = [simulate_gene() for _ in range(randint(3, 11))]
-    out = {
-        'genes': {gene_name: row_val for gene_name, row_val in genes},
-    }
+    out = {gene_name: row_val for gene_name, row_val in genes}
     return out
 
 
 def create_vfdb():
     """Create VFDBlToolResult with randomized field data."""
     packed_data = create_values()
-    return VFDBToolResult(**packed_data).save()
+    return VFDBToolResult(genes=packed_data).save()

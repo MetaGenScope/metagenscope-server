@@ -35,3 +35,8 @@ class Humann2ResultModule(SampleToolResultModule):
     def result_model(cls):
         """Return HUMANn2 module's model class."""
         return Humann2Result
+
+    @classmethod
+    def upload_hooks(cls):
+        """Return hook for top level key, pathways."""
+        return [lambda payload: {'pathways': payload}]
