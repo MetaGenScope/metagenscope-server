@@ -1,6 +1,5 @@
 """Test suite for Humann2 tool result model."""
 
-from app.tool_results.humann2 import Humann2Result
 from app.tool_results.humann2.constants import MODULE_NAME
 from app.tool_results.tool_result_test_utils.tool_result_base_test import BaseToolResultTest
 

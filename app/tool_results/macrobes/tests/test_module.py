@@ -1,10 +1,9 @@
 """Test suite for Macrobe tool result model."""
 
-from app.tool_results.macrobes import MacrobeToolResult
 from app.tool_results.macrobes.constants import MODULE_NAME
 from app.tool_results.tool_result_test_utils.tool_result_base_test import BaseToolResultTest
 
-from .factory import create_values
+from .factory import create_values, create_macrobe
 
 
 class TestMacrobeModel(BaseToolResultTest):
@@ -12,7 +11,7 @@ class TestMacrobeModel(BaseToolResultTest):
 
     def test_add_macrobes(self):
         """Ensure Macrobe tool result model is created correctly."""
-        macrobes = MacrobeToolResult(**create_values())
+        macrobes = create_macrobe()
         self.generic_add_sample_tool_test(macrobes, MODULE_NAME)
 
     def test_upload_macrobes(self):
