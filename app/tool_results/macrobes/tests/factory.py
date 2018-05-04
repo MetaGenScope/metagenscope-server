@@ -18,13 +18,10 @@ def simulate_macrobe():
 def create_values():
     """Create methyl values."""
     macrobe_tbl = {macrobe: simulate_macrobe() for macrobe in MACROBE_NAMES}
-    out = {
-        'macrobes': macrobe_tbl,
-    }
-    return out
+    return macrobe_tbl
 
 
 def create_macrobe():
     """Create VFDBlToolResult with randomized field data."""
     packed_data = create_values()
-    return MacrobeToolResult(**packed_data).save()
+    return MacrobeToolResult(macrobes=packed_data).save()

@@ -17,13 +17,11 @@ def simulate_gene():
 def create_values():
     """Create CARD AMR values."""
     genes = [simulate_gene() for _ in range(randint(4, 12))]
-    out = {
-        'genes': {gene_name: row_val for gene_name, row_val in genes},
-    }
+    out = {gene_name: row_val for gene_name, row_val in genes}
     return out
 
 
 def create_card_amr():
     """Create CARD AMR Alignment ToolResult with randomized field data."""
     packed_data = create_values()
-    return CARDAMRToolResult(**packed_data).save()
+    return CARDAMRToolResult(genes=packed_data).save()
