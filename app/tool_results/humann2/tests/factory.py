@@ -16,7 +16,7 @@ def random_pathway():
 def create_values():
     """Create a plausible humann2 values object."""
     result = {'sample_pathway_{}': random_pathway()
-                     for i in range(randint(3, 100))},
+              for i in range(randint(3, 100))}
     return result
 
 
