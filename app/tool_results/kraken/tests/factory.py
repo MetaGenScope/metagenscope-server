@@ -31,7 +31,7 @@ def create_taxa_pair(depth=None):
     return (entry_name, value)
 
 
-def create_taxa(taxa_count):
+def create_values(taxa_count=10):
     """Create taxa dictionary."""
     # Make sure we have at least one root element to avoid divide-by-zero
     # https://github.com/bchrobot/metagenscope-server/issues/76
@@ -43,5 +43,5 @@ def create_taxa(taxa_count):
 
 def create_kraken(taxa_count=10):
     """Create KrakenResult with specified number of taxa."""
-    taxa = create_taxa(taxa_count)
+    taxa = create_taxa(taxa_count=taxa_count)
     return KrakenResult(taxa=taxa).save()
