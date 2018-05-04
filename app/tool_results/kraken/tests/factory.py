@@ -43,5 +43,5 @@ def create_values(taxa_count=10):
 
 def create_kraken(taxa_count=10):
     """Create KrakenResult with specified number of taxa."""
-    taxa = create_taxa(taxa_count=taxa_count)
+    taxa = create_values(taxa_count=taxa_count)
     return KrakenResult(taxa=taxa).save()
