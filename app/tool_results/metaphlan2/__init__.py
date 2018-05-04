@@ -2,6 +2,7 @@
 
 from app.tool_results.modules import SampleToolResultModule
 
+from .constants import MODULE_NAME
 from .models import Metaphlan2Result
 
 
@@ -11,7 +12,7 @@ class Metaphlan2ResultModule(SampleToolResultModule):
     @classmethod
     def name(cls):
         """Return Metaphlan 2 module's unique identifier string."""
-        return 'metaphlan2_taxonomy_profiling'
+        return MODULE_NAME
 
     @classmethod
     def result_model(cls):

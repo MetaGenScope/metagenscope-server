@@ -2,6 +2,7 @@
 
 from app.tool_results.modules import SampleToolResultModule
 
+from .constants import MODULE_NAME
 from .models import KrakenHLLResult
 
 
@@ -11,7 +12,7 @@ class KrakenHLLResultModule(SampleToolResultModule):
     @classmethod
     def name(cls):
         """Return Kraken module's unique identifier string."""
-        return 'krakenhll_taxonomy_profiling'
+        return MODULE_NAME
 
     @classmethod
     def result_model(cls):
