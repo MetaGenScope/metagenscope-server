@@ -21,7 +21,7 @@ from app.sample_groups.sample_group_models import SampleGroup
 
 def wrap_result(result):
     """Wrap display result in status wrapper."""
-    return AnalysisResultWrapper(status='S', data=result)
+    return AnalysisResultWrapper(status='S', data=result).save()
 
 
 def create_saved_group(uuid=None):

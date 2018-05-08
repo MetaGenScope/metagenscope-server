@@ -29,13 +29,14 @@ from app.tool_results.models import ToolResult, GroupToolResult
 from app.samples.sample_models import Sample
 from app.sample_groups.sample_group_models import SampleGroup
 
-from seed import abrf_analysis_result, uw_analysis_result, reads_classified
-from seed.fuzz import create_saved_group
-
 
 app = create_app()
 manager = Manager(app)  # pylint: disable=invalid-name
 manager.add_command('db', MigrateCommand)
+
+# These must be imported AFTER Mongo connection has been established during app creation
+from seed import abrf_analysis_result, uw_analysis_result, reads_classified
+from seed.fuzz import create_saved_group
 
 
 @manager.command
@@ -88,6 +89,20 @@ def recreate_db():
 
     # Empty Mongo database
     drop_mongo_collections()
+
+
+@manager.command
+def seed_users():
+    """Seed just the users for the database."""
+    bchrobot = User(username='bchrobot',
+                    email='benjamin.blair.chrobot@gmail.com',
+                    password='Foobar22')
+    dcdanko = User(username='dcdanko',
+                   email='dcd3001@med.cornell.edu',
+                   password='Foobar22')
+    db.add(bchrobot)
+    db.add(dcdanko)
+    db.session.commit()
 
 
 @manager.command
