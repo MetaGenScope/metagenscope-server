@@ -29,13 +29,14 @@ from app.tool_results.models import ToolResult, GroupToolResult
 from app.samples.sample_models import Sample
 from app.sample_groups.sample_group_models import SampleGroup
 
-from seed import abrf_analysis_result, uw_analysis_result, reads_classified
-from seed.fuzz import create_saved_group
-
 
 app = create_app()
 manager = Manager(app)  # pylint: disable=invalid-name
 manager.add_command('db', MigrateCommand)
+
+# These must be imported AFTER Mongo connection has been established during app creation
+from seed import abrf_analysis_result, uw_analysis_result, reads_classified
+from seed.fuzz import create_saved_group
 
 
 @manager.command
