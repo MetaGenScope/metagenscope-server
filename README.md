@@ -1,5 +1,7 @@
 # MetaGenScope Server
 
+[![CircleCI](https://circleci.com/gh/MetaGenScope/metagenscope-server/tree/master.svg?style=svg)](https://circleci.com/gh/MetaGenScope/metagenscope-server/tree/master)
+
 > MetaGenScope server application.
 
 ## Getting Started
