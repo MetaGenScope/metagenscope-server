@@ -127,8 +127,8 @@ jobs:
           name: Deploy to emptyfish.net
           command: |
             set -x
-            echo "$DROPLET_IP $DROPLET_HOST_KEY" > ~/tmp_auth_hosts
-            ssh -A -o "UserKnownHostsFile ~/tmp_auth_hosts" $DROPLET_USER@$DROPLET_IP "cd /home/metagenscope/metagenscope-app && sh deploy.sh"
+            echo "$STAGING_MACHINE_IP $STAGING_MACHINE_HOST_KEY" > ~/tmp_auth_hosts
+            ssh -A -o "UserKnownHostsFile ~/tmp_auth_hosts" $STAGING_MACHINE_USER@$STAGING_MACHINE_IP "cd /home/metagenscope/metagenscope-app && sh deploy.sh"
 
   build_worker_staging:
     docker:
@@ -184,23 +184,23 @@ workflows:
   app_staging_cd:
     jobs:
       - test_app:
-          context: org-global
+          context: metagenscope-staging
       - build_app_staging:
-          context: org-global
+          context: metagenscope-staging
           filters:
             branches:
               only: develop
           requires:
             - test_app
       - build_worker_staging:
-          context: org-global
+          context: metagenscope-staging
           filters:
             branches:
               only: develop
           requires:
             - test_app
       - deploy_staging:
-          context: org-global
+          context: metagenscope-staging
           filters:
             branches:
               only: develop
