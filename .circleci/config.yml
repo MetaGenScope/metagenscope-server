@@ -189,8 +189,7 @@ workflows:
             branches:
               only: develop
           requires:
-            - build_app_staging
-            - build_worker_staging
+            - build_staging
       - build_master:
           context: metagenscope-staging
           filters:
