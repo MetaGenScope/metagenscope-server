@@ -1,6 +1,6 @@
 """Test suite for Reads Classified tool result model."""
 
-from app.tool_results.reads_classified import ReadsClassifiedResultModule
+from app.tool_results.reads_classified import ReadsClassifiedToolResult
 from app.tool_results.reads_classified.constants import MODULE_NAME
 from app.tool_results.tool_result_test_utils.tool_result_base_test import BaseToolResultTest
 
