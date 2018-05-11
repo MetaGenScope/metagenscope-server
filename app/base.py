@@ -1,13 +1,12 @@
 """Base modules used throughout application."""
 
 from uuid import UUID
-from marshmallow import Schema, pre_load, post_load, pre_dump, post_dump
 
-from app.api.utils import uuid2slug
+from marshmallow import Schema, pre_load, post_load, pre_dump, post_dump
 
 
 class BaseSchema(Schema):
-    """Base Schema that handles envelopes and slug generation."""
+    """Base Schema that handles envelopes."""
 
     __envelope__ = {
         'single': None,
@@ -29,15 +28,13 @@ class BaseSchema(Schema):
     @post_load
     def make_object(self, data):
         """Make object from unwrapped envelope."""
-        # pylint: disable=no-member
-        return self.__model__(**data)
+        return self.__model__(**data)  # pylint: disable=no-member
 
     @pre_dump(pass_many=False)
-    # pylint: disable=no-self-use
-    def slugify_organization_id(self, data):
-        """Translate UUID into URL-safe slug."""
+    def standardize_uuid_property(self, data):  # pylint: disable=no-self-use
+        """Rename id properties into standardized uuid field."""
         if hasattr(data, 'id') and isinstance(data.id, UUID):
-            data.slug = uuid2slug(data.id)
+            data.uuid = data.id
         return data
 
     @post_dump(pass_many=True)

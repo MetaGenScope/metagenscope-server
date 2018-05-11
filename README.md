@@ -4,7 +4,7 @@
 
 ## Getting Started
 
-This readme documents how to run and test the MetaGenScope server as a standalone application. `metagenscope-server` is part of [`metagenscope-main`](https://github.com/bchrobot/metagenscope-main) and should usually be run as part of the complete stack.
+This readme documents how to run and test the MetaGenScope server as a standalone application. `metagenscope-server` is part of [`metagenscope-main`](https://github.com/longtailbio/metagenscope-main) and should usually be run as part of the complete stack.
 
 ### Prerequisites
 
@@ -52,6 +52,18 @@ Spin up server (runs on `http://127.0.0.1:5000/`):
 $ python manage.py runserver
 ```
 
+A startup script is provided to ensure that the application does not attempt to start before all service dependencis are accepting connections. It can be used like so:
+
+```
+$ ./startup.sh [host:port[, host:port, ...]] -- [command]
+```
+
+An example of waiting for Postgres and Mongo DBs running on localhost before starting the application would look like this:
+
+```
+$ ./startup.sh localhost:5435 localhost:27020 -- python manage.py runserver
+```
+
 ## Testing
 
 The entry point to test suite tools is the `Makefile`.
@@ -83,6 +95,26 @@ $ make cov
 ## Development
 
 MetaGenScope uses the GitFlow branching strategy along with Pull Requests for code reviews. Check out [this post](https://devblog.dwarvesf.com/post/git-best-practices/) by the Dwarves Foundation for more information.
+
+### Tool Result Modules
+
+`ToolResult` modules define database storage and API upload for outputs.
+
+To add a new `ToolResult` module write your new module `app/tool_results/my_new_module` following existing conventions. Make sure the main module class inherits from `ToolResultModule` and is named ending in `ResultModule`.
+
+### Display Modules
+
+`DisplayModule`s provide the backing data for each front-end visualization type. They are in charge of:
+
+- Providing the data model for the visualization backing data
+- Enumerating the `ToolResult` types that are valid data sources (_WIP_)
+- The Middleware task that transforms a set of `Sample`s into the module's data model (_WIP_)
+
+These modules live in `app/display_modules/` and are self-contained: all models, API endpoint definitions, long-running tasks, and tests live within each module.
+
+To add a new `DisplayModule` module:
+1. Write your new module `app/display_modules/my_new_module` following existing conventions. Make sure the main module class inherits from `DisplayModule` and is named ending in `Module`.
+2. Add your module to `all_display_modules` in `app.display_modules`.
 
 ## Continuous Integration
 
@@ -141,5 +173,5 @@ See also the list of [contributors][contributors] who participated in this proje
 This project is licensed under the MIT License - see the [`LICENSE.md`](LICENSE.md) file for details.
 
 
-[project-tags]: https://github.com/bchrobot/metagenscope-server/tags
-[contributors]: https://github.com/bchrobot/metagenscope-server/contributors
+[project-tags]: https://github.com/longtailbio/metagenscope-server/tags
+[contributors]: https://github.com/longtailbio/metagenscope-server/contributors

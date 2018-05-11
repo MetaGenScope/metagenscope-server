@@ -1,4 +1,4 @@
-.PHONY: clean-pyc clean-build clean lint lint-tests lint-seed test cov
+.PHONY: clean-pyc clean-build clean lint-app lint-tests lint-seed lint-worker lint test cov
 .DEFAULT_GOAL: help
 
 help:
@@ -26,7 +26,7 @@ clean-pyc:
 	find . -name '*~' -exec rm -f {} +
 	find . -name '__pycache__' -exec rm -fr {} +
 
-lint:
+lint-app:
 	pylint --rcfile=.pylintrc app -f parseable -r n && \
 	pycodestyle app --max-line-length=120 && \
 	pydocstyle app
@@ -40,6 +40,16 @@ lint-seed:
 	pylint --rcfile=.pylintrc seed -f parseable -r n && \
 	pycodestyle seed --max-line-length=120 && \
 	pydocstyle seed
+
+lint-worker:
+	pylint --rcfile=.pylintrc worker -f parseable -r n && \
+	pycodestyle worker --max-line-length=120 && \
+	pydocstyle worker
+
+lint:
+	pylint --rcfile=.pylintrc app tests seed worker -f parseable -r n && \
+	pycodestyle app tests seed worker --max-line-length=120 && \
+	pydocstyle app tests seed worker
 
 test: lint
 	python manage.py test

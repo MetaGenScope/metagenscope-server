@@ -1,6 +1,6 @@
 """Environment configurations."""
 
-# pylint: disable=too-few-public-methods
+# pylint: disable=too-few-public-methods,invalid-name
 
 import os
 
@@ -17,6 +17,26 @@ class Config(object):
     BCRYPT_LOG_ROUNDS = 13
     TOKEN_EXPIRATION_DAYS = 30
     TOKEN_EXPIRATION_SECONDS = 0
+    MAX_CONTENT_LENGTH = 100 * 1000 * 1000
+
+    # Prevent MongoClient from connecting before Celery workers fork
+    # http://api.mongodb.com/python/current/faq.html#is-pymongo-fork-safe
+    MONGODB_CONNECT = False
+
+    # Flask-API renderer
+    DEFAULT_RENDERERS = [
+        'app.api.renderers.EnvelopeJSONRenderer',
+        'flask_api.renderers.BrowsableAPIRenderer',
+    ]
+
+    # Celery settings
+    broker_url = os.environ.get('CELERY_BROKER_URL')
+    result_backend = os.environ.get('CELERY_RESULT_BACKEND')
+    result_expires = 3600     # Expire results after one hour
+    result_cache_max = None   # Do not limit cache
+    task_always_eager = False
+    task_eager_propagates = False
+    task_serializer = 'json'
 
 
 class DevelopmentConfig(Config):
@@ -37,6 +57,12 @@ class TestingConfig(Config):
     TOKEN_EXPIRATION_DAYS = 0
     TOKEN_EXPIRATION_SECONDS = 3
 
+    # Celery settings
+    broker_url = os.environ.get('CELERY_BROKER_TEST_URL')
+    result_backend = os.environ.get('CELERY_RESULT_TEST_BACKEND')
+    task_always_eager = True
+    task_eager_propagates = True
+
 
 class StagingConfig(Config):
     """Configurations for Staging."""
@@ -52,6 +78,10 @@ class ProductionConfig(Config):
     TESTING = False
     SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL')
     MONGODB_HOST = os.environ.get('MONGODB_HOST')
+
+    # Celery settings
+    broker_url = os.environ.get('CELERY_BROKER_URL')
+    result_backend = os.environ.get('CELERY_RESULT_BACKEND')
 
 
 # pylint: disable=invalid-name

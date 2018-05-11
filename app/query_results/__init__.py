@@ -1,1 +1,0 @@
-"""Query Result module."""
